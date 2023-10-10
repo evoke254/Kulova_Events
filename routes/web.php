@@ -29,8 +29,6 @@ Route::get('/home', [landingpageController::class, 'home'])->name('home');
 
 Route::middleware('auth')->group(function () {
 
-    //Preview Mail
-    Route::get('/preview_mail/{emailTemplate}', [\App\Http\Controllers\MailGarage::class, 'render'])->name('mail.preview');
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
@@ -40,15 +38,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    /*Campaigns*/
-    Route::resource('campaigns', CampaignController::class);
+    /*Organization*/
+    Route::resource('organizations', \App\Http\Controllers\OrganizationController::class);
 
-    /*Email List*/
-    Route::resource('mail_list', \App\Http\Controllers\MailListController::class);
-    /*Email Template*/
-    Route::resource('emailTemplate', \App\Http\Controllers\EmailTemplateController::class);
-    /*Landing page route */
-    Route::resource('landing-page', \App\Http\Controllers\LandingPageController::class);
+    /*Events*/
+    Route::resource('events', \App\Http\Controllers\EventController::class);
+        //Create Election
+    Route::get('/event/{event}/create-election', [\App\Http\Controllers\ElectionController::class, 'create'])->name('election.create');
+
+
+
+
+
+
+
+
+
+
+
+    //Content upload
+
+
     /*Grape JS DB storage*/
     Route::get('/grapejs-landing-pageGet/{landing_page}', [\App\Http\Controllers\LandingPageController::class, 'pageGet'])->name('grapejs.get');
 //    Route::post('/grapejs-landing-pageUpload/{landing_page}', [\App\Http\Controllers\LandingPageController::class, 'pageUpload'])->name('grapejs.store');
@@ -65,6 +75,5 @@ Route::middleware('auth')->group(function () {
 
 
 });
-    Route::get('/grapejs-landing-pageGet/{landing_page}', [\App\Http\Controllers\LandingPageController::class, 'pageGet'])->name('grapejs.get');
 
 require __DIR__.'/auth.php';

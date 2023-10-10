@@ -29,11 +29,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $org = \App\Models\Organization::create([
-            'name' => 'Default',
+            'name' => 'Swift Apps Africa',
         ]);
 
         \App\Models\OrganizationDepartment::create([
-            'name' => 'Main',
+            'name' => 'Human Resource',
             'organization_id' => $org->id
         ]);
 
