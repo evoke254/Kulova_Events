@@ -15,6 +15,15 @@ class EventController extends Controller
         return view('event.index');
     }
 
+
+
+//Display frontend
+ public function display()
+    {
+        return view('event.frontend');
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -31,6 +40,16 @@ class EventController extends Controller
         //
     }
 
+
+    public function vote(Event $event)
+    {
+        return view('event.vote', compact('event'));
+    }
+
+        public function voteOnline(Event $event)
+    {
+        return view('event.vote-online', compact('event'));
+    }
     /**
      * Display the specified resource.
      */

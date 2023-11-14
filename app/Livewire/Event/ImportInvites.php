@@ -28,7 +28,6 @@ class ImportInvites extends Component
 
 
     public function mount(){
-
         $this->importComplete = false;
     }
 

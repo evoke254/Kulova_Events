@@ -12,15 +12,19 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-
+    @filamentStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @stack('style')
 </head>
 <body class="font-sans antialiased">
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+
     {{--}}            @include('layouts.navigation') --}}
     @include('partials.dashboard-navbar')
+
+    <x-notifications />
+        <x-dialog />
 
     <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
 
@@ -57,8 +61,10 @@
     <!-- Page Content -->
 
 </div>
+@filamentScripts
 @wireUiScripts
 @livewireScripts
 @stack('script')
+{{--}}@livewire('wire-elements-modal') --}}
 </body>
 </html>

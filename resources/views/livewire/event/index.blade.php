@@ -4,7 +4,7 @@
     <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700 w-full">
         <div class="w-full mb-1">
             <div class="mb-4">
-                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Organizations</h1>
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Events</h1>
             </div>
             <div class="items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
                 <div class="flex items-center mb-4 sm:mb-0">

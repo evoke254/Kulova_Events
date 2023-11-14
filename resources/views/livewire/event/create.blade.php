@@ -1,6 +1,6 @@
 <div>
 
-    <div class="relative  mt-2 mx-auto  w-3/4 p-4 h-full ">
+    <div class="relative  mt-2 mx-auto  w-3/4 p-4 min-h-screen overflow-scroll">
         <div class="relative w-full">
 
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -14,7 +14,11 @@
                         </div>
 
 
-                        <div>
+
+
+                        <div class="grid md:grid-cols-2  gap-4">
+
+                        <div class=" pt-2">
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Event Name *</label>
                             <input type="text" wire:model="event.name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                    placeholder="Annual general Meeting-{{date('Y')}}">
@@ -23,8 +27,17 @@
                                 {{$message}}</p>
                             @enderror
                         </div>
-
-                        <div class="grid md:grid-cols-2  gap-4">
+                            <div class="pt-2">
+                                <x-select
+                                    class="dark:text-white"
+                                    label="Category"
+                                    :async-data="route('event-category.data')"
+                                    wire:model.defer="category_id"
+                                    placeholder="Select A Category"
+                                    option-label="name"
+                                    option-value="id"
+                                />
+                            </div>
                             <div class="pt-2">
                                 <label for="event.organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization *</label>
                                 <select type="event.organization_id"
@@ -116,6 +129,43 @@
                                     />
                                 </div>
                             </div>
+
+
+
+                            <label class="col-span-1 sm:col-span-2 cursor-pointer rounded-xl shadow-md min-h-fit flex items-center
+                                                                    justify-center mt-3 border border-gray-400 border-dashed file-upload overflow-y-auto">
+                                <div  x-data="fileUpload()">
+                                    <div class="flex flex-col items-center justify-center py-3 px-3"
+                                         x-on:drop="isDroppingFile = false"
+                                         x-on:drop.prevent="handleFileDrop($event)"
+                                         x-on:dragover.prevent="isDroppingFile = true"
+                                         x-on:dragleave.prevent="isDroppingFile = false">
+
+                                        <input type="file" hidden multiple id="file-upload" @change="handleFileSelect" >
+                                        @if(count($files))
+                                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                    @foreach($files as $file)
+                                                        @if( getimagesize( $file->path() ) )
+                                                            <div>
+                                                                <img class="h-auto max-w-full rounded-lg w-20 "
+                                                                     src="{{ $file->temporaryUrl()  }}" alt="">
+                                                            </div>
+                                                        @else
+                                                            <div>
+                                                                <video class="h-auto max-w-full rounded-lg w-20" controls>
+                                                                    <source src="{{ $file->path()  }}" >
+                                                                </video>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                            </div>
+                                        @endif
+                                        <x-icon name="cloud-upload" class="w-16 h-16 text-gray-600 dark:text-gray-400" />
+                                        <p class="text-gray-600 dark:text-gray-400">Click or drop files here</p>
+                                    </div>
+                                </div>
+
+                            </label>
                         </div>
 
 
@@ -131,30 +181,58 @@
 
 
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js" ></script>
-
-
-
     <script>
 
-        document.addEventListener('livewire:initialized', () => {
-
-            const startDatepickerEl = document.getElementById('start_date');
-            const endDatepickerEl = document.getElementById('end_date');
-
-            endDatepickerEl.addEventListener('changeDate', (event2) => {
-                console.log(event2.detail);
-            @this.dispatch('endDateSelected', {date: event2.detail.date});
-            });
-
-            startDatepickerEl.addEventListener('changeDate', (event) => {
-            @this.dispatch('startDateSelected', {date: event.detail.date});
-            });
-
-        });
 
 
+
+        function fileUpload() {
+            return {
+                isDropping: false,
+                isUploading: false,
+                progress: 0,
+                handleFileSelect(event) {
+                    if (event.target.files.length ) {
+                        this.uploadFiles(event.target.files)
+                    }
+                },
+                handleFileDrop(event) {
+                    if (event.dataTransfer.files.length > 0) {
+                        this.uploadFiles(event.dataTransfer.files)
+                    }
+                },
+                uploadFiles(files) {
+                    const $this = this;
+                    this.isUploading = true
+                @this.uploadMultiple('files', files,
+                    function (success) {
+                        $this.isUploading = false
+                        $this.progress = 0
+
+                        //Adjust height
+                        /*  var photoVideoModEl = document.getElementById('photoVideoMod')
+                          var photoVideoModal = bootstrap.Modal.getInstance(photoVideoModEl) // Returns a Bootstrap modal instance
+                          photoVideoModal.handleUpdate()*/
+
+                    },
+                    function(error) {
+                        console.log('error', error)
+                    },
+                    function (event) {
+                        $this.progress = event.detail.progress
+                    }
+                )
+                },
+                removeUpload(filename) {
+                @this.removeUpload('files', filename);
+
+                    //Adjust height
+                    /*                    var photoVideoModEl = document.getElementById('photoVideoMod')
+                                        var photoVideoModal = bootstrap.Modal.getInstance(photoVideoModEl) // Returns a Bootstrap modal instance
+                                        photoVideoModal.handleUpdate()*/
+                },
+            }
+        }
     </script>
 
 

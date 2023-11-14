@@ -24,8 +24,10 @@ class ElectivePosition extends Model
         return $this->hasmany(CandidateElectivePosition::class);
     }
 
-        public function election(): BelongsTo
+     public function election(): BelongsTo
     {
         return $this->belongsTo(Election::class);
     }
+
+
 }

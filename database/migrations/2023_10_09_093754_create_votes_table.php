@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('invite_id');
+            $table->unsignedBigInteger('election_id');
+            $table->unsignedBigInteger('elective_position_id');
             $table->timestamps();
         });
     }

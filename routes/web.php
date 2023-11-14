@@ -41,11 +41,27 @@ Route::middleware('auth')->group(function () {
     /*Organization*/
     Route::resource('organizations', \App\Http\Controllers\OrganizationController::class);
 
+    /*Event categories JSON*/
+    Route::get('/event-categoryData', [\App\Http\Controllers\EventCategoryController::class, 'data'])
+        ->name('event-category.data');
     /*Events*/
+    Route::resource('event-category', \App\Http\Controllers\EventCategoryController::class);
     Route::resource('events', \App\Http\Controllers\EventController::class);
+    Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'display'])
+        ->name('events.frontend');
+        //Voting
+    Route::get('/event/{event}/vote', [\App\Http\Controllers\EventController::class, 'vote'])
+        ->name('event.vote');
+    //Online Voting
+    Route::get('/event/{event}/voteOnline', [\App\Http\Controllers\EventController::class, 'voteOnline'])
+        ->name('event.vote.online');
+
+
         //Create Election
     Route::get('/event/{event}/create-election', [\App\Http\Controllers\ElectionController::class, 'create'])->name('election.create');
 
+  /*Voting CRUD*/
+    Route::resource('vote', \App\Http\Controllers\VoteController::class);
 
 
 
@@ -66,7 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::match(['patch', 'post'], '/grapejs-landing-pageUpload/{landing_page}', [\App\Http\Controllers\LandingPageController::class, 'pageUpload'])->name('grapejs.store');
 
 
-    Route::resource('campaign-template', \App\Http\Controllers\CampaignTemplateController::class);
 
     //Upload TinyMCE images
     Route::post('/upload-images-tinyMCE', [\App\Http\Controllers\UploadImagesController::class, 'upload'])->name('uploadImages.tiny');
