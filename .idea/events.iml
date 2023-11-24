@@ -186,6 +186,7 @@
       <excludeFolder url="file://$MODULE_DIR$/storage/framework/cache/data/a5" />
       <excludeFolder url="file://$MODULE_DIR$/storage/framework/cache/data/ea" />
       <excludeFolder url="file://$MODULE_DIR$/storage/framework/cache/laravel-excel" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/botman/botman" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/evenement/evenement" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mpociot/pipeline" />
