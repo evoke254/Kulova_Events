@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "botman/botman": "^2.8",
         "chiiya/filament-access-control": "^2.3",
         "doctrine/dbal": "^3.6",
         "filament/filament": "^3.0-stable",

@@ -20,6 +20,10 @@ return new class extends Migration
             $table->unsignedBigInteger('candidate_elective_position_id');
             $table->foreign('candidate_elective_position_id')->references('id')->on('candidate_elective_positions');
 
+            $table->unsignedBigInteger('invite_id');
+            $table->foreign('invite_id')->references('id')->on('invites');
+
+
             $table->integer('vote')->default(1);
             $table->timestamps();
         });

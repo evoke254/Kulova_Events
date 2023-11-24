@@ -77,17 +77,14 @@
                                                 " aria-hidden="true"></span>
                                                 </label>
                                             </div>
-
-                                            @if($loop->parent->last && $loop->last)
-                                                <div class="my-2 mt-5 flex justify-center">
-                                                    <x-button green lg label="Cast Vote" wire:click="submit" class="rounded-lg shadow-lg" />
-                                                </div>
-                                            @endif
                                         </fieldset>
 
                                     @endforeach
                                 </div>
                         @endforeach
+                        <div class="my-2 mt-5 flex justify-center">
+                                                    <x-button green lg label="Cast Ballot" wire:click="submit" class="rounded-lg shadow-lg" />
+                                                </div>
                     </form>
                 </div>
             </div>
