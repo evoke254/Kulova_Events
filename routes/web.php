@@ -25,7 +25,10 @@ Route::get('/dashboardjkkjjkjkjkjjkkjkjjkjkj', function () {
 
 Route::get('/', [landingpageController::class, 'index'])->name('landing');
 Route::get('/home', [landingpageController::class, 'home'])->name('home');
-
+Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'display'])
+    ->name('events.frontend');
+Route::get('/event/{event}', [\App\Http\Controllers\EventController::class, 'showEvent'])
+    ->name('event.view');
 
 Route::middleware('auth')->group(function () {
 
@@ -47,20 +50,22 @@ Route::middleware('auth')->group(function () {
     /*Events*/
     Route::resource('event-category', \App\Http\Controllers\EventCategoryController::class);
     Route::resource('events', \App\Http\Controllers\EventController::class);
-    Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'display'])
-        ->name('events.frontend');
-        //Voting
-    Route::get('/event/{event}/vote', [\App\Http\Controllers\EventController::class, 'vote'])
-        ->name('event.vote');
+
+
+
+
+    //Create Election
+    Route::get('/event/{event}/create-election', [\App\Http\Controllers\ElectionController::class, 'create'])->name('election.create');
+
+    //Voting
+    Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
+        ->name('election.vote');
     //Online Voting
     Route::get('/event/{event}/voteOnline', [\App\Http\Controllers\EventController::class, 'voteOnline'])
         ->name('event.vote.online');
 
 
-        //Create Election
-    Route::get('/event/{event}/create-election', [\App\Http\Controllers\ElectionController::class, 'create'])->name('election.create');
-
-  /*Voting CRUD*/
+    /*Voting CRUD*/
     Route::resource('vote', \App\Http\Controllers\VoteController::class);
 
 

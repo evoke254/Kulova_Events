@@ -1,52 +1,72 @@
 <div >
 
 
-    <section>
-        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-            <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Events</h2>
-                <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
-                    Some description text here!!!!!!!!!!!!!!!!!!!!!!!
-                    !!!!!
-                    Motre
+
+    <div class="bg-white py-24 sm:py-32 dark:bg-gray-800 dark:text-white">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-2xl text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white ">Events</h2>
+                <p class="mt-2 text-lg leading-8 text-gray-600 dark:text-white">
+                    Lorem Ipsum
                 </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+
                 @foreach($events as $event)
-                    <div class=" bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                        <div>
-                            @if($event->getMedia())
-                                <a href="#" class="rounded-t-lg mb-4">
-                                    {{$event->getFirstMedia()}}
-                                </a>
+
+                    <article class="flex flex-col items-start justify-between">
+                        <div class="relative w-full">
+                            @if($event->getFirstMedia() )
+                                <img src="{{ $event->getFirstMedia()->preview_url  }}" alt=""
+                                     class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
                             @endif
-                            <article class="pt-6 p-6">
-                                <div class="flex justify-between items-center mb-5 text-gray-500">
-                              <span class="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
-                                  <svg class="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"></path><path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"></path></svg>
-                                  Article
-                              </span>
-                                    <span class="text-sm">14 days ago</span>
-                                </div>
-                                <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"><a href="#">{{$event->name}}</a></h2>
-                                <p class="mb-5 font-light text-gray-500 dark:text-gray-400">
-                                    {{substr($event->description, 0 , 20)}}....
-                                </p>
-                                <div class="flex justify-end items-center mt-3 gap-4">
-                                    <x-button class="rounded-lg mx-3 font-semibold" lime label="Attend" icon="identification" />
-                                    @if($event->elections->count())
-                                        <x-button class="rounded-lg mx-3 font-semibold" warning
-                                                  href="{{route('event.vote', ['event' => $event->id])}}"
-                                                  label="Vote" icon="identification" />
-                                    @endif
-                                </div>
-                            </article>
+                            <a href="{{route('event.view', ['event' => $event->id])}}">
+                                <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+                            </a>
                         </div>
-                    </div>
+
+                        <div class="max-w-xl">
+                            <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                <time datetime="2020-03-16" class="text-gray-500 dark:text-gray-200">
+                                    {{Carbon\Carbon::parse($event->start_date)->format('M jS Y')}}, {{ Carbon\Carbon::parse($event->start_date)->diffForHumans() }}
+                                </time>
+                                <a href="{{route('event.view', ['event' => $event->id])}}" class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
+                                    {{$event->category?->name}}
+                                </a>
+                            </div>
+                            <div class="group relative">
+                                <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                                    <a href="{{route('event.view', ['event' => $event->id])}}" class="dark:text-white">
+                                        <span class="absolute inset-0"></span>
+                                        {{$event->name}}
+                                    </a>
+                                </h3>
+                                <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-200 ">
+                                    {{ $event->description }}
+                                </p>
+                            </div>
+                            {{--}}
+                            <div class="relative mt-8 flex items-center gap-x-4">
+                                <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="h-10 w-10 rounded-full bg-gray-100">
+                                <div class="text-sm leading-6">
+                                    <p class="font-semibold text-gray-900">
+                                        <a href="#" class="dark:text-gray-200">
+                                            <span class="absolute inset-0"></span>
+                                            Michael Foster
+                                        </a>
+                                    </p>
+                                    <p class="text-gray-600">Co-Founder / CTO</p>
+                                </div>
+                            </div>
+                             --}}
+                        </div>
+                    </article>
+
                 @endforeach
             </div>
         </div>
-    </section>
+    </div>
+
 
 
 

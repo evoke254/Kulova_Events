@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('event_id');
+            $table->dateTime('election_date')->nullable();
             $table->foreign('event_id')->references('id')->on('events');
             $table->longText('details')->nullable();
             $table->timestamps();

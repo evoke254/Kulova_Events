@@ -13,6 +13,7 @@
 
     <!-- Scripts -->
     @filamentStyles
+    @wireUiScripts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     @stack('style')
@@ -21,7 +22,6 @@
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
     {{--}}            @include('layouts.navigation') --}}
-    @include('partials.dashboard-navbar')
 
     <x-notifications />
         <x-dialog />
@@ -44,7 +44,7 @@
                 {{ $slot }}
 
                 <div class=" px-6 my-2">
-                    @include('partials.dashboard-footer')
+
                 </div>
             </main>
         </div>

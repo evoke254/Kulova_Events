@@ -64,4 +64,12 @@ class ElectionController extends Controller
     {
         //
     }
+
+
+
+    public function vote(Election $election)
+    {
+        return view('event.election.vote', compact('election'));
+
+    }
 }

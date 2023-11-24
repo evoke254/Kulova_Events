@@ -11,7 +11,7 @@ class Election extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'event_id', 'details'
+        'name', 'event_id', 'details', 'election_date'
     ];
 
     protected $with = ['elective_positions'];

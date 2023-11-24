@@ -13,6 +13,13 @@ export default {
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         "./resources/**/*.blade.php",
+        "./resources/views/**/*.blade.php",
+        "./resources/views/livewire/**/*.blade.php",
+        "./resources/views/livewire/campaign-template/**/*.blade.php",
+        "./resources/views/livewire/event/**/*.blade.php",
+        "./resources/views/livewire/event/election/**/*.blade.php",
+        "./resources/views/livewire/event/vote/**/*.blade.php",
+        "./resources/views/vendor/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
         "./node_modules/flowbite/**/*.js",

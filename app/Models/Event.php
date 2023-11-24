@@ -20,7 +20,7 @@ class Event extends Model implements HasMedia
         'cost', 'start_date', 'end_date', 'event_category_id'
     ];
 
-    protected $with = ['organization', 'invites', 'elections'];
+    protected $with = ['organization', 'invites', 'elections', 'category'];
 
     protected $dates = ['start_date', 'end_date'];
 
@@ -29,9 +29,9 @@ class Event extends Model implements HasMedia
         return $this->belongsTo(Organization::class);
     }
 
-        public function category(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(EventCategory::class);
+        return $this->belongsTo(EventCategory::class, 'event_category_id', 'id' );
     }
 
     public function invites(): HasMany
@@ -39,17 +39,17 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Invite::class);
     }
 
-        public function elections(): HasMany
+    public function elections(): HasMany
     {
         return $this->hasMany(Election::class);
     }
 
     public function registerMediaConversions(Media $media = null): void
-{
-    $this
-        ->addMediaConversion('preview')
-        ->fit(Manipulations::FIT_CROP, 300, 300)
-        ->nonQueued();
-}
+    {
+        $this
+            ->addMediaConversion('preview')
+            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->nonQueued();
+    }
 
 }

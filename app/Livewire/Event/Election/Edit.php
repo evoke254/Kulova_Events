@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Event\Election;
 
+use Carbon\Carbon;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\CandidateElectivePosition;
 use App\Models\Election;
@@ -11,13 +13,14 @@ use Livewire\WithFileUploads;
 class Edit extends Component
 {
 
-     use WithFileUploads;
+    use WithFileUploads;
     public $steps  = 1;
     public $election_name;
     public $event_id;
     public $event;
     public $election =[];
     public $election_detail;
+    public $election_date;
     public $positions = [] ;
     public $pstn_counter = 1;
     public $positionsCltn ;
@@ -30,6 +33,8 @@ class Edit extends Component
 
     public function mount(){
         $this->election = $this->election_detail->toArray();
+      //  dd($this->election);
+        $this->election_date = $this->election['election_date'];
         $this->position = null;
         $this->candidate = [];
         $this->resetValidation();
@@ -37,11 +42,13 @@ class Edit extends Component
 
     }
 
-
     public function createElection()
     {
+        $this->election['election_date'] = Carbon::parse($this->election_date);
+
         $validatedData = $this->validate([
             'election.name' => 'required|min:2',
+            'election.election_date' => 'required|date',
         ]);
 
         $this->election['event_id'] = $this->event['id'];

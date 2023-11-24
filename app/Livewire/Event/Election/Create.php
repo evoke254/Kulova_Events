@@ -5,6 +5,8 @@ namespace App\Livewire\Event\Election;
 use App\Models\CandidateElectivePosition;
 use App\Models\Election;
 use App\Models\ElectivePosition;
+use Carbon\Carbon;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -13,6 +15,7 @@ class Create extends Component
     use WithFileUploads;
     public $steps  = 1;
     public $election_name;
+    public $election_date;
     public $event_id;
     public $event;
     public $election =[];
@@ -35,10 +38,17 @@ class Create extends Component
 
     }
 
+    #[On('electionDateSelected')]
+    public function updateElectionDate($date = null)
+    {
+
+    }
     public function createElection()
     {
+        $this->election['election_date'] = Carbon::parse($this->election_date);
         $validatedData = $this->validate([
             'election.name' => 'required|min:2',
+            'election.election_date' => 'required|date',
         ]);
 
         $this->election['event_id'] = $this->event['id'];

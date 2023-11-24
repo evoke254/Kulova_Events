@@ -5,7 +5,7 @@
 
     <div
         data-modal-placement="top-center"
-        id="editElectionModal"
+        id="editElectionModal-{{$election['id']}}"
         tabindex="-1"
         aria-hidden="true"
         wire:ignore.self
@@ -17,7 +17,7 @@
                     <h3 class="text-2xl text-center font-semibold text-gray-900 dark:text-white">
                         Update Election Wizard
                     </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editElectionModal">
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="editElectionModal-{{$election['id']}}">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                         </svg>
@@ -44,6 +44,20 @@
                                             {{$message}}</p>
                                         @enderror
                                     </div>
+                                     <div class="pt-2">
+                                        <div>
+                                            <x-datetime-picker
+                                                min="today"
+                                                interval="30"
+                                                time-format="24"
+                                                display-format="ddd, DD MMM YYYY - HH:mm"
+                                                label="Election Date"
+                                                placeholder="Election Date"
+                                                wire:model.defer="election_date"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            />
+                                        </div>
+                                    </div>
                                     <div class="sm:col-span-2">
                                         <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Description / Info (Optional)</label>
                                         <textarea wire:model="election.details" rows="6"
@@ -53,7 +67,7 @@
                                     </div>
                                     <div class="flex justify-end">
                                         <button type="button" wire:click="createElection" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                            Next >> Add Elective Positions
+                                            Next >> Update Elective Positions
                                         </button>
                                     </div>
                                 </form>
@@ -132,7 +146,7 @@
                                             Add
                                         </button>
                                     </div>
-                                    <div class="flex justify-end space-x-2 space-y-2.5">
+                                    <div class="flex justify-end space-x-2 ">
                                         <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                                             << prev  - Election
                                         </button>
@@ -141,7 +155,7 @@
                                                     class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
                                                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
                                                     dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                                Next >> Add Candidates
+                                                Next >> Update Candidates
                                             </button>
                                         @endif
                                     </div>
@@ -156,7 +170,7 @@
                             <div class="py-2 lg:py-4 px-4 mx-auto max-w-screen-md space-x-3">
                                 <div class="pt-6">
                                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
-                                        Add Candidates
+                                        Update Candidates
                                     </h2>
                                 </div>
 
@@ -268,26 +282,26 @@
 
                                         <button type="submit"
                                                 wire:click="addCandidate"
-                                                class="text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg
+                                                class=" py-3 text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg
                                                     text-sm w-1/2 sm:w-auto px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Candidate</button>
                                     </form>
                                 </div>
 
 
-                                <div class="flex justify-end space-x-2 space-y-2.5 mt-5">
-                                    <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                <div class="flex justify-end space-x-2 mt-5">
+                                    <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700
+                                    sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none
+                                    focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                                         << prev  - Elective Positions
                                     </button>
 
 
-                                    @if($this->complete)
                                         <a href="{{route('events.show', ['event' =>$event->id])}}"
                                            class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
                                                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
                                                     dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                            Finish
+                                            Update
                                         </a>
-                                    @endif
                                 </div>
 
 
@@ -298,7 +312,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button type="button"  data-modal-hide="editElectionModal"  class="inline-flex items-center text-white bg-red-700  hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                    <button type="button"  data-modal-hide="editElectionModal-{{$election['id']}}"  class="inline-flex items-center text-white bg-red-700  hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                         Close
                     </button>
                 </div>

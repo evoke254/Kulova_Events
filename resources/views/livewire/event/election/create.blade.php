@@ -1,41 +1,24 @@
 <div class="mt-2">
 
-    <button href="{{-- route('election.create', ['event' => $event->id]) --}}"
-            data-modal-target="createElectionModal"
-            data-modal-toggle="createElectionModal"
-            class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 mr-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        Create
-    </button>
+
+    <x-button
+        onclick="$openModal('createElectionModal')"
+        class="rounded-lg " lime
+        label="Create" icon="document-add" />
 
 
-    <div
-        data-modal-placement="top-center"
-        id="createElectionModal"
-        tabindex="-1"
-        aria-hidden="true"
-        wire:ignore.self
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] min-h-max ">
-        <div class="relative w-full max-h-full max-w-7xl">
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-2xl text-center font-semibold text-gray-900 dark:text-white">
-                        Election Wizard
-                    </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="createElectionModal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
+    <x-modal.card
+        max-width='6xl'
+        blur
+        static
+        title="Election Wizard"
+        wire:model.defer="createElectionModal"
+        class="w-full">
+        <div class="relative w-full max-h-full ">
+            <div class="relative ">
                 <div class="p-6 space-y-6">
-
                     @if($steps ==1)
-                        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                        <section class="">
                             <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
                                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
                                     Create An Election
@@ -51,6 +34,20 @@
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span>
                                             {{$message}}</p>
                                         @enderror
+                                    </div>
+                                    <div class="pt-2">
+                                        <div>
+                                            <x-datetime-picker
+                                                min="today"
+                                                interval="30"
+                                                time-format="24"
+                                                display-format="ddd, DD MMM YYYY - HH:mm"
+                                                label="Election Date"
+                                                placeholder="Election Date"
+                                                wire:model.defer="election_date"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            />
+                                        </div>
                                     </div>
                                     <div class="sm:col-span-2">
                                         <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Description / Info (Optional)</label>
@@ -71,7 +68,7 @@
 
                     @elseif($steps == 2)
 
-                        <section class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                        <section class="">
                             <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
                                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
                                     Add Elective Positions
@@ -160,7 +157,7 @@
 
 
                     @elseif($steps == 3)
-                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+                        <div class="">
                             <div class="py-2 lg:py-4 px-4 mx-auto max-w-screen-md space-x-3">
                                 <div class="pt-6">
                                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
@@ -290,7 +287,7 @@
 
                                     @if($this->complete)
                                         <a href="{{route('events.show', ['event' =>$event->id])}}"
-                                                class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
+                                           class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
                                                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
                                                     dark:hover:bg-green-700 dark:focus:ring-green-800">
                                             Finish
@@ -304,14 +301,8 @@
                         </div>
                     @endif
                 </div>
-                <!-- Modal footer -->
-                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                    <button type="button"  data-modal-hide="createElectionModal"  class="inline-flex items-center text-white bg-red-700  hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
-                        Close
-                    </button>
-                </div>
             </div>
         </div>
-    </div>
+    </x-modal.card>
 
 </div>

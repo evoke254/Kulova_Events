@@ -16,7 +16,7 @@
         :padding="$padding"
         :divider="$divider">
         @if ($header)
-            <x-slot name="header">
+            <x-slot name="header" >
                 {{ $header }}
             </x-slot>
         @elseif(!$hideClose)
@@ -27,7 +27,7 @@
                     <x-dynamic-component
                         :component="WireUi::component('icon')"
                         name="x"
-                        class="w-5 h-5"
+                        class="w-6 h-6"
                     />
                 </button>
             </x-slot>

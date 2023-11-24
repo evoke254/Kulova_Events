@@ -10,7 +10,7 @@
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                         {{$election->name}}
                     </h5>
-
+{{--}}
                     <button
                         data-modal-target="editElectionModal"
                         data-modal-toggle="editElectionModal"
@@ -19,7 +19,13 @@
                         <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
-                    </button>
+                    </button> --}}
+
+                    <x-button
+                        data-modal-target="editElectionModal-{{$election->id}}"
+                        data-modal-toggle="editElectionModal-{{$election->id}}"
+                        class="rounded-lg " warning
+                        label="Update" icon="document-add" />
 
                 </div>
 
@@ -68,7 +74,7 @@
                     @endforeach
                 </div>
 
-            @livewire('event.election.edit', ['event' => $event, 'election_detail' => $election])
+                @livewire('event.election.edit', ['event' => $event, 'election_detail' => $election])
 
             </div>
         @endforeach

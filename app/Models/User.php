@@ -38,7 +38,7 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
     protected $allowed_admin_mails = [
-        'visuafusion.com',
+        'text40.com',
         'gmail.com'
     ];
 

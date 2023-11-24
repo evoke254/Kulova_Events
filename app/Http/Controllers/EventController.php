@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+        /**
+     * Show Frontend
+     */
+    public function showEvent(Event $event)
+    {
+        return view('event.showEvent', compact('event'));
+    }
     /**
      * Display a listing of the resource.
      */
@@ -18,7 +25,7 @@ class EventController extends Controller
 
 
 //Display frontend
- public function display()
+    public function display()
     {
         return view('event.frontend');
     }
@@ -46,7 +53,7 @@ class EventController extends Controller
         return view('event.vote', compact('event'));
     }
 
-        public function voteOnline(Event $event)
+    public function voteOnline(Event $event)
     {
         return view('event.vote-online', compact('event'));
     }

@@ -17,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Chiiya\FilamentAccessControl\FilamentAccessControlPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -26,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+        //    ->plugin(FilamentAccessControlPlugin::make())
             ->login()
             ->colors([
                 'primary' => Color::Amber,
