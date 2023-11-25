@@ -14,7 +14,7 @@
 
                 @foreach($events as $event)
 
-                    <article class="flex flex-col items-start justify-between">
+                    <article class="flex flex-col items-start justify-between shadow-lg p-4 rounded-lg">
                         <div class="relative w-full">
                             @if($event->getFirstMedia() )
                                 <img src="{{ $event->getFirstMedia()->preview_url  }}" alt=""
