@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/assets/css/chat.min.css">
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -33,7 +33,7 @@
 
 <script>
 var botmanWidget = {
-    frameEndpoint: '/api/voting/ussd',
+    frameEndpoint: '/botman/chat',
     chatServer: '/api/voting/ussd'
 };
 </script>
