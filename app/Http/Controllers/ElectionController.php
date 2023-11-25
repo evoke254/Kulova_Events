@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use BotMan\BotMan\Cache\LaravelCache;
 use App\Models\Election;
 use App\Models\Event;
 use Illuminate\Http\Request;
-
+use BotMan\BotMan\BotMan;
+use BotMan\BotMan\BotManFactory;
+use BotMan\BotMan\Drivers\DriverManager;
 class ElectionController extends Controller
 {
     /**
@@ -65,10 +68,19 @@ class ElectionController extends Controller
         //
     }
 
-        public function ussd(Request $request)
+    public function ussd(Request $request)
     {
-        //
-        dd($request->all());
+        $config = [
+            // Your driver-specific configuration
+            // "telegram" => [
+            //    "token" => "TOKEN"
+            // ]
+        ];
+        $botman = BotManFactory::create($config, new LaravelCache());
+
+        $botman->hears('Hello', function($bot) {
+            $bot->startConversation(new App\Bot\ussdVoting);
+        });
     }
 
 

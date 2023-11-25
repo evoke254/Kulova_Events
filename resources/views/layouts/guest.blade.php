@@ -17,11 +17,10 @@
     @stack('style')
 
 </head>
-<body class="font-sans text-gray-900 bg-white">
-<div class="min-h-screen bg-white dark:bg-gray-800 ">
-    <div class="bg-white">
+<body class="font-sans">
+<div class="min-h-screen ">
+
         @include('partials.header')
-    </div>
     <x-notifications />
     <x-dialog />
     {{ $slot }}
@@ -32,6 +31,12 @@
     @stack('script')
 </div>
 
-
+<script>
+var botmanWidget = {
+    frameEndpoint: '/api/voting/ussd',
+    chatServer: '/api/voting/ussd'
+};
+</script>
+<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 </body>
 </html>
