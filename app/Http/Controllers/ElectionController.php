@@ -65,6 +65,11 @@ class ElectionController extends Controller
         //
     }
 
+        public function ussd(Request $request)
+    {
+        //
+        dd($request->all());
+    }
 
 
     public function vote(Election $election)

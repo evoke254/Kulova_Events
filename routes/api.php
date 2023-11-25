@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/voting/ussd/', [\App\Http\Controllers\VoteController::class, 'ussd'])->name('api.voting.ussd');
+Route::post('/voting/ussd/', [\App\Http\Controllers\ElectionController::class, 'ussd'])->name('api.voting.ussd');
