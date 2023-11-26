@@ -80,11 +80,11 @@ class ElectionController extends Controller
     //    DriverManager::loadDriver(ussd::class);
         $botman = BotManFactory::create($config, new LaravelCache());
 
+        dd($request->all());
         $botman->hears('', function($bot) {
             $bot->reply("CON Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n
-            1. Vote\n
+            1. Browse Events\n
             00 : Cancel
-
              ");
             $bot->startConversation(new \App\Bot\ussdVoting);
         });
