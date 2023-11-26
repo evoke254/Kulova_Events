@@ -10,6 +10,7 @@ use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Collection;
 use BotMan\BotMan\Users\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class ussd extends HttpDriver
 {
@@ -60,7 +61,7 @@ class ussd extends HttpDriver
     /**
      * @inheritDoc
      */
-    public function getConversationAnswer(IncomingMessage $message)
+    public function getConversationAnswer(IncomingMessage $message): Answer
     {
         return Answer::create($message->getText())->setMessage($message);
     }
@@ -74,7 +75,9 @@ class ussd extends HttpDriver
             $this->errorMessage = 'Unsupported message type.';
             $this->replyStatusCode = 500;
         }
-        return $message;
+        return [
+            'message' => $message,
+        ];
     }
 
     /**
@@ -82,7 +85,7 @@ class ussd extends HttpDriver
      */
     public function sendPayload($payload)
     {
-        return$payload;
+        $this->replies[] = $payload;
     }
 
     /**
@@ -92,6 +95,32 @@ class ussd extends HttpDriver
     {
         $this->payload = $request->request->all();
         $this->event = Collection::make($this->payload);
+    }
+
+    protected function buildReply($messages)
+    {
+        $replyData = Collection::make($messages)->transform(function ($replyData) {
+            $reply = [];
+            $message = $replyData['message'];
+
+            if ($message instanceof OutgoingMessage) {
+                $reply = $message->getText();
+            }
+
+            return $reply;
+        })->toArray();
+
+        return $replyData[0];
+    }
+
+    public function messagesHandled()
+    {
+        $messages = $this->buildReply($this->replies);
+
+        // Reset replies
+        $this->replies = [];
+
+        echo $messages;
     }
 
     /**
