@@ -81,7 +81,7 @@ class ElectionController extends Controller
         $botman = BotManFactory::create($config, new LaravelCache());
 
         $botman->hears('', function($bot) {
-            $bot->reply("Welcome to Text-40 Digital Voting System! I'm here to assist you cast your vote.
+            $bot->reply("CON Welcome to Text-40 Digital Voting System! I'm here to assist you cast your vote.
 
              ");
             $bot->startConversation(new \App\Bot\ussdVoting);
