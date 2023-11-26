@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bot\Driver\ussd;
 use BotMan\BotMan\Cache\LaravelCache;
 use App\Models\Election;
 use App\Models\Event;
@@ -76,16 +77,12 @@ class ElectionController extends Controller
             //    "token" => "TOKEN"
             // ]
         ];
-        DriverManager::loadDriver(\BotMan\Drivers\Web\WebDriver::class);
+        DriverManager::loadDriver(ussd::class);
         $botman = BotManFactory::create($config, new LaravelCache());
 
         $botman->hears('', function($bot) {
             $bot->reply("Welcome to Text-40 Digital Voting System! I'm here to assist you cast your vote.
-             \n
-             Voting Options: You'll be presented with the available candidates or options.
-                Choose: Pick your preferred candidate or option.
-                Confirmation: Review your selection.
-                Submission: Once confirmed, your vote will be submitted securely.
+
              ");
             $bot->startConversation(new \App\Bot\ussdVoting);
         });
