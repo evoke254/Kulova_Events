@@ -16,12 +16,21 @@ class ussd extends HttpDriver
 {
 
     const DRIVER_NAME = 'USSD';
+
+    protected $replies = [];
+
+    /** @var int */
+    protected $replyStatusCode = 200;
+
+    /** @var string */
+    protected $messages = [];
     /**
      * @inheritDoc
      */
     public function matchesRequest()
     {
-        return true;
+        dd($this->event);
+        return Collection::make($this->config->get('sessionId'))->diffAssoc($this->event)->isEmpty();
     }
 
     /**
@@ -30,11 +39,11 @@ class ussd extends HttpDriver
     public function getMessages()
     {
         if (empty($this->messages)) {
-            $message = $this->event->get('message');
-            $userId = $this->event->get('userId');
-            $sender = $this->event->get('sender', $userId);
+            $message = $this->event->get('text');
+            $phoneNumber = $this->event->get('phoneNumber');
+            $sender = $this->event->get('sender', $phoneNumber);
 
-            $incomingMessage = new IncomingMessage($message, $sender, $userId, $this->payload);
+            $incomingMessage = new IncomingMessage($message, $sender, $phoneNumber, $this->payload);
 
             $this->messages = [$incomingMessage];
         }

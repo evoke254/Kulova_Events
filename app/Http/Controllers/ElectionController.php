@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bot\Driver\ussd;
+use App\Models\Ussd_Call;
 use BotMan\BotMan\Cache\LaravelCache;
 use App\Models\Election;
 use App\Models\Event;
@@ -71,21 +72,19 @@ class ElectionController extends Controller
 
     public function ussd(Request $request)
     {
-        $config = [
-            // Your driver-specific configuration
-            // "telegram" => [
-            //    "token" => "TOKEN"
-            // ]
-        ];
-    //    DriverManager::loadDriver(ussd::class);
+        /*$request->=> $phoneNumber,
+        $request->=> $serviceCode,
+        $request->=> $sessionId,
+        $request->=> $text,
+       */
+
+        $config = $request->all();
+        Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
+
+        DriverManager::loadDriver(ussd::class);
         $botman = BotManFactory::create($config, new LaravelCache());
 
-        dd($request->all());
         $botman->hears('', function($bot) {
-            $bot->reply("CON Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n
-            1. Browse Events\n
-            00 : Cancel
-             ");
             $bot->startConversation(new \App\Bot\ussdVoting);
         });
 

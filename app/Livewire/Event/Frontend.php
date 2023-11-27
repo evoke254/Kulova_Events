@@ -10,7 +10,8 @@ class Frontend extends Component
     public $events;
 
     public function mount(){
-        $this->events = Event::orderBy('updated_at', 'Desc')->get();
+        $this->events = Event::orderBy('start_date:', 'Desc')
+                                                    ->get();
     }
     public function render()
     {

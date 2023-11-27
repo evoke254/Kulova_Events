@@ -1,0 +1,42 @@
+[90m= [39m[34;4mApp\Models\Event[39;24m {#8262
+    [34mid[39m: [35m3[39m,
+    [34mname[39m: "[32mtets Evenyt[39m",
+    [34mdescription[39m: "[32msasa[39m",
+    [34mvenue[39m: "[32mNgara[39m",
+    [34morganization_id[39m: [35m2[39m,
+    [34mis_active[39m: [35m1[39m,
+    [34mis_featured[39m: [35m0[39m,
+    [34muser_id[39m: [35m1[39m,
+    [34mcost[39m: [33m0.0[39m,
+    [34mstart_date[39m: "[32m2023-10-23 21:30:57[39m",
+    [34mend_date[39m: "[32m2023-10-24 21:30:01[39m",
+    [34mcreated_at[39m: "[32m2023-10-20 06:40:43[39m",
+    [34mupdated_at[39m: "[32m2023-10-20 06:40:43[39m",
+    [34mevent_category_id[39m: [35m4[39m,
+    [34morganization[39m: [34;4mApp\Models\Organization[39;24m {#8270
+      [34mid[39m: [35m2[39m,
+      [34mname[39m: "[32mStima Sacco[39m",
+      [34memail[39m: [36mnull[39m,
+      [34mlocation[39m: [36mnull[39m,
+      [34mdescription[39m: [36mnull[39m,
+      [34mphone_number[39m: [36mnull[39m,
+      [34mlat[39m: [36mnull[39m,
+      [34mlong[39m: [36mnull[39m,
+      [34mcreated_at[39m: "[32m2023-10-09 10:09:04[39m",
+      [34mupdated_at[39m: "[32m2023-10-09 10:09:04[39m",
+    },
+    [34minvites[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8265
+      [34mall[39m: [],
+    },
+    [34melections[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8271
+      [34mall[39m: [],
+    },
+    [34mcategory[39m: [34;4mApp\Models\EventCategory[39;24m {#8287
+      [34mid[39m: [35m4[39m,
+      [34mname[39m: "[32msassasa[39m",
+      [34mdescription[39m: [36mnull[39m,
+      [34mcreated_at[39m: "[32m2023-10-20 04:33:31[39m",
+      [34mupdated_at[39m: "[32m2023-10-20 04:33:31[39m",
+    },
+  }
+
