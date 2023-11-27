@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('ussd__calls', function (Blueprint $table) {
             $table->id();
-            $table->string('phoneNumber');
-            $table->string('serviceCode');
-            $table->string('sessionId');
+            $table->string('phoneNumber')->nullable();
+            $table->string('serviceCode')->nullable();
+            $table->string('sessionId')->nullable();
             $table->string('text')->nullable();
             $table->timestamps();
         });
