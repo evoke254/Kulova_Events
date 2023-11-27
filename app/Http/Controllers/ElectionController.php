@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\BotManFactory;
 use BotMan\BotMan\Drivers\DriverManager;
+use Illuminate\Support\Facades\Log;
+
 class ElectionController extends Controller
 {
     /**
@@ -79,9 +81,11 @@ class ElectionController extends Controller
        */
 
         $config = $request->all();
-        Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
 
+           Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
         DriverManager::loadDriver(ussd::class);
+        Log::info($config);
+
         $botman = BotManFactory::create($config, new LaravelCache());
 
         $botman->hears('', function($bot) {
