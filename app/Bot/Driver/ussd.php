@@ -29,7 +29,7 @@ class ussd extends HttpDriver
      */
     public function matchesRequest()
     {
-        return Collection::make($this->config)->diffAssoc($this->event)->isEmpty();
+        return ($this->config['sessionId'])  == $this->event->get('sessionId') ;
     }
 
     /**
