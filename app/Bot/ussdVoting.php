@@ -11,9 +11,11 @@ use Illuminate\Support\Str;
 
 class ussdVoting extends Conversation
 {
-    public $event;
+    public $event; public $events;
     public $voter;
-    public $election;
+    public $election; public $elections;
+    public $positions;
+    public $candidates;
 
     public function __construct()
     {
@@ -24,19 +26,21 @@ class ussdVoting extends Conversation
 
     public function startConversation() {
 //Display all events
-        $events = Event::orderBy('start_date', 'Desc')
-            ->get();
+        $this->events = Event::orderBy('start_date', 'Desc')
+            ->get()->toArray();
 
         $opt = "";
-        foreach($events as $event) {
-            $opt .= $event->id.": ".$event->name. " \n ";
+        foreach($this->events as $key => $event) {
+            $opt .= $key+1 . ": ". $event['name']. " \n ";
         }
         $qstn = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n
         Please select an event: \n ".   $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $this->event = Event::find($answer->getText());
-            if ($this->event){
+            $ans = (int)$answer->getText();
+
+            if (isset($this->events[$ans - 1])){
+                $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->selectElection();
             } else{
                 $qstn = "CON Invalid response. Please check and try again \n
@@ -49,28 +53,51 @@ class ussdVoting extends Conversation
 
 
     public function selectElection() {
-        //$this->election =
-        $elections =  $this->event->elections;
+        $this->elections =  $this->event->elections->toArray();
+
         $opt = "";
-        foreach($elections as $election) {
-            $opt .= "**".Str::upper($election->name)."**";
-            foreach ($election->elective_positions as $pstn){
-                $opt .= $pstn->id.": ".$pstn->position. " \n ";
-            }
+        foreach($this->elections as $key => $election) {
+            $opt .= $key+1 . ": ".$election['name']. " \n ";
         }
 
         $qstn = "CON ELECTIONS: \n ".   $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $this->election = Election::find($answer->getText());
-            if ($this->election){
-                $this->listElectivePositions();
+            $ans = (int)$answer->getText();
+            if (isset($this->elections[$ans - 1])){
+                $this->election = Election::find($this->elections[$ans - 1]['id']);
+                $this->selectElectivePositions();
             } else{
                 $qstn = "CON  Invalid response. Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
+        });
 
+    }
+
+
+    public function selectElectivePositions(){
+        $this->positions = $this->election->elective_positions->toArray();
+        $opt = "";
+        foreach ($this->positions as $key => $pstn){
+            $opt .= Str::upper($pstn['position']). " \n ";
+            $this->candidates = $pstn['candidates'];
+            foreach ($this->candidates as $candidate){
+                   $opt .= $candidate['id'] . ": ".$candidate['name']. " \n ";
+            }
+        }
+        $qstn = "POSITIONS: \n ".   $opt ." 00 : Cancel ";
+        $this->ask($qstn, function(Answer $answer) use ($opt) {
+            $ans = (int)$answer->getText();
+            if (isset($this->elections[$ans - 1])){
+                $this->election = Election::find($this->elections[$ans - 1]['id']);
+                $this->selectElectivePositions();
+            } else{
+                $qstn = "CON  Invalid response. Please check and try again \n
+                                : \n ".   $opt ." 00 : Cancel ";
+                $this->qstnFallback($qstn);
+            }
         });
 
     }
