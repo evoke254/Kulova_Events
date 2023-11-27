@@ -31,16 +31,16 @@ class ussdVoting extends Conversation
         foreach($events as $event) {
             $opt .= $event->id.': '.$event->name. ' \n';
         }
-        $qstn = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n
-        Please select an event:\n".   $opt ." 00 : Cancel ";
+        $qstn = 'CON  Welcome to Text-40 Digital Voting System. I\'m here to assist you cast your vote.\n
+        Please select an event:\n'.   $opt .' 00 : Cancel ';
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
             $this->event = Event::find($answer->getText());
             if ($this->event){
                 $this->selectElection();
             } else{
-                $qstn = "Invalid response. Please check and try again\n
-                                Please select an event:\n".   $opt ." 00 : Cancel ";
+                $qstn = 'Invalid response. Please check and try again\n
+                                Please select an event:\n'.   $opt .' 00 : Cancel ';
                 $this->qstnFallback($qstn);
             }
 
@@ -59,15 +59,15 @@ class ussdVoting extends Conversation
             }
         }
 
-        $qstn = "CON  ELECTIONS:\n".   $opt ." 00 : Cancel ";
+        $qstn = 'CON ELECTIONS:\n'.   $opt .' 00 : Cancel ';
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
             $this->election = Election::find($answer->getText());
             if ($this->election){
                 $this->listElectivePositions();
             } else{
-                $qstn = "CON  Invalid response. Please check and try again\n
-                                :\n".   $opt ." 00 : Cancel ";
+                $qstn = 'CON  Invalid response. Please check and try again\n
+                                :\n'.   $opt .' 00 : Cancel ';
                 $this->qstnFallback($qstn);
             }
 
