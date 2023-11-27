@@ -87,8 +87,8 @@ class ussdVoting extends Conversation
     public function stopsConversation(IncomingMessage $message)
     {
         if ($message->getText() == '00') {
-            return true;
             $this->say('END Thanks for your submission.');
+            return true;
         }
         return false;
     }

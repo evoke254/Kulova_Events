@@ -28,7 +28,7 @@ class ussd extends HttpDriver
      * @inheritDoc
      */
     public function matchesRequest()
-    {
+    {return  true;
         return ($this->config['sessionId'])  == $this->event->get('sessionId') ;
     }
 
@@ -127,7 +127,7 @@ class ussd extends HttpDriver
 
         // Reset replies
         $this->replies = [];
-
+        header('Content-type: text/plain');
         echo $messages;
     }
 
