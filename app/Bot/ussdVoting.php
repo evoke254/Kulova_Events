@@ -31,7 +31,7 @@ class ussdVoting extends Conversation
         foreach($events as $event) {
             $opt .= $event->id.": ".$event->name. " \n ";
         }
-        $qstn = "CON  Welcome to Text-40 Digital Voting System. I\'m here to assist you cast your vote. \n
+        $qstn = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n
         Please select an event: \n ".   $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
