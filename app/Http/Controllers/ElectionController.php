@@ -82,7 +82,7 @@ class ElectionController extends Controller
 
         $config = $request->all();
 
-       //    Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
+           Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
         DriverManager::loadDriver(ussd::class);
         Log::info(json_encode($config));
 

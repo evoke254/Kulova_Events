@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('phoneNumber');
             $table->string('serviceCode');
             $table->string('sessionId');
-            $table->string('text');
+            $table->string('text')->default('N/A');
             $table->timestamps();
         });
     }
