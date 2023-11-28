@@ -202,7 +202,7 @@ class ussdVoting extends Conversation
             }
         }
 
-        $qstn = "CON POSITIONS: \n ".   $opt ."\n 101 : Confirm\n 99 : Cancel and Start";
+        $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
             $ans = (int)$answer->getText();
             Log::info(var_dump($ans));
