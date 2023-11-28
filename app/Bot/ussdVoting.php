@@ -198,7 +198,7 @@ class ussdVoting extends Conversation
             }
         }
 
-        $this->startConversation('You squashed your previous ballot');
+        $this->startConversation('CON You squashed your previous ballot');
 
     }
 
