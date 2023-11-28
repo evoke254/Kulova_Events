@@ -204,7 +204,7 @@ class ussdVoting extends Conversation
         }
 
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
-        $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
+        $this->ask($qstn, function(Answer $answer) use ($opt) {
             $ans = (int)$answer->getText();
             if ($ans == 1){
                 $this->say('END Vote cast. Thank you.');
