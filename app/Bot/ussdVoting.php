@@ -9,6 +9,7 @@ use App\Models\Vote;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ussdVoting extends Conversation
@@ -27,9 +28,8 @@ class ussdVoting extends Conversation
     }
     public function run(){
         //TODO set th euser immediately app starts
-        dd($this->bot->getUser());
-        $user = $this->getUser();
-        $user = '+254742968713';
+        Log::info(json_encode($this->bot->getUser()));
+        $user = $this->bot->getUser()->getId();
         $this->voter = Invite::where('phone_number', $user) ->orWhere('phone_number', '254'.substr($user, -9)) ->orWhere('phone_number', substr($user, -9)) ->orWhere('phone_number', '0'.substr($user, -9))->first();
 
         $welcomeMessage = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n";
