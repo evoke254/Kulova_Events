@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ElectivePosition extends Model
 {
@@ -17,11 +18,16 @@ class ElectivePosition extends Model
         'election_id'
     ];
 
-    protected $with = ['candidates'];
+    protected $with = ['candidates', 'vote'];
 
     public function candidates():HasMany
     {
         return $this->hasmany(CandidateElectivePosition::class);
+    }
+
+        public function vote():HasOne
+    {
+        return $this->hasOne(Vote::class);
     }
 
      public function election(): BelongsTo

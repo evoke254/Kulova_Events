@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign('invite_id')->references('id')->on('invites');
 
 
-            $table->integer('vote')->default(1);
+            $table->integer('vote')->default(1)->nullable();
             $table->timestamps();
         });
     }

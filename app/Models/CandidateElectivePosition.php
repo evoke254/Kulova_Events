@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CandidateElectivePosition extends Model
 {
@@ -20,5 +21,10 @@ class CandidateElectivePosition extends Model
     public function elective_position(): BelongsTo
     {
         return $this->belongsTo(ElectivePosition::class);
+    }
+
+    public function votes():HasMany
+    {
+        return $this->hasmany(Vote::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Bot;
 
 use App\Models\Election;
 use App\Models\Event;
+use App\Models\Vote;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
@@ -16,6 +17,8 @@ class ussdVoting extends Conversation
     public $election; public $elections;
     public $positions;
     public $candidates;
+    public $votes = [];
+    public $SelectedElectionArr;
 
     public function __construct()
     {
@@ -41,6 +44,7 @@ class ussdVoting extends Conversation
 
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
+                $this->elections =  $this->event->elections->toArray();
                 $this->selectElection();
             } else{
                 $qstn = "CON Invalid response. Please check and try again \n
@@ -53,7 +57,6 @@ class ussdVoting extends Conversation
 
 
     public function selectElection() {
-        $this->elections =  $this->event->elections->toArray();
 
         $opt = "";
         foreach($this->elections as $key => $election) {
@@ -66,6 +69,7 @@ class ussdVoting extends Conversation
             $ans = (int)$answer->getText();
             if (isset($this->elections[$ans - 1])){
                 $this->election = Election::find($this->elections[$ans - 1]['id']);
+                $this->SelectedElectionArr = $this->elections[$ans - 1];
                 $this->selectElectivePositions();
             } else{
                 $qstn = "CON  Invalid response. Please check and try again \n
@@ -79,28 +83,122 @@ class ussdVoting extends Conversation
 
     public function selectElectivePositions(){
         $this->positions = $this->election->elective_positions->toArray();
+        $countBallot = 0;
         $opt = "";
-        foreach ($this->positions as $key => $pstn){
-            $opt .= Str::upper($pstn['position']). " \n ";
-            $this->candidates = $pstn['candidates'];
-            foreach ($this->candidates as $candidate){
-                   $opt .= $candidate['id'] . ": ".$candidate['name']. " \n ";
+        foreach ($this->positions as $pstnKey => $pstn){
+            if (empty($pstn['vote'])  && !empty($pstn['candidates'])) {
+                $countBallot++;
+                $opt .= Str::upper($pstn['position']). " \n ";
+                $this->candidates = $pstn['candidates'];
+                foreach ($this->candidates as $key => $candidate){
+                    if ($candidate['id'] == $this->positions[$pstnKey]['vote']['candidate_elective_position_id']) {
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
+                    } else {
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
+                    }
+                }
+                break;
             }
+
         }
-        $qstn = "POSITIONS: \n ".   $opt ." 00 : Cancel ";
-        $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $ans = (int)$answer->getText();
-            if (isset($this->elections[$ans - 1])){
-                $this->election = Election::find($this->elections[$ans - 1]['id']);
-                $this->selectElectivePositions();
-            } else{
-                $qstn = "CON  Invalid response. Please check and try again \n
+
+        if ($countBallot >0) {
+
+            $qstn = "CON POSITIONS: \n ".   $opt ." 00 : Cancel ";
+            $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
+                $ans = (int)$answer->getText();
+
+                if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
+                    //Check if position has vote and delete
+                    if (isset($this->positions[$pstnKey]['vote'])  && !empty($this->positions[$pstnKey]['vote']) ){
+                        $prev_vote = Vote::find($this->positions[$pstnKey]['vote']['id']);
+                        $prev_vote->delete();
+                    }
+                    $this->positions[$pstnKey]['vote'] = ['candidate_elective_position' => $this->candidates[$ans - 1]];
+
+                    $castVote =  [
+                        'elective_position_id' => $this->positions[$pstnKey]['id'],
+                        'candidate_elective_position_id' => $this->candidates[$ans - 1]['id'],
+                        'invite_id' => 1,
+                        'vote' => 1,
+                    ];
+                    $vote = Vote::create($castVote);
+                    array_push($this->votes, $vote);
+
+                    $this->markBallot();
+                } else{
+                    $qstn = "CON  Invalid response. Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";
-                $this->qstnFallback($qstn);
-            }
-        });
+                    $this->qstnFallback($qstn);
+                }
+            });
+
+
+        } else {
+            $this->confirmBallot();
+        }
 
     }
+
+    public function markBallot() {
+        $myCastVotes = count($this->votes);
+        $validVotes = 0;
+        foreach ($this->positions as $pstnKey => $pstn){
+            if (!empty($pstn['candidates'])) {
+                $validVotes += 1;
+            }
+        }
+        if ($myCastVotes != $validVotes){
+            $this->selectElectivePositions();
+        } else {
+            $this->confirmBallot();
+        }
+    }
+
+    public function confirmBallot(){
+
+        $opt = "";
+        foreach ($this->positions as $pstnKey => $pstn){
+
+            $opt .= Str::upper($pstn['position']). " \n ";
+            $this->candidates = $pstn['candidates'];
+            foreach ($this->candidates as $key => $candidate){
+                if ($candidate['id'] == $this->positions[$pstnKey]['vote']['candidate_elective_position_id']) {
+                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
+                } else {
+                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
+                }
+            }
+        }
+
+        $qstn = "CON POSITIONS: \n ".   $opt ."\n 101 : Confirm\n 99 : Cancel ";
+        $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
+            $ans = (int)$answer->getText();
+            if ($ans == 101){
+                $this->say('END Vote cast. Thank you.');
+            } else {
+                $this->deleteVote();
+        //        $this->say('END Cancelled by user.');
+            }
+
+        });
+
+
+    }
+
+    public function deleteVote(){
+        foreach ($this->elections as $election){
+            $electionCollection = Election::find($election['id']);
+            foreach ($electionCollection->elective_positions as $pstn){
+                if ($pstn->vote) {
+                    $pstn->vote->delete();
+                }
+            }
+        }
+        $this->startConversation();
+
+    }
+
 
     public function qstnFallback($qstn) {
 
@@ -114,7 +212,8 @@ class ussdVoting extends Conversation
     public function stopsConversation(IncomingMessage $message)
     {
         if ($message->getText() == '00') {
-            $this->say("END Thanks for your submission.");
+            header('Content-type: text/plain');
+            echo "END Thanks for your submission.";
             return true;
         }
         return false;
