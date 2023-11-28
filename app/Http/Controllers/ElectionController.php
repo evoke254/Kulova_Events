@@ -101,7 +101,7 @@ class ElectionController extends Controller
                 ]
         );
 
-        $voterId = $rr->id;
+        $voterId = $rr;
 
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\ussdVoting($voterId));
