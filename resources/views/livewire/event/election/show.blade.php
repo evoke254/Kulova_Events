@@ -67,9 +67,9 @@
                                                         <dl>
                                                             <dd class="flex items-center mb-3">
                                                                 <div class="w-full bg-gray-200 rounded h-5 dark:bg-gray-600 me-2">
-                                                                    <div class="bg-blue-600 h-5 rounded dark:bg-blue-500" style="width: 88%"></div>
+                                                                    <div class="bg-blue-600 h-5 rounded dark:bg-blue-500" style="width: {{  $cdt->votes()->count() / ($position->votes()->count() > 0 ? $position->votes()->count() : 1) * 100}}%"></div>
                                                                 </div>
-                                                                <span class="text-sm font-medium text-gray-600 dark:text-gray-300">8.8</span>
+                                                                <span class="text-sm font-medium text-gray-600 dark:text-gray-300">{{$cdt->votes()->count()/ ($position->votes()->count() > 0 ? $position->votes()->count() : 1)* 100}}%</span>
                                                             </dd>
                                                         </dl>
                                                     </div>

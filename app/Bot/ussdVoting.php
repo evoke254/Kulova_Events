@@ -91,18 +91,14 @@ class ussdVoting extends Conversation
         $countBallot = 0;
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
+            if (  !empty($pstn['candidates']) && empty($this->voter->castVoteInPstn($pstn['id']) ) ) {
 
-            if ( (empty($pstn['votes'])  && !empty($pstn['candidates']) ) ) {
-                //      dd($pstn);
                 $countBallot++;
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
 
-
-                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
-                        ->where('candidate_elective_position_id', $candidate['id'])
-                        ->where('invite_id', $this->voter->id)->first();
+                    $prev_vote = $this->voter->castVote($pstn['id'], $candidate['id']);
 
                     if ( $prev_vote ){
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
@@ -113,9 +109,6 @@ class ussdVoting extends Conversation
                 }
                 break;
             }
-
-
-
         }
 
         if ($countBallot >0) {
@@ -127,9 +120,8 @@ class ussdVoting extends Conversation
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
                     //Check if position has vote and delete
 
-                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
-                        ->where('candidate_elective_position_id', $this->candidates[$ans - 1]['id'])
-                        ->where('invite_id', $this->voter->id)->first();
+                    $prev_vote =  $this->voter->castVote($this->positions[$pstnKey]['id'], $this->candidates[$ans - 1]['id']);
+
                     if ($prev_vote){
                         $prev_vote->delete();
                     }
@@ -198,9 +190,9 @@ class ussdVoting extends Conversation
             foreach ($this->candidates as $key => $candidate){
 
                 if (isset($candidate['id'])) {
-                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
-                        ->where('candidate_elective_position_id', $candidate['id'])
-                        ->where('invite_id', $this->voter->id)->first();
+
+                    $prev_vote =  $this->voter->castVote($pstn['id'], $candidate['id']);
+
                 }
                 if ($prev_vote) {
                     $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
@@ -233,9 +225,8 @@ class ussdVoting extends Conversation
             if ((empty($pstn['votes']) && !empty($pstn['candidates']))) {
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate) {
-                    $prev_vote = Vote::where('elective_position_id', $this->positions[$pstnKey]['id'])
-                        ->where('candidate_elective_position_id', $candidate['id'])
-                        ->where('invite_id', $this->voter->id)->first();
+
+                    $prev_vote =  $this->voter->castVote($pstn['id'], $candidate['id']);
                     if ($prev_vote){
                         $prev_vote->delete();
                     }

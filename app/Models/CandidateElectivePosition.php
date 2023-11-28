@@ -18,6 +18,8 @@ class CandidateElectivePosition extends Model
         'photo'
     ];
 
+    protected $with =['votes'];
+
     public function elective_position(): BelongsTo
     {
         return $this->belongsTo(ElectivePosition::class);
