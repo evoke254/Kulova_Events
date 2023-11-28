@@ -26,7 +26,7 @@ class Invite extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function userVotes(): HasMany
+    public function allUserVotes(): HasMany
     {
         return $this->HasMany(Vote::class);
     }

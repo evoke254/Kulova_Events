@@ -2,7 +2,9 @@
 
 namespace App\Bot;
 
+use App\Models\CandidateElectivePosition;
 use App\Models\Election;
+use App\Models\ElectivePosition;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Vote;
@@ -91,6 +93,7 @@ class ussdVoting extends Conversation
         $countBallot = 0;
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
+
             if (  !empty($pstn['candidates']) && empty($this->voter->castVoteInPstn($pstn['id']) ) ) {
 
                 $countBallot++;
@@ -101,6 +104,7 @@ class ussdVoting extends Conversation
                     $prev_vote = $this->voter->castVote($pstn['id'], $candidate['id']);
 
                     if ( $prev_vote ){
+                        //Random check to c
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
                     }
                     else {
@@ -109,7 +113,7 @@ class ussdVoting extends Conversation
                 }
                 break;
             }
-                break;
+
         }
 
         if ($countBallot >0) {
@@ -181,26 +185,14 @@ class ussdVoting extends Conversation
     public function confirmBallot(){
 
         $opt = "";
-        foreach ($this->positions as $pstnKey => $pstn){
+        foreach ($this->votes as $vote){
+            $postn = ElectivePosition::find($vote->elective_position_id);
 
-            if (!empty($pstn['candidates'])){
+            $opt .= Str::upper($postn->position). " \n ";
+            $candidate = CandidateElectivePosition::find($vote->candidate_elective_position_id);
 
-                $opt .= Str::upper($pstn['position']). " \n ";
-                $this->candidates = $pstn['candidates'];
-            }
-            foreach ($this->candidates as $key => $candidate){
+            $opt .= "- " . $candidate['name'] . " - " . $candidate['member_no'] . "**Elect  \n ";
 
-                if (isset($candidate['id'])) {
-
-                    $prev_vote =  $this->voter->castVote($pstn['id'], $candidate['id']);
-
-                }
-                if ($prev_vote) {
-                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
-                } else {
-                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
-                }
-            }
         }
 
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
@@ -209,8 +201,9 @@ class ussdVoting extends Conversation
             if ($ans == 1){
                 $this->say('END Vote cast. Thank you.');
             } else {
+                $this->votes = [];
                 $this->deleteVote();
-                        $this->say('END Cancelled by user. Dial *544# to try again');
+                $this->say('END Cancelled by user. Dial *544# to try again');
             }
 
         });
@@ -234,6 +227,7 @@ class ussdVoting extends Conversation
                 }
             }
         }
+        $this->votes = [];
 
     }
 
@@ -244,12 +238,14 @@ class ussdVoting extends Conversation
     }
 
     public function cancelConversation() {
+        $this->votes = [];
         $this->say("END Canceled");
     }
 
     public function stopsConversation(IncomingMessage $message)
     {
         if ($message->getText() == '00') {
+            $this->votes = [];
             header('Content-type: text/plain');
             echo "END Thanks for your submission.";
             return true;

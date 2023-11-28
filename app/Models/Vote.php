@@ -16,6 +16,7 @@ class Vote extends Model
         'invite_id',
         'vote',
     ];
+    protected $with = ['position', 'candidate'];
     public function position(): BelongsTo
     {
         return $this->belongsTo(ElectivePosition::class);
