@@ -195,16 +195,21 @@ class ussdVoting extends Conversation
 
         }
 
-        $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
+        $qstn = "CON POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
             $ans = (int)$answer->getText();
             echo $ans;
-            if ($ans == 1){
+            if ($ans == 2){
                 $this->say('END Vote cast. Thank you.');
-            } else {
+            } else if ($ans == 3) {
                 $this->votes = [];
                 $this->deleteVote();
                 $this->say('END Cancelled by user. Dial *544# to try again');
+            } else {
+
+                    $qstn = "CON  Invalid response. Please check and try again \n
+                                : \n ".   $opt ." 00 : Cancel ";
+                    $this->qstnFallback($qstn);
             }
 
         });
