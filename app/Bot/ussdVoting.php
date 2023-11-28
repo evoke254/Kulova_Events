@@ -93,6 +93,7 @@ class ussdVoting extends Conversation
         foreach ($this->positions as $pstnKey => $pstn){
 
             if ( (empty($pstn['votes'])  && !empty($pstn['candidates']) ) ) {
+                //      dd($pstn);
                 $countBallot++;
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
@@ -129,8 +130,9 @@ class ussdVoting extends Conversation
                     $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
                         ->where('candidate_elective_position_id', $this->candidates[$ans - 1]['id'])
                         ->where('invite_id', $this->voter->id)->first();
-                    $prev_vote->delete();
-
+                    if ($prev_vote){
+                        $prev_vote->delete();
+                    }
 
                     if ($this->voter) {
                         $castVote =  [
@@ -140,7 +142,7 @@ class ussdVoting extends Conversation
                             'vote' => 1,
                         ];
                         $vote = Vote::create($castVote);
-                        $this->positions[$pstnKey]['vote'] = $castVote;
+                        $this->positions[$pstnKey]['votes'] = $castVote;
                         array_push($this->votes, $vote);
 
                         $this->markBallot();
@@ -187,8 +189,11 @@ class ussdVoting extends Conversation
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
 
-            $opt .= Str::upper($pstn['position']). " \n ";
-            $this->candidates = $pstn['candidates'];
+            if (!empty($pstn['candidates'])){
+
+                $opt .= Str::upper($pstn['position']). " \n ";
+                $this->candidates = $pstn['candidates'];
+            }
             foreach ($this->candidates as $key => $candidate){
 
                 if (isset($candidate['id'])) {
@@ -221,14 +226,23 @@ class ussdVoting extends Conversation
     }
 
     public function deleteVote(){
-        foreach ($this->elections as $election){
-            $electionCollection = Election::find($election['id']);
-            foreach ($electionCollection->elective_positions as $pstn){
-                if ($pstn->vote) {
-                    $pstn->vote->delete();
+
+
+        foreach ($this->positions as $pstnKey => $pstn) {
+
+            if ((empty($pstn['votes']) && !empty($pstn['candidates']))) {
+                $this->candidates = $pstn['candidates'];
+                foreach ($this->candidates as $key => $candidate) {
+                    $prev_vote = Vote::where('elective_position_id', $this->positions[$pstnKey]['id'])
+                        ->where('candidate_elective_position_id', $candidate['id'])
+                        ->where('invite_id', $this->voter->id)->first();
+                    if ($prev_vote){
+                        $prev_vote->delete();
+                    }
                 }
             }
         }
+
 
         $this->startConversation('CON You squashed your previous ballot');
 
