@@ -205,12 +205,12 @@ class ussdVoting extends Conversation
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 101 : Confirm\n 99 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
             $ans = (int)$answer->getText();
-            Log::info('$ans is : '.$ans);
+            Log::info(var_dump($ans));
             if ($ans == 101){
                 $this->say('END Vote cast. Thank you.');
             } else {
                 $this->deleteVote();
-                //        $this->say('END Cancelled by user.');
+                        $this->say('END Cancelled by user.');
             }
 
         });
@@ -234,9 +234,6 @@ class ussdVoting extends Conversation
                 }
             }
         }
-
-
-        $this->startConversation('CON You squashed your previous ballot');
 
     }
 
