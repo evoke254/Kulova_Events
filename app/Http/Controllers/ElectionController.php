@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bot\Driver\ussd;
+use App\Models\Invite;
 use App\Models\Ussd_Call;
 use BotMan\BotMan\Cache\LaravelCache;
 use App\Models\Election;
@@ -82,15 +83,18 @@ class ElectionController extends Controller
 
         $config = $request->all();
 
-        Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
-        DriverManager::loadDriver(ussd::class);
+          Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
+          DriverManager::loadDriver(ussd::class);
 
         // Log::info(json_encode($config));
 
         $botman = BotManFactory::create($config, new LaravelCache());
+        $phoneNumber = $request->get('phoneNumber');
+        $phoneNumber = '+254742968713';
+        $voterId = Invite::where('phone_number', $phoneNumber)->orWhere('phone_number', '254'.substr($phoneNumber, -9))->orWhere('phone_number', substr($phoneNumber, -9))->orWhere('phone_number', '0'.substr($phoneNumber, -9))->first();
 
-        $botman->hears('', function($bot) {
-            $bot->startConversation(new \App\Bot\ussdVoting);
+        $botman->hears('', function($bot) use ($voterId) {
+            $bot->startConversation(new \App\Bot\ussdVoting($voterId));
         });
 
         // Start listening

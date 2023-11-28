@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 class ussdVoting extends Conversation
 {
     public $event; public $events;
-    public $voter;
+    public Invite $voter;
     public $election; public $elections;
     public $positions;
     public $candidates;
@@ -23,15 +23,12 @@ class ussdVoting extends Conversation
     public $SelectedElectionArr;
 
 
-    public function __construct()
+    public function __construct(Invite $voter)
     {
+        $this->voter = $voter;
+
     }
     public function run(){
-        //TODO set th euser immediately app starts
-        Log::info(json_encode($this->bot->getUser()));
-        $user = $this->bot->getUser()->getId();
-        $this->voter = Invite::where('phone_number', $user) ->orWhere('phone_number', '254'.substr($user, -9)) ->orWhere('phone_number', substr($user, -9)) ->orWhere('phone_number', '0'.substr($user, -9))->first();
-
         $welcomeMessage = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n";
         $this->startConversation($welcomeMessage);
     }
@@ -94,17 +91,20 @@ class ussdVoting extends Conversation
         $countBallot = 0;
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
+
             if ( (empty($pstn['votes'])  && !empty($pstn['candidates']) ) ) {
                 $countBallot++;
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
-                    if ( isset($this->positions[$pstnKey]['votes'])){
-                        foreach ($this->positions[$pstnKey]['votes'] as $castVote){
-                            if ($castVote['candidate_elective_position_id'] ==  $candidate['id']){
-                                $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
-                            }
-                        }
+
+
+                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
+                        ->where('candidate_elective_position_id', $candidate['id'])
+                        ->where('invite_id', $this->voter->id)->first();
+
+                    if ( $prev_vote ){
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
                     }
                     else {
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
@@ -112,6 +112,8 @@ class ussdVoting extends Conversation
                 }
                 break;
             }
+
+
 
         }
 
@@ -189,10 +191,11 @@ class ussdVoting extends Conversation
             $this->candidates = $pstn['candidates'];
             foreach ($this->candidates as $key => $candidate){
 
-                $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
-                    ->where('candidate_elective_position_id', $candidate['id'])
-                    ->where('invite_id', $this->voter->id)->first();
-
+                if (isset($candidate['id'])) {
+                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
+                        ->where('candidate_elective_position_id', $candidate['id'])
+                        ->where('invite_id', $this->voter->id)->first();
+                }
 
                 if ($prev_vote) {
                     $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
