@@ -109,6 +109,7 @@ class ussdVoting extends Conversation
                 }
                 break;
             }
+                break;
         }
 
         if ($countBallot >0) {
@@ -205,11 +206,11 @@ class ussdVoting extends Conversation
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
             $ans = (int)$answer->getText();
-            if ($ans == 2){
+            if ($ans == 1){
                 $this->say('END Vote cast. Thank you.');
             } else {
                 $this->deleteVote();
-                        $this->say('END Cancelled by user.');
+                        $this->say('END Cancelled by user. Dial *544# to try again');
             }
 
         });
