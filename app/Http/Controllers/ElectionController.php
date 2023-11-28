@@ -90,8 +90,18 @@ class ElectionController extends Controller
 
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = $request->get('phoneNumber');
-     //   $phoneNumber = '+254742968713';
-        $voterId = Invite::where('phone_number', $phoneNumber)->orWhere('phone_number', '254'.substr($phoneNumber, -9))->orWhere('phone_number', substr($phoneNumber, -9))->orWhere('phone_number', '0'.substr($phoneNumber, -9))->first();
+
+        //TODO remove in prod
+        $rr = Invite::updateOrCreate(
+            ['email' => time().'@gmail.com' ],
+            ['phone_number' => $phoneNumber,
+                'name' => 'test user 00',
+                'email' => time().'@gmail.com',
+                'event_id' => 4
+                ]
+        );
+
+        $voterId = $rr->id;
 
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\ussdVoting($voterId));
