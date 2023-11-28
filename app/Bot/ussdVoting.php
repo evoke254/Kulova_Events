@@ -180,6 +180,7 @@ class ussdVoting extends Conversation
         if ($myCastVotes != $validVotes){
             $this->selectElectivePositions();
         } else {
+
             $this->confirmBallot();
         }
     }
@@ -201,7 +202,6 @@ class ussdVoting extends Conversation
                         ->where('candidate_elective_position_id', $candidate['id'])
                         ->where('invite_id', $this->voter->id)->first();
                 }
-
                 if ($prev_vote) {
                     $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
                 } else {
