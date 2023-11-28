@@ -91,7 +91,7 @@ class ussdVoting extends Conversation
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
-                    if ($candidate['id'] == $this->positions[$pstnKey]['vote']['candidate_elective_position_id']) {
+                    if ( isset($this->positions[$pstnKey]['vote']) && $this->positions[$pstnKey]['vote']['candidate_elective_position_id']    == $candidate['id']) {
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
                     } else {
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
