@@ -4,6 +4,7 @@ namespace App\Bot;
 
 use App\Models\Election;
 use App\Models\Event;
+use App\Models\Invite;
 use App\Models\Vote;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
@@ -25,6 +26,12 @@ class ussdVoting extends Conversation
     {
     }
     public function run(){
+        //TODO set th euser immediately app starts
+        dd($this->bot->getUser());
+        $user = $this->getUser();
+        $user = '+254742968713';
+        $this->voter = Invite::where('phone_number', $user) ->orWhere('phone_number', '254'.substr($user, -9)) ->orWhere('phone_number', substr($user, -9)) ->orWhere('phone_number', '0'.substr($user, -9))->first();
+
         $welcomeMessage = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n";
         $this->startConversation($welcomeMessage);
     }
@@ -87,14 +94,19 @@ class ussdVoting extends Conversation
         $countBallot = 0;
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
-            if ( (empty($pstn['vote'])  && !empty($pstn['candidates']) ) ) {
+            if ( (empty($pstn['votes'])  && !empty($pstn['candidates']) ) ) {
                 $countBallot++;
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
-                    if ( isset($this->positions[$pstnKey]['vote']) && $this->positions[$pstnKey]['vote']['candidate_elective_position_id']    == $candidate['id']) {
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
-                    } else {
+                    if ( isset($this->positions[$pstnKey]['votes'])){
+                        foreach ($this->positions[$pstnKey]['votes'] as $castVote){
+                            if ($castVote['candidate_elective_position_id'] ==  $candidate['id']){
+                                $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
+                            }
+                        }
+                    }
+                    else {
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
                     }
                 }
@@ -111,22 +123,33 @@ class ussdVoting extends Conversation
 
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
                     //Check if position has vote and delete
-                    if (isset($this->positions[$pstnKey]['vote'])  && !empty($this->positions[$pstnKey]['vote']) ){
-                        $prev_vote = Vote::find($this->positions[$pstnKey]['vote']['id']);
-                        $prev_vote->delete();
+
+                    $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
+                        ->where('candidate_elective_position_id', $this->candidates[$ans - 1]['id'])
+                        ->where('invite_id', $this->voter->id)->first();
+                    $prev_vote->delete();
+
+
+                    if ($this->voter) {
+                        $castVote =  [
+                            'elective_position_id' => $this->positions[$pstnKey]['id'],
+                            'candidate_elective_position_id' => $this->candidates[$ans - 1]['id'],
+                            'invite_id' => $this->voter->id,
+                            'vote' => 1,
+                        ];
+                        $vote = Vote::create($castVote);
+                        $this->positions[$pstnKey]['vote'] = $castVote;
+                        array_push($this->votes, $vote);
+
+                        $this->markBallot();
+
+                    } else {
+
+                        $this->say('END You are not eligible to vote');
                     }
 
-                    $castVote =  [
-                        'elective_position_id' => $this->positions[$pstnKey]['id'],
-                        'candidate_elective_position_id' => $this->candidates[$ans - 1]['id'],
-                        'invite_id' => 1,
-                        'vote' => 1,
-                    ];
-                    $vote = Vote::create($castVote);
-                    $this->positions[$pstnKey]['vote'] = $castVote;
-                    array_push($this->votes, $vote);
 
-                    $this->markBallot();
+
                 } else{
                     $qstn = "CON  Invalid response. Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";

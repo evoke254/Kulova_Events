@@ -20,9 +20,13 @@ class InvitessImport implements ToCollection, WithHeadingRow, WithChunkReading
     }
     public function collection(Collection $rows)
     {
-
         foreach ($rows as $row)
         {
+
+
+            $phone_number = $row['phone'] ?? $row['phone_number'] ?? $row['mobile'];
+            $phone_number = preg_replace('/\s+/', '', $phone_number);
+
             Invite::updateOrCreate(
                 [
                     'event_id' => $this->event,
@@ -32,7 +36,7 @@ class InvitessImport implements ToCollection, WithHeadingRow, WithChunkReading
                     'event_id' => $this->event,
                     'name' => $row['name'],
                     'last_name' => $row['last name'] ?? $row['l_name'] ?? null,
-                    'phone_number' => $row['phone'] ?? $row['phone_number'] ?? $row['mobile'],
+                    'phone_number' => $phone_number,
                     'email' => $row['email'] ?? $row['mail'] ?? null,
                     'member_no' => $row['member_no'] ?? $row['member no'] ?? $row['member number'] ?? null,
                 ]
