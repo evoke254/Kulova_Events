@@ -188,7 +188,13 @@ class ussdVoting extends Conversation
             $opt .= Str::upper($pstn['position']). " \n ";
             $this->candidates = $pstn['candidates'];
             foreach ($this->candidates as $key => $candidate){
-                if ( isset($this->positions[$pstnKey]['vote']) && $this->positions[$pstnKey]['vote']['candidate_elective_position_id']    == $candidate['id']) {
+
+                $prev_vote = Vote::where('elective_position_id',  $this->positions[$pstnKey]['id'])
+                    ->where('candidate_elective_position_id', $candidate['id'])
+                    ->where('invite_id', $this->voter->id)->first();
+
+
+                if ($prev_vote) {
                     $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
                 } else {
                     $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
