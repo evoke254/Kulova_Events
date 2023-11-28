@@ -90,7 +90,7 @@ class ElectionController extends Controller
 
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = $request->get('phoneNumber');
-        $phoneNumber = '+254742968713';
+     //   $phoneNumber = '+254742968713';
         $voterId = Invite::where('phone_number', $phoneNumber)->orWhere('phone_number', '254'.substr($phoneNumber, -9))->orWhere('phone_number', substr($phoneNumber, -9))->orWhere('phone_number', '0'.substr($phoneNumber, -9))->first();
 
         $botman->hears('', function($bot) use ($voterId) {
