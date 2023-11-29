@@ -207,7 +207,7 @@ class ussdVoting extends Conversation
                 $this->say('END Cancelled by user. Dial *544# to try again');
             } else {
 
-                    $qstn = "CON  Invalid response. Please check and try again \n
+                    $qstn = "CON  Invalid response ( ".$ans." ). Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";
                     $this->qstnFallback($qstn);
             }
