@@ -250,7 +250,9 @@ class ussdVoting extends Conversation
 
     public function stopsConversation(IncomingMessage $message)
     {
-        if ($message->getText() == '00') {
+
+            $ans = last(explode("*", $message->getText())) ;
+        if ($ans == '00') {
             $this->votes = [];
             header('Content-type: text/plain');
             echo "END Thanks for your submission.";
