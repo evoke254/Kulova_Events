@@ -197,11 +197,10 @@ class ussdVoting extends Conversation
 
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $ans = (int)$answer->getText();
-            echo $ans;
-            if ($ans == 2){
+            $ans = trim($answer->getText());
+            if ($ans == '2'){
                 $this->say('END Vote cast. Thank you.');
-            } else if ($ans == 3) {
+            } else if ($ans == '3') {
                 $this->votes = [];
                 $this->deleteVote();
                 $this->say('END Cancelled by user. Dial *544# to try again');
