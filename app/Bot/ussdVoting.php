@@ -206,7 +206,7 @@ class ussdVoting extends Conversation
                 $this->say('END Cancelled by user. Dial *544# to try again');
             } else {
 
-                    $qstn = "CON POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
+                    $qstn = "Invalid Option ( ".$ans." ). Try again\nCON POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
                     $this->qstnFallback($qstn);
             }
 
