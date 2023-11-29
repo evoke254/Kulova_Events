@@ -73,7 +73,8 @@ class ussdVoting extends Conversation
         $qstn = "CON ELECTIONS: \n ".   $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $ans = (int)$answer->getText();
+
+            $ans = (int) last(explode("*", $answer->getText())) ;
             if (isset($this->elections[$ans - 1])){
                 $this->election = Election::find($this->elections[$ans - 1]['id']);
                 $this->SelectedElectionArr = $this->elections[$ans - 1];
@@ -120,8 +121,8 @@ class ussdVoting extends Conversation
 
             $qstn = "CON POSITIONS: \n ".   $opt ." 00 : Cancel ";
             $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
-                $ans = (int)$answer->getText();
 
+                $ans = (int) last(explode("*", $answer->getText())) ;
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
                     //Check if position has vote and delete
 
@@ -197,17 +198,18 @@ class ussdVoting extends Conversation
 
         $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
-            $ans = trim($answer->getText());
-            if ($ans == '1'){
+
+            $ans = (int) last(explode("*", $answer->getText())) ;
+            if ($ans == 1){
                 $this->say('END Vote cast. Thank you.');
-            } else if ($ans == '2') {
+            } else if ($ans == 2) {
                 $this->votes = [];
                 $this->deleteVote();
                 $this->say('END Cancelled by user. Dial *544# to try again');
             } else {
 
-                    $qstn = "Invalid Option ( ".$ans." ). Try again\nCON POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
-                    $this->qstnFallback($qstn);
+                $qstn = "CON Invalid Option ( ".$ans." ). Try again\n POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
+                $this->qstnFallback($qstn);
             }
 
         });
