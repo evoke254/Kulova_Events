@@ -3,6 +3,7 @@
 namespace App\Livewire\Event;
 
 use App\Models\Event;
+use App\Models\EventCategory;
 use App\Models\Organization;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class Create extends Component
     public $files = [];
     public $event = [];
 
-    public $organizations ;
+    public $organizations, $categories ;
 
     public $start_date;
     public $end_date;
@@ -33,6 +34,7 @@ class Create extends Component
         'end_date' => 'required|date|after_or_equal:start_date'
     ];
     public function mount(){
+        $this->categories = EventCategory::orderBy('created_at', 'DESC')->get();
         $this->organizations = Organization::orderBy('created_at', 'DESC')->get();
     }
 

@@ -27,17 +27,26 @@
                                 {{$message}}</p>
                             @enderror
                         </div>
+
+
                             <div class="pt-2">
-                                <x-select
-                                    class="dark:text-white"
-                                    label="Category"
-                                    :async-data="route('event-category.data')"
-                                    wire:model.defer="category_id"
-                                    placeholder="Select A Category"
-                                    option-label="name"
-                                    option-value="id"
-                                />
+                                <label for="category_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization *</label>
+                                <select type="category_id"
+                                        wire:model="category_id"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                >
+                                    <option> Select A Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{$category->id}}">{{$category->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('event.organization_id')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Sorry!</span>
+                                    {{$message}}</p>
+                                @enderror
                             </div>
+
+
                             <div class="pt-2">
                                 <label for="event.organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization *</label>
                                 <select type="event.organization_id"
