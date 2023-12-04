@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="pt-2">
-                                <label for="mail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location</label>
+                                <label for="mail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location *</label>
                                 <textarea
                                     wire:model="event.venue"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
@@ -115,7 +115,7 @@
                                         interval="30"
                                         time-format="24"
                                         display-format="ddd, DD MMM YYYY - HH:mm"
-                                        label="Event Start Date"
+                                        label="Event Start Date *"
                                         placeholder="Event Start Date"
                                         wire:model.defer="start_date"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
@@ -131,7 +131,7 @@
                                         interval="30"
                                         time-format="24"
                                         display-format="ddd, DD MMM YYYY - HH:mm"
-                                        label="Event End Date"
+                                        label="Event End Date *"
                                         placeholder="Event End Date"
                                         wire:model.defer="end_date"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
