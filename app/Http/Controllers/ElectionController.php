@@ -121,11 +121,21 @@ class ElectionController extends Controller
             'access_token' => env('waba_admin_token'),
             'waba' => $request->all()];
 
+        $config = [
+            'facebook' => [
+                'token' => env('waba_admin_token'),
+                'app_secret' => 'b84c6e8f3b5ceb41dabb307855e68436',
+                'verification'=>'LoveLivesHere',
+            ]
+        ];
+
         //Log::info(json_encode($config));
-      DriverManager::loadDriver(whatsapp::class);
+//      DriverManager::loadDriver(whatsapp::class);
+
+        DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
 
         $botman = BotManFactory::create($config, new LaravelCache());
-        $phoneNumber = $request->get('userId');
+        $phoneNumber = '+254742968713';
 
         //TODO remove in prod
         $rr = Invite::updateOrCreate(

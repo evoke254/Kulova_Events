@@ -7,6 +7,7 @@ use BotMan\BotMan\Interfaces\WebAccess;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Collection;
 use BotMan\BotMan\Users\User;
@@ -16,6 +17,7 @@ class whatsapp extends HttpDriver
 {
 
     const DRIVER_NAME = 'WABA';
+    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v16.0/';
 
     protected $replies = [];
 
@@ -25,12 +27,31 @@ class whatsapp extends HttpDriver
     /** @var string */
     protected $messages = [];
     protected $interactive = false;
-    /**
-     * @inheritDoc
-     */
+    protected $signature;
+
+    protected $content;
+
+
+    public function buildPayload(Request $request)
+    {
+
+        $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
+        $this->event = Collection::make((array) $this->payload->get('entry', [null])[0]);
+        $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
+        $this->content = $request->getContent();
+        $this->config = Collection::make($this->config->get('facebook', []));
+
+    }
+
     public function matchesRequest()
-    {return  true;
-        return ($this->config['sessionId'])  == $this->event->get('sessionId') ;
+    {
+
+        $validSignature = empty($this->config->get('app_secret')) || $this->validateSignature();
+        $messages = Collection::make($this->event->get('messaging'))->filter(function ($msg) {
+            return (isset($msg['message']['text']) || isset($msg['postback']['payload'])) && !isset($msg['message']['is_echo']);
+        });
+
+        return !$messages->isEmpty() && $validSignature;
     }
 
     /**
@@ -101,11 +122,7 @@ class whatsapp extends HttpDriver
     /**
      * @inheritDoc
      */
-    public function buildPayload(Request $request)
-    {
-        $this->payload = $request->request->all();
-        $this->event = Collection::make($this->payload);
-    }
+
 
     protected function buildReply($messages)
     {
@@ -138,8 +155,8 @@ class whatsapp extends HttpDriver
 
         // Reset replies
         $this->replies = [];
-dd($messages);
-       echo json_encode($messages);
+        dd($messages);
+        echo json_encode($messages);
 
     }
 
@@ -179,6 +196,15 @@ dd($messages);
     public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
     {
         // TODO: Implement sendRequest() method.
+    }
+
+
+    protected function validateSignature()
+    {
+        return hash_equals(
+            $this->signature,
+            'sha1=' . hash_hmac('sha1', $this->content, $this->config->get('app_secret'))
+        );
     }
 
 }
