@@ -39,7 +39,7 @@ class whatsappVoting extends Conversation
     public function startConversation($welcomeMessage) {
 //Display all events
 
-$this->bot->setIntercative();
+//$this->bot->setInteractive(); TODO
         $this->events = Event::orderBy('start_date', 'Desc')
             ->get()->toArray();
 

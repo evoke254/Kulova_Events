@@ -168,7 +168,7 @@ class whatsapp extends HttpDriver
         ];
     }
 
-    public function setIntercative(IncomingMessage $matchingMessage)
+    public function setInteractive(IncomingMessage $matchingMessage)
     {
         $this->interactive = true;
     }
