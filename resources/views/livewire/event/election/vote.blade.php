@@ -25,7 +25,6 @@
                                             <div class="space-y-4 my-3 ">
                                                 <!-- Active: "border-indigo-600 ring-2 ring-indigo-600", Not Active: "border-gray-300" -->
                                                 <label class="relative block cursor-pointer rounded-lg border bg-white px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between
-
                                             @if( isset($ballot_papers[$pstn->id]) && $ballot_papers[$pstn->id]['candidate'] == $cdt->id )
                                             border-indigo-600 ring-2 ring-indigo-600
                                             @else
@@ -35,26 +34,20 @@
                                                     <input wire:model="ballot_papers.{{$pstn->id}}.candidate" type="radio"
                                                            value="{{$cdt->id}}"
                                                            class="sr-only" aria-labelledby="server-size-0-label" aria-describedby="server-size-0-description-0 server-size-0-description-1">
-
                                                     <div class="flex justify-start gap-x-6 py-5">
                                                         <div class="flex min-w-0 gap-x-4">
                                                             <img class="h-36 w-36 object-center flex-none rounded-lg bg-gray-50" src="{{asset('storage/'.$cdt->photo)}}" alt="">
                                                         </div>
-
                                                         <span class="flex items-center">
                                                         <span class="flex flex-col text-sm">
                                                           <span id="server-size-0-label" class="font-semibold  text-xl text-gray-900 my-4">{{$cdt->name}}</span>
                                                           <span id="server-size-0-description-0" class="text-gray-800">
-
                                                       <span id="server-size-0-label" class="font-medium text-gray-900">Member No. {{$cdt->member_no}}</span>
                                                             <span class="hidden sm:mx-1 sm:inline" aria-hidden="true">&middot;</span>
                                                           </span>
                                                         </span>
                                                       </span>
                                                     </div>
-
-
-
                                                     <div class=" flex items-center">
                                                         @if( isset($ballot_papers[$pstn->id]) && $ballot_papers[$pstn->id]['candidate'] == $cdt->id )
                                                             <svg class="h-9 w-9 text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -63,11 +56,6 @@
                                                         @endif
 
                                                     </div>
-
-                                                    <!--
-                                                      Active: "border", Not Active: "border-2"
-                                                      Checked: "border-indigo-600", Not Checked: "border-transparent"
-                                                    -->
                                                     <span class="pointer-events-none absolute -inset-px rounded-lg
                                                     @if( isset($ballot_papers[$pstn->id]) && $ballot_papers[$pstn->id]['candidate'] == $cdt->id )
                                                     border border-indigo-600

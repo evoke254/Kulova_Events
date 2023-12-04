@@ -9,13 +9,16 @@ use Carbon\Carbon;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
 class Create extends Component
 {
-    use WithFileUploads;
-    public $steps  = 1;
+    use WithFileUploads, Actions;
+    public $steps  = 0;
     public $election_name;
     public $election_date;
+    public $electionTypes = [1 => 'Single Vote', 2 => 'Plural Vote', 3 =>'Resolution Vote'], $electionType;
+
     public $event_id;
     public $event;
     public $election =[];
@@ -27,6 +30,7 @@ class Create extends Component
     public $candidate = [];
     public $photo;
     public $position = null;
+    public $positionVotes = 1;
     public $complete = false;
 
 
@@ -43,6 +47,7 @@ class Create extends Component
     {
 
     }
+
     public function createElection()
     {
         $this->election['election_date'] = Carbon::parse($this->election_date);
@@ -52,6 +57,7 @@ class Create extends Component
         ]);
 
         $this->election['event_id'] = $this->event['id'];
+        $this->election['type'] = $this->electionType;
 
         $this->election_detail = Election::updateOrCreate(
             ['id' => isset($this->election_detail) ? $this->election_detail->id : null],
@@ -63,9 +69,11 @@ class Create extends Component
     public function addElectivePositions(){
         $this->validate([
             'position' => 'required|min:2',
-        ]);
+        ], ['position.required' => 'Kindly fill in a title or Resolution']);
+
         ElectivePosition::create(
             ['position' => $this->position,
+                'votes' => $this->positionVotes,
                 'election_id' => isset($this->election_detail->id) ? $this->election_detail->id : null,
             ]
         );
@@ -96,6 +104,14 @@ class Create extends Component
         $this->mount();
     }
 
+
+    public function submitResolutions(){
+        $this->notification()->success(
+            $title = 'Resolution Election Submitted',
+            $description = 'Your election was successfully saved'
+        );
+    }
+
     public function rmvCandidate($index){
         CandidateElectivePosition::find($index)->delete();
         $this->mount();
@@ -112,6 +128,16 @@ class Create extends Component
     public function prev(){
         --$this->steps;
         $this->mount();
+    }
+
+    public function setElectionType($type){
+
+        $this->mount();
+    }
+
+    public function stepTwo(){
+        $this->validate([ 'electionType' => 'required']);
+        $this->next();
     }
 
     public function render()

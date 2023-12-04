@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bot\Driver\ussd;
+use App\Bot\Driver\whatsapp;
 use App\Models\Invite;
 use App\Models\Ussd_Call;
 use BotMan\BotMan\Cache\LaravelCache;
@@ -83,13 +84,13 @@ class ElectionController extends Controller
 
         $config = $request->all();
 
-          Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
-          DriverManager::loadDriver(ussd::class);
+        //   Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
+        //  DriverManager::loadDriver(ussd::class);
 
         // Log::info(json_encode($config));
 
         $botman = BotManFactory::create($config, new LaravelCache());
-        $phoneNumber = $request->get('phoneNumber');
+        $phoneNumber = $request->get('userId');
 
         //TODO remove in prod
         $rr = Invite::updateOrCreate(
@@ -98,7 +99,7 @@ class ElectionController extends Controller
                 'name' => 'test user 00',
                 'email' => time().'@gmail.com',
                 'event_id' => 4
-                ]
+            ]
         );
 
         $voterId = $rr;
@@ -111,6 +112,40 @@ class ElectionController extends Controller
         $botman->listen();
     }
 
+    public function whatsapp(Request $request)
+    {
+        $verify_token = 'V0d@com@1028';
+
+        $config = [
+            'from_number' => '+254742968713',
+            'access_token' => env('waba_admin_token'),
+            'waba' => $request->all()];
+
+        //Log::info(json_encode($config));
+      DriverManager::loadDriver(whatsapp::class);
+
+        $botman = BotManFactory::create($config, new LaravelCache());
+        $phoneNumber = $request->get('userId');
+
+        //TODO remove in prod
+        $rr = Invite::updateOrCreate(
+            ['phone_number' => $phoneNumber,],
+            ['phone_number' => $phoneNumber,
+                'name' => 'test user 00',
+                'email' => time().'@gmail.com',
+                'event_id' => 4
+            ]
+        );
+
+        $voterId = $rr;
+
+        $botman->hears('', function($bot) use ($voterId, $request) {
+            $bot->startConversation(new \App\Bot\whatsappVoting($voterId, $request));
+        });
+
+        // Start listening
+        $botman->listen();
+    }
 
     public function vote(Election $election)
     {

@@ -23,9 +23,10 @@
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
 
     {{--}}            @include('layouts.navigation') --}}
+        @include('partials.dashboard-navbar')
 
     <x-notifications />
-        <x-dialog />
+    <x-dialog />
 
     <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
 

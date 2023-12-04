@@ -16,12 +16,68 @@
         class="w-full">
         <div class="relative w-full max-h-full ">
             <div class="relative ">
-                <div class="p-6 space-y-6">
-                    @if($steps ==1)
+                <div class="">
+                    <x-errors class="mt-2 text-sm text-red-600 dark:text-red-500" />
+                </div>
+                <div class="p-2 space-y-6">
+                    @if($steps ==0)
+                        <div class=" rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4 my-2 mb-4">
+                            <div class="my-2 pb-4">
+                                <h2 class="mt-6 text-xl leading-8 text-gray-800 font-bold dark:text-gray-100 text-center">Election Type </h2>
+                            </div>
+                            @foreach($electionTypes as $typekey => $elctnType)
+                                <fieldset class="gap-2" >
+                                    <div class="space-y-4 my-3 " wire:click="setElectionType({{$typekey}})">
+                                        <!-- Active: "border-indigo-600 ring-2 ring-indigo-600", Not Active: "border-gray-300" -->
+                                        <label class="relative block cursor-pointer rounded-lg border px-6 py-4 shadow-sm focus:outline-none sm:flex sm:justify-between
+                                            @if( !empty($electionType) && $typekey == $electionType )
+                                            border-indigo-600 ring-2 ring-indigo-600
+                                            @else
+                                            border-gray-300 dark:border-gray-100
+                                            @endif
+                                            ">
+                                            <input wire:model="electionType" type="radio"
+                                                   value="{{$typekey}}"
+                                                   class="sr-only" aria-labelledby="server-size-0-label" aria-describedby="server-size-0-description-0 server-size-0-description-1">
+                                            <div class="flex justify-start gap-x-6 py-5">
+                                                <div class="flex min-w-0 gap-x-4">
+                                                    <h4 class="text-xl text-slate-800 dark:text-white ">{{$elctnType}}</h4>
+                                                </div>
+                                            </div>
+                                            <div class=" flex items-center">
+                                                @if( !empty($electionType) && $typekey == $electionType )
+                                                    <svg class="h-9 w-9 text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                                                    </svg>
+                                                @endif
+                                            </div>
+                                            <span class="pointer-events-none absolute -inset-px rounded-lg
+                                                    @if( !empty($electionType) && $typekey == $electionType )
+                                                    border border-indigo-600
+                                                    @else
+                                                     border-2 border-transparent
+                                                    @endif
+                                                " aria-hidden="true"></span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+
+                            @endforeach
+
+                            <div class="flex justify-end space-x-2 space-y-2.5 mt-5">
+
+                                <button type="button" wire:click="stepTwo" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Next >>
+                                </button>
+                            </div>
+                        </div>
+
+                    @elseif($steps == 1)
+
                         <section class="">
-                            <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
+                            <div class="py-8 lg:py-16 px-4 mx-auto p-4">
                                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
-                                    Create An Election
+                                    Create {{$electionTypes[$electionType]}} Election
                                 </h2>
                                 <form  wire:submit.prevent="createElection" class="space-y-8">
                                     <div>
@@ -56,7 +112,10 @@
                                               focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                                               dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Describe the election ..."></textarea>
                                     </div>
-                                    <div class="flex justify-end">
+                                    <div class="flex justify-end space-x-2 space-y-2.5 mt-5">
+                                        <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                            Prev
+                                        </button>
                                         <button type="button" wire:click="createElection" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                                             Next >> Add Elective Positions
                                         </button>
@@ -65,11 +124,10 @@
                             </div>
                         </section>
 
-
-                    @elseif($steps == 2)
+                    @elseif($steps == 2 && ($electionType == 1 || $electionType == 2 ))
 
                         <section class="">
-                            <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
+                            <div class="py-8 lg:py-16 px-4 mx-auto p-4">
                                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
                                     Add Elective Positions
                                 </h2>
@@ -77,7 +135,110 @@
 
 
                                     @if(!$positions->isEmpty())
-                                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Positions</h2>
+                                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Elective Positions : </h2>
+                                    @endif
+                                    @foreach($positions as $position)
+
+                                        <ul class="max-w-md w-3/4 divide-y divide-gray-200 dark:divide-gray-700">
+                                            <li class="pb-3 sm:pb-4 @if($loop->index > 1)border-b  border-gray-400 @endif">
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex-shrink-0">
+                                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                                            {{$loop->index + 1}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <p class="text-lg text-lg font-bold text-gray-900 truncate dark:text-white">
+                                                            {{$position->position}}
+                                                        </p>
+                                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                            Votes : {{$position->votes}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                                                        <button type="button"  wire:click="rmvElectivePositions({{$position->id}})"  class="inline-flex items-center text-white bg-red-700  hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                                 class="w-6 h-6 mr-2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    @endforeach
+
+                                    <div class="flex justify-center gap-2">
+                                        <div class="mb-0 w-3/4">
+                                            <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Position Title* </label>
+                                            <input type="text"
+                                                   wire:model="position"
+                                                   class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
+                                                            shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                                                            dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+                                                   placeholder="example: Chairman" >
+
+                                        </div>
+                                        @if( $electionType == 2)
+                                            <div class="mb-0 flex-grow">
+                                                <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">No. Votes </label>
+                                                <input type="number"
+                                                       min="1"
+                                                       max="30"
+                                                       wire:model="positionVotes"
+                                                       class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
+                                                            shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                                                            dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+                                                       placeholder="example: Chairman" >
+
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="flex justify-end mt-1">
+                                        <button type="button"
+                                                wire:click="addElectivePositions"
+                                                class="inline-flex items-center text-white bg-blue-700
+                                                                            hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 mb-2
+                                                                            dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                 class="w-6 h-6 mr-2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Add
+                                        </button>
+                                    </div>
+                                    <div class="flex justify-end space-x-2 space-y-2.5">
+                                        <button type="button" wire:click="prev"  class="py-2 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                            Prev
+                                        </button>
+                                        @if(!$positions->isEmpty())
+                                            <button type="button" wire:click="next"
+                                                    class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
+                                                    hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
+                                                    dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                                Next >> Add Candidates
+                                            </button>
+                                        @endif
+                                    </div>
+
+                                </form>
+                            </div>
+                        </section>
+
+
+                    @elseif($steps == 2 && ($electionType == 3) )
+
+                        <section class="">
+                            <div class="py-8 lg:py-16 px-4 mx-auto p-4">
+                                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
+                                    Add Resolutions
+                                </h2>
+                                <form   class="space-y-8" wire:submit.prevent="addElectivePositions">
+
+
+                                    @if(!$positions->isEmpty())
+                                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Resolutions</h2>
                                     @endif
                                     @foreach($positions as $position)
 
@@ -111,13 +272,14 @@
                                     @endforeach
 
                                     <div class="mb-0">
-                                        <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Position Title *</label>
-                                        <input type="text"
-                                               wire:model="position"
-                                               class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
+                                        <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"> Resolution *</label>
+                                        <textarea
+                                            wire:model="position"
+                                            class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
                                                             shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                                                             dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                                               placeholder="example: Chairman" >
+                                            placeholder="example: Resolution that the Company shall implement a comprehensive ...."  >
+                                        </textarea>
                                         @error('position')
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500">
                                             <span class="font-medium">Oops!</span>
@@ -138,15 +300,15 @@
                                         </button>
                                     </div>
                                     <div class="flex justify-end space-x-2 space-y-2.5">
-                                        <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                                            << prev  - Election
+                                        <button type="button" wire:click="prev"  class="py-2 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                            << Prev
                                         </button>
                                         @if(!$positions->isEmpty())
-                                            <button type="button" wire:click="next"
+                                            <button type="button" wire:click="submitResolutions" x-on:click="close"
                                                     class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
                                                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
                                                     dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                                Next >> Add Candidates
+                                                Submit
                                             </button>
                                         @endif
                                     </div>
@@ -156,9 +318,9 @@
                         </section>
 
 
-                    @elseif($steps == 3)
+                    @elseif($steps == 3 && ($electionTypes[$electionType] == 1 || $electionTypes[$electionType] == 2 ))
                         <div class="">
-                            <div class="py-2 lg:py-4 px-4 mx-auto max-w-screen-md space-x-3">
+                            <div class="py-2 lg:py-4 px-4 mx-auto p-4 space-x-3">
                                 <div class="pt-6">
                                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
                                         Add Candidates
@@ -280,18 +442,18 @@
 
 
                                 <div class="flex justify-end space-x-2 space-y-2.5 mt-5">
-                                    <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                                        << prev  - Elective Positions
+                                    <button type="button" wire:click="prev"  class="py-2 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                        Prev
                                     </button>
 
 
                                     @if($this->complete)
-                                        <a href="{{route('events.show', ['event' =>$event->id])}}"
-                                           class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
+                                        <button x-on:click="close" href="{{route('events.show', ['event' =>$event->id])}}"
+                                                class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit
                                                     hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600
                                                     dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                            Finish
-                                        </a>
+                                            Submit
+                                        </button>
                                     @endif
                                 </div>
 
