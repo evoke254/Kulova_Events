@@ -143,7 +143,7 @@ class ElectionController extends Controller
             ['phone_number' => $phoneNumber,
                 'name' => 'test user 00',
                 'email' => time().'@gmail.com',
-                'event_id' => 4
+                'event_id' => 1
             ]
         );
 
