@@ -257,11 +257,10 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function getMessages()
     {
         if (empty($this->messages)) {
-            Log::info(json_encode($this->event['messages']));
-        $message =  $this->event['messages']['text']['body'];
+        $message =  $this->event['messages'][0]['text']['body'];
         Log::info($message);
         Log::info("Getting my message and user ======");
-        $userId = $this->event['messages']['from'];
+        $userId = $this->event['messages'][0]['from'];
         Log::info($userId);
         $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
     }
@@ -439,9 +438,9 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function getUser(IncomingMessage $matchingMessage)
     {
-        $firstName = $this->event['contacts']['profile']['name'] ?? null;
+        $firstName = $this->event['contacts'][0]['profile']['name'] ?? null;
         $lastName = ' ';
-        $username = $this->event['contacts']['wa_id'];
+        $username = $this->event['contacts'][0]['wa_id'];
 
         return new User($matchingMessage->getSender(), $firstName, $lastName, $username, null);
     }
