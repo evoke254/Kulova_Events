@@ -257,6 +257,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function getMessages()
     {
         if (empty($this->messages)) {
+            Log::info(json_encode($this->event['messages']));
         $message =  $this->event['messages']['text']['body'];
         Log::info($message);
         Log::info("Getting my message and user ======");
