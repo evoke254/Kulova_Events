@@ -93,7 +93,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint.'/phone_numbers',);
+        ])->get($this->facebookProfileEndpoint.'/phone_numbers',);
 
         Log::info('numbrs');
         Log::info(json_encode($response));
