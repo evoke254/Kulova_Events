@@ -91,10 +91,11 @@ class whatsapp extends HttpDriver implements VerifiesService
         $payload = new ParameterBag((array) json_decode($request->getContent(), true));
 
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
-        $this->event = Collection::make((array) $this->payload->get('entry', [null])[0]);
+        $event = Collection::make((array) $this->payload->get('entry', [null])[0]);
+        $value = Collection::make($event->get('changes'));
+        $this->event = Collection::make($value[0]["value"]);
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
-        $value = Collection::make($this->event->get('changes'));
-        $this->content = $value[0]["value"];
+        $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
 
     }
@@ -106,9 +107,8 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function matchesRequest()
     {
         $validSignature = empty($this->config->get('app_secret')) || $this->validateSignature();
-        $value = Collection::make($this->event->get('changes'));
 
-        $messages = Collection::make($this->content)->filter(function ($msg) {
+        $messages = Collection::make($this->event)->filter(function ($msg) {
                Log::info('messages-_______');
                 Log::info('Ndaaan-_______');
                 Log::info($msg);
