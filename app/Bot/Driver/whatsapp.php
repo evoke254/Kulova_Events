@@ -79,7 +79,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     /** @var DriverEventInterface */
     protected $driverEvent;
     const DRIVER_NAME = 'WABA';
-    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
+    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/175304455667813';
 
     protected $interactive = false;
     protected $isPostback = false;
@@ -93,7 +93,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint.$this->config->get('from_number').'/phone_numbers',);
+        ])->post($this->facebookProfileEndpoint.'/phone_numbers',);
 
         Log::info('numbrs');
         Log::info(json_encode($response));
