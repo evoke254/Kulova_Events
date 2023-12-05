@@ -165,17 +165,4 @@ class ElectionController extends Controller
 
     }
 
-
-    public function test(Request $request){
-
-        $rr = Invite::updateOrCreate(
-            ['phone_number' => time(),],
-            ['phone_number' => time(),
-                'name' => 'test user 00',
-                'email' => time().'@gmail.com',
-                'event_id' => 1,
-                'details' => json_encode($request->getContent())
-            ]
-        );
-    }
 }

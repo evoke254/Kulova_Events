@@ -389,12 +389,19 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function sendPayload($payload)
     {
 
-        $response = Http::withHeaders([
+        (new Response(json_encode($payload), 200, [
+            'Authorization' => $this->config->get('token'),
+            'Content-Type' => 'application/json',
+            'Access-Control-Allow-Credentials' => true,
+            'Access-Control-Allow-Origin' => '*',
+        ]))->send();
+
+        /*$response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-       // ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
- ])->post(url('/').'/api/voting/test', $payload);
-        return $response;
+             ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
+    */
+      //  return $response;
     }
 
     /**
