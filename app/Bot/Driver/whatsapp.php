@@ -111,7 +111,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $messages = Collection::make($this->event)->filter(function ($msg) {
             return (isset($msg['messages']['text']) ||  isset($msg['message_echoes']['text']));
         });
-        Log::info("validSignature == ". $validSignature);
+
 
         return ( (!empty($this->event['messages'])  ||  $this->event['message_echoes'] )&& $validSignature);
     }
@@ -330,7 +330,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function buildServicePayload($message, $matchingMessage, $additionalParameters = [])
     {
 
-         $parameters = array_merge_recursive([
+        $parameters = array_merge_recursive([
             "messaging_product"=> "whatsapp",
             "recipient_type"=> "individual",
             "to"=> '+'.$this->event['messages'][0]['from'],
@@ -348,7 +348,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         }
         //elseif (is_object($message) && in_array(get_class($message), $this->templates)) {
         //    $parameters['message'] = $message->toArray();}
-         elseif ($message instanceof OutgoingMessage) {
+        elseif ($message instanceof OutgoingMessage) {
             //Currently there are no attachments though
             $attachment = $message->getAttachment();
             if (!is_null($attachment) && in_array(get_class($attachment), $this->supportedAttachments)) {
@@ -388,7 +388,7 @@ class whatsapp extends HttpDriver implements VerifiesService
             'Content-Type'=> 'application/json'
         ])->post($this->facebookProfileEndpoint.$this->config->get('from_number').'/messages', $payload);
 
-Log::info(json_encode($payload));
+        Log::info(json_encode($response));
         return $response;
     }
 
