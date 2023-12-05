@@ -124,7 +124,7 @@ class ElectionController extends Controller
 
         $config = [
             'facebook' => [
-            'from_number' => '+254742968713',
+                'from_number' => '+254742968713',
                 'token' => env('waba_admin_token'),
                 'app_secret' => 'b84c6e8f3b5ceb41dabb307855e68436',
                 'verification'=>'LoveLivesHere',
@@ -132,9 +132,9 @@ class ElectionController extends Controller
         ];
 
         //Log::info(json_encode($config));
-      DriverManager::loadDriver(whatsapp::class);
+        DriverManager::loadDriver(whatsapp::class);
 
-  //      DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
+        //      DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
 
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = '+254742968713';
@@ -163,5 +163,19 @@ class ElectionController extends Controller
     {
         return view('event.election.vote', compact('election'));
 
+    }
+
+
+    public function test(Request $request){
+
+        $rr = Invite::updateOrCreate(
+            ['phone_number' => time(),],
+            ['phone_number' => time(),
+                'name' => 'test user 00',
+                'email' => time().'@gmail.com',
+                'event_id' => 1,
+                'details' => json_encode($request->getContent())
+            ]
+        );
     }
 }
