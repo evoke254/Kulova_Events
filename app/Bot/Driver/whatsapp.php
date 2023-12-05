@@ -364,7 +364,7 @@ class whatsapp extends HttpDriver implements VerifiesService
             }
         }
 
-        $parameters['access_token'] = $this->config->get('token');
+//        $parameters['access_token'] = $this->config->get('token');
 
         return $parameters;
 
@@ -374,7 +374,7 @@ class whatsapp extends HttpDriver implements VerifiesService
 
     /**
      * @param  mixed  $payload
-     * @return Response
+     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
      *
      * @throws FacebookException
      */
