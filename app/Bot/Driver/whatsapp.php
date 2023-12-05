@@ -90,7 +90,7 @@ class whatsapp extends HttpDriver
     {
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $this->event = Collection::make((array) $this->payload->get('entry', [null])[0]);
-        Log::info(json_encode($this->payload));
+        Log::info($request->request->all());
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
