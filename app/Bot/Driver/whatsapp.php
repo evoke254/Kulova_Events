@@ -7,6 +7,7 @@ use BotMan\BotMan\Interfaces\WebAccess;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Collection;
@@ -89,7 +90,7 @@ class whatsapp extends HttpDriver
     {
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $this->event = Collection::make((array) $this->payload->get('entry', [null])[0]);
-        dd($this->payload);
+        Log::info(json_encode($this->payload));
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
