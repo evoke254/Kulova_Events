@@ -79,7 +79,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     /** @var DriverEventInterface */
     protected $driverEvent;
     const DRIVER_NAME = 'WABA';
-    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0';
+    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
 
     protected $interactive = false;
     protected $isPostback = false;
@@ -102,11 +102,6 @@ class whatsapp extends HttpDriver implements VerifiesService
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
-
-                $response = Http::get($this->facebookProfileEndpoint.'/phone_numbers?access_token',);
-
-        Log::info($this->event['metadata']['phone_number_id']);
-        Log::info('ggg phone ndio hii');
 
     }
     /**
@@ -396,7 +391,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint.$this->config->get('from_number').'/messages', $payload);
+        ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
 
 
         return $response;
