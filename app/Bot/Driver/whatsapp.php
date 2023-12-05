@@ -393,7 +393,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         try {
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$token->access_token,
+                'Authorization' => 'Bearer '.$token->json('access_token'),
                 'Content-Type'=> 'application/json'
             ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
 
@@ -407,6 +407,7 @@ class whatsapp extends HttpDriver implements VerifiesService
                 // Successful request
                 // Access $responseData for additional details
                 Log::info($responseData);
+                return $response;
             } else {
                 // Handle errors
                 // Access $responseData for error details
@@ -419,7 +420,7 @@ class whatsapp extends HttpDriver implements VerifiesService
 
 
 
-        return $response;
+
     }
 
     /**
