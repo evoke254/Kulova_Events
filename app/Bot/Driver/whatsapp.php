@@ -390,7 +390,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
 
         $accessToken = 'YOUR_ACCESS_TOKEN';
-        $apiEndpoint = 'https://graph.facebook.com/v18.0/174826509049406/messages';
+        $apiEndpoint = 'https://graph.facebook.com/v18.0/104777855590461/messages';
         $recipientPhoneNumber = '+254702755928';
         $messageContent = 'MESSAGE_CONTENT';
 
