@@ -37,7 +37,7 @@ use BotMan\Drivers\Facebook\Extensions\ListTemplate;
 use BotMan\Drivers\Facebook\Extensions\MediaTemplate;
 use BotMan\Drivers\Facebook\Extensions\OpenGraphTemplate;
 use BotMan\Drivers\Facebook\Extensions\ReceiptTemplate;
-class whatsapp extends HttpDriver
+class whatsapp extends HttpDriver implements VerifiesService
 {
 
         const HANDOVER_INBOX_PAGE_ID = '263902037430900';
@@ -93,6 +93,9 @@ class whatsapp extends HttpDriver
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
+
+                Log::info(json_encode($request->request->all()));
+                dd('leo');
     }
     /**
      * Determine if the request is for this driver.
