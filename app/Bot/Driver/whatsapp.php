@@ -337,6 +337,7 @@ class whatsapp extends HttpDriver implements VerifiesService
 
         $parameters = array_merge_recursive([
             "messaging_product"=> "whatsapp",
+            "context" => ["message_id" => $this->event['messages'][0]['id']],
             "recipient_type"=> "individual",
             "to"=> '+'.$this->event['messages'][0]['from'],
             "type"=> 'text',
