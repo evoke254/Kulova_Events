@@ -389,19 +389,54 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function sendPayload($payload)
     {
 
-        (new Response(json_encode($payload), 200, [
-            'Authorization' => $this->config->get('token'),
-            'Content-Type' => 'application/json',
-            'Access-Control-Allow-Credentials' => true,
-            'Access-Control-Allow-Origin' => '*',
-        ]))->send();
+        $accessToken = 'YOUR_ACCESS_TOKEN';
+        $apiEndpoint = 'https://graph.facebook.com/v18.0/174826509049406/messages';
+        $recipientPhoneNumber = '+254702755928';
+        $messageContent = 'MESSAGE_CONTENT';
 
-        /*$response = Http::withHeaders([
+        try {
+            $response = Http::post($apiEndpoint, [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => $recipientPhoneNumber,
+                'type' => 'text',
+                'text' => [
+                    'preview_url' => false,
+                    'body' => $messageContent,
+                ],
+            ], [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ]);
+
+            // Handle the API response as needed
+            $statusCode = $response->status();
+            $responseData = $response->json();
+
+            // Your further logic based on the API response
+            if ($statusCode == 200) {
+                // Successful request
+                // Access $responseData for additional details
+                Log::info($responseData);
+            } else {
+                // Handle errors
+                // Access $responseData for error details
+                Log::error($responseData);
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions, such as connection errors
+            Log::error( 'Error: ' . $e->getMessage());
+        }
+
+
+
+        $response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-             ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
-    */
-      //  return $response;
+        ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
+
+
+        return $response;
     }
 
     /**
