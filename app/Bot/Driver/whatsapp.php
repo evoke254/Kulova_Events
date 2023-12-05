@@ -330,7 +330,7 @@ class whatsapp extends HttpDriver implements VerifiesService
      * @param  string|Question|IncomingMessage  $message
      * @param  IncomingMessage  $matchingMessage
      * @param  array  $additionalParameters
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function buildServicePayload($message, $matchingMessage, $additionalParameters = [])
     {
@@ -388,11 +388,6 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function sendPayload($payload)
     {
-
-        $accessToken = 'YOUR_ACCESS_TOKEN';
-        $apiEndpoint = 'https://graph.facebook.com/v18.0/174826509049406/messages';
-        $recipientPhoneNumber = '+254702755928';
-        $messageContent = 'MESSAGE_CONTENT';
 
         try {
 
