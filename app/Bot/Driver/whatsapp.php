@@ -390,24 +390,17 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
 
         $accessToken = 'YOUR_ACCESS_TOKEN';
-        $apiEndpoint = 'https://graph.facebook.com/v18.0/104777855590461/messages';
+        $apiEndpoint = 'https://graph.facebook.com/v18.0/174826509049406/messages';
         $recipientPhoneNumber = '+254702755928';
         $messageContent = 'MESSAGE_CONTENT';
 
         try {
-            $response = Http::post($apiEndpoint, [
-                'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
-                'to' => $recipientPhoneNumber,
-                'type' => 'text',
-                'text' => [
-                    'preview_url' => false,
-                    'body' => $messageContent,
-                ],
-            ], [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ]);
+
+            $response = Http::withHeaders([
+                'Authorization' => $this->config->get('token'),
+                'Content-Type'=> 'application/json'
+            ])->post($this->facebookProfileEndpoint.'174826509049406/messages', $payload);
+
 
             // Handle the API response as needed
             $statusCode = $response->status();
@@ -429,11 +422,6 @@ class whatsapp extends HttpDriver implements VerifiesService
         }
 
 
-
-        $response = Http::withHeaders([
-            'Authorization' => $this->config->get('token'),
-            'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint.'104777855590461/messages', $payload);
 
 
         return $response;
