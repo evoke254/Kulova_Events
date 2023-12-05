@@ -115,7 +115,6 @@ class ElectionController extends Controller
     public function whatsapp(Request $request)
     {
 
-        Log::info(json_encode($request->all()));
         $verify_token = 'V0d@com@1028';
 
         $config = [

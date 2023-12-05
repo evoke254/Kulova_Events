@@ -88,6 +88,8 @@ class whatsapp extends HttpDriver implements VerifiesService
 
     public function buildPayload(Request $request)
     {
+        $payload = new ParameterBag((array) json_decode($request->getContent(), true));
+
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $this->event = Collection::make((array) $this->payload->get('entry', [null])[0]);
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
@@ -104,17 +106,17 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
         $validSignature = empty($this->config->get('app_secret')) || $this->validateSignature();
         $messages = Collection::make($this->event->get('changes'))->filter(function ($msg) {
-            return (isset($msg['messages']['text']) ||  isset($msg['message_echoes']['text']));
+            return (isset($msg['value']['messages']['text']) ||  isset($msg['value']['message_echoes']['text']));
         });
 
 
-                Log::info('Get Changes====');
-                Log::info('Get Changes====');
-                Log::info('Get Changes====');
-                Log::info('Get Changes====');
-                Log::info('Get Changes====');
+                Log::info('messages-_______');
+                Log::info('messages-_______');
+                Log::info('messages-_______');
+                Log::info('messages-_______');
+                Log::info('messages-_______');
 
-                Log::info(json_encode(Collection::make($this->event->get('changes'))));
+                Log::info(json_encode($messages));
 
         return !$messages->isEmpty() && $validSignature;
     }
