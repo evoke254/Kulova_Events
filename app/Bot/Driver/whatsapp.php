@@ -108,9 +108,14 @@ class whatsapp extends HttpDriver implements VerifiesService
         });
 
 
-                Log::info('messages====');
+                Log::info('Get Changes====');
+                Log::info('Get Changes====');
+                Log::info('Get Changes====');
+                Log::info('Get Changes====');
+                Log::info('Get Changes====');
 
-                Log::info(json_encode($messages));
+                Log::info(json_encode(Collection::make($this->event->get('changes'))));
+
         return !$messages->isEmpty() && $validSignature;
     }
 
