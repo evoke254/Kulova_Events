@@ -40,7 +40,7 @@ use BotMan\Drivers\Facebook\Extensions\ReceiptTemplate;
 class whatsapp extends HttpDriver implements VerifiesService
 {
 
-        const HANDOVER_INBOX_PAGE_ID = '263902037430900';
+    const HANDOVER_INBOX_PAGE_ID = '263902037430900';
 
     const TYPE_RESPONSE = 'RESPONSE';
     const TYPE_UPDATE = 'UPDATE';
@@ -82,7 +82,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
 
     protected $interactive = false;
-       protected $isPostback = false;
+    protected $isPostback = false;
 
 
 
@@ -133,13 +133,13 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
         $event = Collection::make($this->event->get('messaging'))->filter(function ($msg) {
             return Collection::make($msg)->except([
-                'sender',
-                'recipient',
-                'timestamp',
-                'message',
-                'postback',
-                'thread_id',
-            ])->isEmpty() === false;
+                    'sender',
+                    'recipient',
+                    'timestamp',
+                    'message',
+                    'postback',
+                    'thread_id',
+                ])->isEmpty() === false;
         })->transform(function ($msg) {
             return Collection::make($msg)->toArray();
         })->first();
@@ -257,13 +257,10 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function getMessages()
     {
         if (empty($this->messages)) {
-        $message =  $this->event['messages'][0]['text']['body'];
-        Log::info($message);
-        Log::info("Getting my message and user ======");
-        $userId = $this->event['messages'][0]['from'];
-        Log::info($userId);
-        $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
-    }
+            $message =  $this->event['messages'][0]['text']['body'];
+            $userId = $this->event['messages'][0]['from'];
+            $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
+        }
 
         return $this->messages;
     }
@@ -331,32 +328,27 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function buildServicePayload($message, $matchingMessage, $additionalParameters = [])
     {
-        if ($this->driverEvent) {
-            $payload = $this->driverEvent->getPayload();
-            if (isset($payload['optin']) && isset($payload['optin']['user_ref'])) {
-                $recipient = ['user_ref' => $payload['optin']['user_ref']];
-            } else {
-                $recipient = ['id' => $payload['sender']['id']];
-            }
-        } else {
-            $recipient = ['id' => $matchingMessage->getSender()];
-        }
-        $parameters = array_merge_recursive([
-            'messaging_type' => self::TYPE_RESPONSE,
-            'recipient' => $recipient,
-            'message' => [
-                'text' => $message,
+
+         $parameters = array_merge_recursive([
+            "messaging_product"=> "whatsapp",
+            "recipient_type"=> "individual",
+            "to"=> $this->event['messages'][0]['from'],
+            "type"=> 'text',
+            'text' => [
+                'body' => $message,
             ],
-        ], $additionalParameters);
+        ]);
         /*
          * If we send a Question with buttons, ignore
          * the text and append the question.
          */
         if ($message instanceof Question) {
-            $parameters['message'] = $this->convertQuestion($message);
-        } elseif (is_object($message) && in_array(get_class($message), $this->templates)) {
-            $parameters['message'] = $message->toArray();
-        } elseif ($message instanceof OutgoingMessage) {
+            $parameters['text'] = $this->convertQuestion($message);
+        }
+        //elseif (is_object($message) && in_array(get_class($message), $this->templates)) {
+        //    $parameters['message'] = $message->toArray();}
+         elseif ($message instanceof OutgoingMessage) {
+            //Currently there are no attachments though
             $attachment = $message->getAttachment();
             if (!is_null($attachment) && in_array(get_class($attachment), $this->supportedAttachments)) {
                 $attachmentType = strtolower(basename(str_replace('\\', '/', get_class($attachment))));
@@ -369,13 +361,16 @@ class whatsapp extends HttpDriver implements VerifiesService
                     ],
                 ];
             } else {
-                $parameters['message']['text'] = $message->getText();
+                $parameters['text']['body'] = $message->getText();
             }
         }
 
         $parameters['access_token'] = $this->config->get('token');
 
         return $parameters;
+
+
+
     }
 
     /**
@@ -386,8 +381,12 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function sendPayload($payload)
     {
-        $response = $this->http->post($this->facebookProfileEndpoint . 'me/messages', [], $payload);
-        $this->throwExceptionIfResponseNotOk($response);
+
+        $response = Http::withHeaders([
+            'Authorization' => $this->config->get('token'),
+            'Content-Type'=> 'application/json'
+        ])->post($this->facebookProfileEndpoint.'+'.$this->event['messages'][0]['from'].'/messages', $payload);
+
 
         return $response;
     }
