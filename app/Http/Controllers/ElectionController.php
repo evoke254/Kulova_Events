@@ -125,7 +125,7 @@ class ElectionController extends Controller
         $config = [
             'facebook' => [
                 'from_number' => '+254742968713',
-                'token' => env('waba_admin_token'),
+                'app_id' => '1205328116524083',
                 'app_secret' => 'b84c6e8f3b5ceb41dabb307855e68436',
                 'verification'=>'LoveLivesHere',
             ]
