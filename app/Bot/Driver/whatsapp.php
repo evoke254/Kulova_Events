@@ -79,10 +79,11 @@ class whatsapp extends HttpDriver implements VerifiesService
     /** @var DriverEventInterface */
     protected $driverEvent;
     const DRIVER_NAME = 'WABA';
-    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/175304455667813';
+    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0';
 
     protected $interactive = false;
     protected $isPostback = false;
+    protected $waba_id;
 
 
 
@@ -90,22 +91,22 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
 
 
-        $response = Http::withHeaders([
-            'Authorization' => $this->config->get('token'),
-            'Content-Type'=> 'application/json'
-        ])->get($this->facebookProfileEndpoint.'/phone_numbers',);
 
-        Log::info('numbrs');
-        Log::info(json_encode($response));
 
 
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $event = Collection::make((array) $this->payload->get('entry', [null])[0]);
+        $this->waba_id = $event->get('id');
         $value = Collection::make($event->get('changes'));
         $this->event = Collection::make($value[0]["value"]);
         $this->signature = $request->headers->get('X_HUB_SIGNATURE', '');
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
+
+                $response = Http::get($this->facebookProfileEndpoint.'/phone_numbers?access_token',);
+
+        Log::info($this->event['metadata']['phone_number_id']);
+        Log::info('ggg phone ndio hii');
 
     }
     /**
