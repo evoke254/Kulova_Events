@@ -94,7 +94,8 @@ class whatsapp extends HttpDriver implements VerifiesService
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
 
-                Log::info(json_encode($request->request->all()));
+                Log::info(json_encode($this->payload));
+                Log::info('leo');
                 dd('leo');
     }
     /**
