@@ -95,7 +95,6 @@ class whatsapp extends HttpDriver
         $this->content = $request->getContent();
         $this->config = Collection::make($this->config->get('facebook', []));
     }
-
     /**
      * Determine if the request is for this driver.
      *
