@@ -118,7 +118,7 @@ class ElectionController extends Controller
         $verify_token = 'V0d@com@1028';
 
         $config = [
-            'from_number' => '+254742968713',
+            'from_number' => '254742968713',
             'access_token' => env('waba_admin_token'),
             'waba' => $request->all()];
 

@@ -88,7 +88,6 @@ class whatsapp extends HttpDriver implements VerifiesService
 
     public function buildPayload(Request $request)
     {
-        $payload = new ParameterBag((array) json_decode($request->getContent(), true));
 
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $event = Collection::make((array) $this->payload->get('entry', [null])[0]);
