@@ -112,13 +112,7 @@ class whatsapp extends HttpDriver implements VerifiesService
             return (isset($msg['messages']['text']) ||  isset($msg['message_echoes']['text']));
         });
 
-
-
-                Log::info('isset-_______');
-
-                Log::info( $this->event['messages'] );
-
-        return !$messages->isEmpty() && $validSignature;
+        return ( (!empty($this->event['messages'])  ||  $this->event['message_echoes'] )&& $validSignature);
     }
 
     /**
@@ -252,13 +246,6 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function getConversationAnswer(IncomingMessage $message)
     {
-        $payload = $message->getPayload();
-        if (isset($payload['message']['quick_reply'])) {
-            return Answer::create($payload['message']['text'])->setMessage($message)->setInteractiveReply(true)->setValue($payload['message']['quick_reply']['payload']);
-        } elseif (isset($payload['postback']['payload'])) {
-            return Answer::create($payload['postback']['title'])->setMessage($message)->setInteractiveReply(true)->setValue($payload['postback']['payload']);
-        }
-
         return Answer::create($message->getText())->setMessage($message);
     }
 
@@ -270,8 +257,13 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function getMessages()
     {
         if (empty($this->messages)) {
-            $this->loadMessages();
-        }
+        $message =  $this->event['messages']['text']['body'];
+        Log::info($message);
+        Log::info("Getting my message and user ======");
+        $userId = $this->event['messages']['from'];
+        Log::info($userId);
+        $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
+    }
 
         return $this->messages;
     }
@@ -279,36 +271,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     /**
      * Load Facebook messages.
      */
-    protected function loadMessages()
-    {
-        $messages = Collection::make($this->event->get('messaging'));
-        $messages = $messages->transform(function ($msg) {
-            $message = new IncomingMessage('', $this->getMessageSender($msg), $this->getMessageRecipient($msg), $msg);
-            if (isset($msg['message']['text']) && !isset($msg['message']['quick_reply']['payload'])) {
-                $message->setText($msg['message']['text']);
 
-                if (isset($msg['message']['nlp'])) {
-                    $message->addExtras('nlp', $msg['message']['nlp']);
-                }
-            } elseif (isset($msg['postback']['payload'])) {
-                $this->isPostback = true;
-
-                $message->setText($msg['postback']['payload']);
-            } elseif (isset($msg['message']['quick_reply']['payload'])) {
-                $this->isPostback = true;
-
-                $message->setText($msg['message']['quick_reply']['payload']);
-            }
-
-            return $message;
-        })->toArray();
-
-        if (count($messages) === 0) {
-            $messages = [new IncomingMessage('', '', '')];
-        }
-
-        $this->messages = $messages;
-    }
 
     /**
      * @return bool
@@ -475,26 +438,11 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function getUser(IncomingMessage $matchingMessage)
     {
-        $messagingDetails = $this->event->get('messaging')[0];
+        $firstName = $this->event['contacts']['profile']['name'] ?? null;
+        $lastName = ' ';
+        $username = $this->event['contacts']['wa_id'];
 
-        // field string available at Facebook
-        $fields = 'name,first_name,last_name,profile_pic';
-
-        // WORKPLACE (Facebook for companies)
-        // if community isset in sender Object, it is a request done by workplace
-        if (isset($messagingDetails['sender']['community'])) {
-            $fields = 'first_name,last_name,email,title,department,employee_number,primary_phone,primary_address,picture,link,locale,name,name_format,updated_time';
-        }
-
-        $userInfoData = $this->http->get($this->facebookProfileEndpoint . $matchingMessage->getSender() . '?fields=' . $fields . '&access_token=' . $this->config->get('token'));
-
-        $this->throwExceptionIfResponseNotOk($userInfoData);
-        $userInfo = json_decode($userInfoData->getContent(), true);
-
-        $firstName = $userInfo['first_name'] ?? null;
-        $lastName = $userInfo['last_name'] ?? null;
-
-        return new User($matchingMessage->getSender(), $firstName, $lastName, null, $userInfo);
+        return new User($matchingMessage->getSender(), $firstName, $lastName, $username, null);
     }
 
     /**
