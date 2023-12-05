@@ -387,7 +387,7 @@ class whatsapp extends HttpDriver implements VerifiesService
             'Content-Type'=> 'application/json'
         ])->post($this->facebookProfileEndpoint.'+'.$this->event['messages'][0]['from'].'/messages', $payload);
 
-
+Log::info(json_encode($response));
         return $response;
     }
 
