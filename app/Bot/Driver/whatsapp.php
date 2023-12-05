@@ -105,9 +105,11 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function matchesRequest()
     {
         $validSignature = empty($this->config->get('app_secret')) || $this->validateSignature();
+        $value = Collection::make($this->event->get('changes'));
+           Log::info('mffffltressages-_______');
+             Log::info(json_encode($value));
         $messages = Collection::make($this->event->get('changes'))->filter(function ($msg) {
-            Log::info('mffffltressages-_______');
-             Log::info(json_encode($msg));
+
             return (isset($msg['value']['messages']['text']) ||  isset($msg['value']['message_echoes']['text']));
         });
 
