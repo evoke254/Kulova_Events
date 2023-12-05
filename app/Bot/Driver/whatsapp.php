@@ -89,6 +89,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function buildPayload(Request $request)
     {
 
+
         $this->payload = new ParameterBag((array) json_decode($request->getContent(), true));
         $event = Collection::make((array) $this->payload->get('entry', [null])[0]);
         $value = Collection::make($event->get('changes'));
@@ -110,6 +111,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $messages = Collection::make($this->event)->filter(function ($msg) {
             return (isset($msg['messages']['text']) ||  isset($msg['message_echoes']['text']));
         });
+        Log::info("validSignature == ". $validSignature);
 
         return ( (!empty($this->event['messages'])  ||  $this->event['message_echoes'] )&& $validSignature);
     }
