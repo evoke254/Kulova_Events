@@ -114,9 +114,9 @@ class whatsapp extends HttpDriver implements VerifiesService
 
 
 
-                Log::info('messages-_______');
+                Log::info('isset-_______');
 
-                Log::info(json_encode($messages));
+                Log::info( isset($msg['messages']['text']) );
 
         return !$messages->isEmpty() && $validSignature;
     }
