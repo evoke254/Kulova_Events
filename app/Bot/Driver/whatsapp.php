@@ -332,7 +332,7 @@ class whatsapp extends HttpDriver implements VerifiesService
          $parameters = array_merge_recursive([
             "messaging_product"=> "whatsapp",
             "recipient_type"=> "individual",
-            "to"=> $this->event['messages'][0]['from'],
+            "to"=> '+'.$this->event['messages'][0]['from'],
             "type"=> 'text',
             'text' => [
                 'body' => $message,
@@ -385,7 +385,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         $response = Http::withHeaders([
             'Authorization' => $this->config->get('token'),
             'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint.'+'.$this->event['messages'][0]['from'].'/messages', $payload);
+        ])->post($this->facebookProfileEndpoint.$this->config->get('from_number').'/messages', $payload);
 
 Log::info(json_encode($payload));
         return $response;
