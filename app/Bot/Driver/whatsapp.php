@@ -261,11 +261,6 @@ class whatsapp extends HttpDriver implements VerifiesService
     }
 
     /**
-     * Load Facebook messages.
-     */
-
-
-    /**
      * @return bool
      */
     public function isBot()
