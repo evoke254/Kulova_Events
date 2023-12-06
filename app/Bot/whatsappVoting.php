@@ -243,7 +243,7 @@ class whatsappVoting extends Conversation
 
     public function cancelConversation() {
         $this->votes = [];
-        $this->say("Canceled");
+        $this->bot->say("Canceled");
     }
 
     public function stopsConversation(IncomingMessage $message)
