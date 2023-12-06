@@ -385,14 +385,11 @@ class whatsapp extends HttpDriver implements VerifiesService
     public function sendPayload($payload)
     {
 
-        $this->replies[] = $payload;
-//=================================
-        $token = Http::get('https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id='.$this->config->get('app_id').'&client_secret='.$this->config->get('app_secret'));
 
         try {
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$token->json('access_token'),
+                'Authorization' => $this->config->get('token'),
                 'Content-Type'=> 'application/json'
             ])->post($this->facebookProfileEndpoint.$this->event['metadata']['phone_number_id'].'/messages', $payload);
 
@@ -482,11 +479,7 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
     {
-        $parameters = array_replace_recursive([
-            'access_token' => $this->config->get('token'),
-        ], $parameters);
-
-        return $this->http->post($this->facebookProfileEndpoint . $endpoint, [], $parameters);
+        //TODo method needed for low level
     }
 
     /**

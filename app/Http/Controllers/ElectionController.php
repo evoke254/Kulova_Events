@@ -128,6 +128,7 @@ class ElectionController extends Controller
                 'from_number' => '+254742968713',
                 'app_id' => '1048420159710452',
                 'app_secret' => 'b80f0c714d7a726b5e317e5923938b3f',
+                'token' => env('waba_admin_token'),
                 'verification'=>'LoveLivesHere',
             ]
         ];
