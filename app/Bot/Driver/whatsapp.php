@@ -114,7 +114,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         });
 
 
-        return ( (!empty($this->event['messages'])  ||  $this->event['message_echoes'] )&& $validSignature);
+        return ( (!empty($this->event['messages'])  ||  isset($this->event['message_echoes']) )&& $validSignature);
     }
 
     /**
