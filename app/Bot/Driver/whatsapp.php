@@ -107,15 +107,9 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function matchesRequest()
     {
-        $validSignature = empty($this->config->get('app_secret')) || $this->validateSignature();
 
-        $messages = Collection::make($this->event)->filter(function ($msg) {
-            return (isset($msg['messages']['text']) ||  isset($msg['message_echoes']['text']));
-        });
-
-
-        return ( (!empty($this->event['messages'])  ||  isset($this->event['message_echoes']) )&& $validSignature);
-    }
+        return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['id']));
+ }
 
     /**
      * @param  Request  $request
@@ -260,7 +254,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
         if (empty($this->messages)) {
             $message =  $this->event['messages'][0]['text']['body'];
-            $userId = $this->event['messages'][0]['from'];
+            $userId = $this->event['messages'][0]['id'];
             $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
         }
 
