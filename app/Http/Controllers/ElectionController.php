@@ -125,7 +125,7 @@ class ElectionController extends Controller
                 'verification'=>'LoveLivesHere',
             ],
             'botman' => [
-                'conversation_cache_time' => 600
+                'conversation_cache_time' => 5
             ],
         ];
 
