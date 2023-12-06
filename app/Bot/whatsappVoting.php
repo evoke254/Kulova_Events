@@ -32,6 +32,7 @@ class whatsappVoting extends Conversation
 
     }
     public function run(){
+        dd($this->bot->say('sss'));
         $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
         $this->startConversation($welcomeMessage);
     }
@@ -248,7 +249,10 @@ class whatsappVoting extends Conversation
 
     public function stopsConversation(IncomingMessage $message)
     {
-        $this->cancelConversation();
+        $ans = $message->getText();
+        if ($ans == '00') {
+            $this->cancelConversation();
+        }
         return false;
     }
 }
