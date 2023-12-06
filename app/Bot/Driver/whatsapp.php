@@ -107,9 +107,8 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function matchesRequest()
     {
-
-        return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['id']));
- }
+        return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['from']));
+    }
 
     /**
      * @param  Request  $request
@@ -254,7 +253,7 @@ class whatsapp extends HttpDriver implements VerifiesService
     {
         if (empty($this->messages)) {
             $message =  $this->event['messages'][0]['text']['body'];
-            $userId = $this->event['messages'][0]['id'];
+            $userId = $this->event['messages'][0]['from'];
             $this->messages = [new IncomingMessage($message, $userId, $userId, $this->payload)];
         }
 
