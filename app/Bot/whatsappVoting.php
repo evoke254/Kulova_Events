@@ -32,7 +32,7 @@ class whatsappVoting extends Conversation
 
     }
     public function run(){
-        $welcomeMessage = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n";
+        $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
         $this->startConversation($welcomeMessage);
     }
 
@@ -45,9 +45,9 @@ class whatsappVoting extends Conversation
 
         $opt = "";
         foreach($this->events as $key => $event) {
-            $opt .= $key+1 . ": ". $event['name']. " \n ";
+            $opt .= $key+1 . ": ". $event['name']. "\n";
         }
-        $qstn = $welcomeMessage. "Please select an event: \n ".   $opt ." 00 : Cancel ";
+        $qstn = $welcomeMessage. "Please select an event: \n ". $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
@@ -58,8 +58,7 @@ class whatsappVoting extends Conversation
                 $this->elections =  $this->event->elections->toArray();
                 $this->selectElection();
             } else{
-                $qstn = "CON Invalid response. Please check and try again \n
-                                EVENTS: \n ".   $opt ." 00 : Cancel ";
+                $qstn = "Invalid response. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
 
@@ -71,22 +70,21 @@ class whatsappVoting extends Conversation
 
         $opt = "";
         foreach($this->elections as $key => $election) {
-            $opt .= $key+1 . ": ".$election['name']. " \n ";
+            $opt .= $key+1 . ": ".$election['name']. "\n";
         }
 
-        $qstn = "CON ELECTIONS: \n ".   $opt ." 00 : Cancel ";
+        $qstn = "ELECTIONS:\n". $opt ." 00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
-            $ans = (int) last(explode("*", $answer->getText())) ;
+            $ans = (int) $answer->getText() ;
             if (isset($this->elections[$ans - 1])){
                 $this->election = Election::find($this->elections[$ans - 1]['id']);
                 $this->SelectedElectionArr = $this->elections[$ans - 1];
                 $this->positions = $this->election->elective_positions->toArray();
                 $this->selectElectivePositions();
             } else{
-                $qstn = "CON  Invalid response. Please check and try again \n
-                                : \n ".   $opt ." 00 : Cancel ";
+                $qstn = "Invalid response. Please check and try again\n\n ". $opt ." 00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
         });
@@ -123,10 +121,10 @@ class whatsappVoting extends Conversation
 
         if ($countBallot >0) {
 
-            $qstn = "CON POSITIONS: \n ".   $opt ." 00 : Cancel ";
+            $qstn = "POSITIONS: \n ".   $opt ." 00 : Cancel ";
             $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
 
-                $ans = (int) last(explode("*", $answer->getText())) ;
+                $ans = (int) $answer->getText() ;
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
                     //Check if position has vote and delete
 
@@ -151,13 +149,13 @@ class whatsappVoting extends Conversation
 
                     } else {
 
-                        $this->say('END You are not eligible to vote');
+                        $this->say('You are not eligible to vote');
                     }
 
 
 
                 } else{
-                    $qstn = "CON  Invalid response. Please check and try again \n
+                    $qstn = " Invalid response. Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";
                     $this->qstnFallback($qstn);
                 }
@@ -200,29 +198,26 @@ class whatsappVoting extends Conversation
 
         }
 
-        $qstn = "CON POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
+        $qstn = "POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
-            $ans = (int) last(explode("*", $answer->getText())) ;
+            $ans = (int) $answer->getText() ;
             if ($ans == 1){
-                $this->say('END Vote cast. Thank you.');
+                $this->say('Vote cast. Thank you.');
             } else if ($ans == 2) {
                 $this->votes = [];
                 $this->deleteVote();
-                $this->say('END Cancelled by user. Dial *544# to try again');
+                $this->say('Cancelled by user. Dial *544# to try again');
             } else {
 
-                $qstn = "CON Invalid Option ( ".$ans." ). Try again\n POSITIONS: \n ".   $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
+                $qstn = "Invalid Option ( ".$ans." ). Try again\nPOSITIONS:\n ". $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
                 $this->qstnFallback($qstn);
             }
 
         });
-
-
     }
 
     public function deleteVote(){
-
 
         foreach ($this->positions as $pstnKey => $pstn) {
 
@@ -243,25 +238,17 @@ class whatsappVoting extends Conversation
 
 
     public function qstnFallback($qstn) {
-
         $this->repeat($qstn);
     }
 
     public function cancelConversation() {
         $this->votes = [];
-        $this->say("END Canceled");
+        $this->say("Canceled");
     }
 
     public function stopsConversation(IncomingMessage $message)
     {
-
-            $ans = last(explode("*", $message->getText())) ;
-        if ($ans == '00') {
-            $this->votes = [];
-            header('Content-type: text/plain');
-            echo "END Thanks for your submission.";
-            return true;
-        }
+        $this->cancelConversation();
         return false;
     }
 }
