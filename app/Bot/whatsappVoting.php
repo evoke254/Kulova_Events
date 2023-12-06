@@ -243,13 +243,14 @@ class whatsappVoting extends Conversation
 
     public function cancelConversation() {
         $this->votes = [];
-        $this->say("Cancelled by user");
+//        $this->say("Cancelled by user");
     }
 
     public function stopsConversation(IncomingMessage $message)
     {
         $ans = $message->getText();
         if ($ans == '00') {
+            $this->reply("Cancelled by user");
             $this->cancelConversation();
         }
         return false;
