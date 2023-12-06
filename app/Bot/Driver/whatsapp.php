@@ -54,7 +54,7 @@ class whatsapp extends HttpDriver implements VerifiesService
 
     /** @var array */
     protected $messages = [];
-
+    protected $replies = [];
     /** @var array */
     protected $templates = [
         AirlineBoardingPass::class,
@@ -384,6 +384,9 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function sendPayload($payload)
     {
+
+        $this->replies[] = $payload;
+//=================================
         $token = Http::get('https://graph.facebook.com/oauth/access_token?grant_type=client_credentials&client_id='.$this->config->get('app_id').'&client_secret='.$this->config->get('app_secret'));
 
         try {
