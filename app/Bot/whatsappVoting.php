@@ -58,7 +58,7 @@ class whatsappVoting extends Conversation
                 $this->elections =  $this->event->elections->toArray();
                 $this->selectElection();
             } else{
-                $qstn = "Invalid response. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
+                $qstn = "Invalid response - _".$ans."_. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
 
@@ -84,7 +84,7 @@ class whatsappVoting extends Conversation
                 $this->positions = $this->election->elective_positions->toArray();
                 $this->selectElectivePositions();
             } else{
-                $qstn = "Invalid response. Please check and try again\n\n ". $opt ." 00 : Cancel ";
+                $qstn = "Invalid response - _".$ans."_. Please check and try again\n\n ". $opt ." 00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
         });
@@ -155,7 +155,7 @@ class whatsappVoting extends Conversation
 
 
                 } else{
-                    $qstn = " Invalid response. Please check and try again \n
+                    $qstn = " Invalid response - _".$ans."_. Please check and try again \n
                                 : \n ".   $opt ." 00 : Cancel ";
                     $this->qstnFallback($qstn);
                 }
@@ -243,7 +243,7 @@ class whatsappVoting extends Conversation
 
     public function cancelConversation() {
         $this->votes = [];
-        $this->bot->say("Canceled");
+        $this->say("Cancelled by user");
     }
 
     public function stopsConversation(IncomingMessage $message)
