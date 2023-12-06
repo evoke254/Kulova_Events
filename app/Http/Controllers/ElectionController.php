@@ -123,7 +123,10 @@ class ElectionController extends Controller
                 'app_secret' => 'b80f0c714d7a726b5e317e5923938b3f',
                 'token' => env('waba_admin_token'),
                 'verification'=>'LoveLivesHere',
-            ]
+            ],
+            'botman' => [
+                'conversation_cache_time' => 600
+            ],
         ];
 
         //Log::info(json_encode($config));
@@ -149,9 +152,6 @@ class ElectionController extends Controller
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId, $request));
         });
 
-        $botman->hears('00', function(BotMan $bot) {
-            $bot->reply('Cancelled by user');
-        })->stopsConversation();
 
         // Start listening
         $botman->listen();

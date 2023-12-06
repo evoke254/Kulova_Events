@@ -207,7 +207,7 @@ class whatsappVoting extends Conversation
             } else if ($ans == 2) {
                 $this->votes = [];
                 $this->deleteVote();
-                $this->say('Cancelled by user. Dial *544# to try again');
+                $this->say('Cancelled by user. Text Vote to try again');
             } else {
 
                 $qstn = "Invalid Option ( ".$ans." ). Try again\nPOSITIONS:\n ". $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
@@ -242,15 +242,18 @@ class whatsappVoting extends Conversation
     }
 
     public function cancelConversation() {
+
+        $this->say('Cancelled by user');
         $this->votes = [];
     }
 
     public function stopsConversation(IncomingMessage $message)
     {
-        $this->cancelConversation();
+
         $ans = $message->getText();
         if ($ans == '00') {
             $this->cancelConversation();
+            return  true;
         }
         return false;
     }
