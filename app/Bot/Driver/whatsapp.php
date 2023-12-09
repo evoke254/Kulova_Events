@@ -116,6 +116,7 @@ class whatsapp extends HttpDriver implements VerifiesService
                 $db_log = new BotLogs();
                 $db_log->message_id = $this->event['messages'][0]['id'];
                 $db_log->data_1 = $this->event['messages'][0]['from'];
+                $db_log->data_2 = $this->event['messages'][0]['text']['body'];
                 $db_log->save();
             }
         }
