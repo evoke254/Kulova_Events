@@ -139,7 +139,7 @@ class ElectionController extends Controller
         $phoneNumber = '+254742968713';
 
         //TODO remove in prod
-        $rr = Invite::updateOrCreate(
+        $voterId = Invite::updateOrCreate(
             ['phone_number' => $phoneNumber,],
             ['phone_number' => $phoneNumber,
                 'name' => 'test user 00',
@@ -148,7 +148,6 @@ class ElectionController extends Controller
             ]
         );
 
-        $voterId = $rr;
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
