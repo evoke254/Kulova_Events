@@ -80,6 +80,24 @@
                                     Create {{$electionTypes[$electionType]}} Election
                                 </h2>
                                 <form  wire:submit.prevent="createElection" class="space-y-8">
+                                    @if(empty($event))
+                                        <div>
+                                            <label for="Event" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Event Name *</label>
+                                            <select type="text" wire:model="election.event_id" class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
+                                    shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                                    dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+                                            >
+                                                <option>Select Event</option>
+                                                @foreach(\App\Models\Event::where('user_id', \Illuminate\Support\Facades\Auth::id())->get() as $event )
+                                                    <option value="{{$event->id}}">{{$event->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('election.event_id')
+                                            <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span>
+                                                {{$message}}</p>
+                                            @enderror
+                                        </div>
+                                    @endif
                                     <div>
                                         <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Election Name *</label>
                                         <input type="text" wire:model="election.name" class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300
@@ -112,13 +130,10 @@
                                               focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                                               dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Describe the election ..."></textarea>
                                     </div>
-                                    <div class="flex justify-end space-x-2 space-y-2.5 mt-5">
-                                        <button type="button" wire:click="prev"  class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-gray-700 sm:w-fit hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                                            Prev
-                                        </button>
-                                        <button type="button" wire:click="createElection" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-green-700 sm:w-fit hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                                            Next >> Add Elective Positions
-                                        </button>
+                                    <div class="flex justify-end gap-2">
+                                        <x-button  wire:click="prev" secondary label="Previous" />
+                                        <x-button positive label="Submit"  wire:click="createElection" />
+
                                     </div>
                                 </form>
                             </div>
@@ -459,6 +474,28 @@
 
 
 
+                            </div>
+                        </div>
+
+                    @elseif($steps == 'Complete')
+                        <div id="alert-additional-content-3" class="p-4 mb-4 text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+                            <div class="flex items-center">
+                                <svg class="flex-shrink-0 w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                </svg>
+                                <span class="sr-only">Info</span>
+                                <h3 class="text-lg font-medium">Success </h3>
+                            </div>
+                            <div class="mt-2 mb-4 text-sm">
+                            You have created an election. Proceed to update and add Resolutions, Elective Positions...
+                            </div>
+                            <div class="flex">
+                                <button type="button" Wire:click="Complete"  x-on:click="close" class="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    <svg class="me-2 h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
+                                        <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+                                    </svg>
+                                    Update Election
+                                </button>
                             </div>
                         </div>
                     @endif

@@ -3,50 +3,37 @@
 namespace App\Livewire\Event;
 
 use App\Models\Event;
-use App\Models\EventCategory;
-use App\Models\Organization;
-use Carbon\Carbon;
+use App\Models\EventImage;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
-use Livewire\Attributes\On;
-use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
+use WireUi\Traits\Actions;
 
-class Create extends Component
+class Create extends Component   implements HasForms
 {
-    use WithFileUploads;
-    public $files = [];
-    public $event = [];
-
-    public $organizations, $categories ;
-
-    public $start_date;
-    public $end_date;
-    public $category_id;
-
-    protected $rules = [
-        'event.name' => 'required',
-        'event.venue' => 'required',
-        'event.organization_id' => 'required',
-        'category_id' => 'required',
-        //'url' => 'url',
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after_or_equal:start_date'
-    ];
-    public function mount(){
-        $this->categories = EventCategory::orderBy('created_at', 'DESC')->get();
-        $this->organizations = Organization::orderBy('created_at', 'DESC')->get();
-    }
-
-    #[On('startDateSelected')]
-    public function updateStartDate($date = null)
+    use InteractsWithForms, WithFileUploads, Actions;
+    public ?array $data = [];
+    public function mount(): void
     {
-        $this->event['start_date'] = Carbon::parse($date);
+        $this->form->fill();
     }
-    #[On('endDateSelected')]
-    public function updateEndDate($date = null){
-        $this->event['end_date'] = Carbon::parse($date);
-    }
+
+
     public function createEvent(){
         $this->validate();
 
@@ -72,16 +59,99 @@ class Create extends Component
 
     }
 
-    public function _finishUpload($name, $tmpPath, $isMultiple)
+    public function form(Form $form): Form
     {
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->required(),
 
-        $file = collect($tmpPath)->map(function ($i) {
-            return TemporaryUploadedFile::createFromLivewire($i);
-        })->toArray();
-        $this->dispatch('upload:finished', name: $name, tmpFilenames: collect($file)->map->getFilename()->toArray())->self();
+                Select::make('organization_id')
+                    ->required()
+                    ->label('Organization')
+                    ->options(\App\Models\Organization::query()->pluck('name', 'id')),
+                TextInput::make('venue')
+                    ->required(),
+                TextInput::make('cost')
+                    ->numeric()
 
-        $file = array_merge($this->getPropertyValue($name), $file);
-        app('livewire')->updateProperty($this, $name, $file);
+                    ->prefixIcon('heroicon-m-currency-dollar')
+                    ->minValue(0)
+                    ->required(),
+                DateTimePicker::make('start_date')
+                    ->required(),
+                DateTimePicker::make('end_date')
+                    ->required(),
+
+
+
+
+                Toggle::make('is_active')
+                    ->label('Active')
+                    ->default(true)
+                    ->columnSpan(1),
+                Toggle::make('is_featured')
+                    ->label('Featured')
+                    ->default(true)
+                    ->columnSpan(1),
+
+                Select::make('categories')
+                    ->multiple()
+                    ->label('Event Category')
+                    ->options(\App\Models\EventCategory::query()->pluck('name', 'id')),
+
+                RichEditor::make('description')
+                    ->columnSpanFull()
+                    ->toolbarButtons([
+                        'attachFiles',
+                        'blockquote',
+                        'bold',
+                        'bulletList',
+                        'codeBlock',
+                        'h2',
+                        'h3',
+                        'italic',
+                        'link',
+                        'orderedList',
+                        'redo',
+                        'strike',
+                        'underline',
+                        'undo',
+                    ]),
+
+                FileUpload::make('images.image')
+                    ->disk('public')
+                    ->multiple()
+                    ->columns(4)
+                    ->columnSpanFull()
+                    ->reorderable()
+                    ->imageEditor(),
+
+
+            ])->columns(2)
+            ->statePath('data');
+    }
+
+    public function create(): void
+    {
+        $data = $this->form->getState();
+        $data['user_id'] = Auth::id();
+
+        $event = Event::create($data);
+        foreach ($data['images']  as $file){
+            $event->addMedia(storage_path('app/public/'.$file))
+                ->withResponsiveImages()
+                ->toMediaCollection();
+//            EventImage::create(['event_id' => $event->id, 'image' => $file]);
+        }
+        $event->attachTags($data['categories']);
+        $this->notification()->success(
+            $title = 'Event saved',
+            $description = 'Event details were successfully saved'
+        );
+
+        $this->redirect(route('events.index'));
+
     }
 
     public function render()

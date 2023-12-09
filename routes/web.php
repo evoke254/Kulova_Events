@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     /*Events*/
     Route::resource('event-category', \App\Http\Controllers\EventCategoryController::class);
     Route::resource('events', \App\Http\Controllers\EventController::class);
+    Route::resource('election', \App\Http\Controllers\ElectionController::class);
 
 
 

@@ -23,7 +23,8 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        //
+
+        return view('event.election-index');
     }
 
     /**
@@ -48,7 +49,8 @@ class ElectionController extends Controller
      */
     public function show(Election $election)
     {
-        //
+
+        return view('event.election-show', compact('election'));
     }
 
     /**

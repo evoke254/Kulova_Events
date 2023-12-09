@@ -20,6 +20,7 @@ class Create extends Component
     }
     public function save(){
         $this->validate();
+        dd('sss');
         EventCategory::updateOrCreate(
             ['id' => isset($this->event_category['id']) ? $this->event_category['id'] : null],
             $this->event_category

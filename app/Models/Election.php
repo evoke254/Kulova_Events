@@ -4,22 +4,35 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model
 {
     use HasFactory;
+    public $electionTypes = [1 => 'Single Vote', 2 => 'Plural Vote', 3 =>'Resolution Vote'];
 
     protected $fillable = [
-        'name', 'event_id', 'details', 'election_date', 'type'
+        'name', 'event_id', 'details', 'election_date', 'type', 'user_id', 'organization_id', 'status'
     ];
 
     protected $with = ['elective_positions'];
+    protected $appends = ['elct_type'];
 
 
     public function elective_positions():HasMany
     {
         return $this->hasmany(ElectivePosition::class);
+    }
+
+        public function event():belongsTo
+        {
+            return $this->belongsTo(Event::class);
+        }
+
+        public function getElctTypeAttribute()
+    {
+        return  isset($this->type) ? $this->electionTypes[$this->type] : ' ';
     }
 
 }

@@ -6,6 +6,7 @@ use App\Models\CandidateElectivePosition;
 use App\Models\Election;
 use App\Models\ElectivePosition;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -37,6 +38,8 @@ class Create extends Component
     public function mount(){
         $this->position = null;
         $this->candidate = [];
+        $this->election =[];
+        $this->election_date = null;
         $this->resetValidation();
         $this->positions = ElectivePosition::where('election_id', isset($this->election_detail) ? $this->election_detail->id : null) ->get();
 
@@ -53,17 +56,35 @@ class Create extends Component
         $this->election['election_date'] = Carbon::parse($this->election_date);
         $validatedData = $this->validate([
             'election.name' => 'required|min:2',
-            'election.election_date' => 'required|date',
+            'election_date' => 'required|date',
         ]);
+        if (empty($this->event)){
+            $this->validate([
+                'election.event_id' => 'required',
+            ], ['required' => 'Event Field has to be selected']);
+        } else {
+                    $this->election['event_id'] = isset($this->event['id']) ? $this->event['id'] : null;
+        }
 
-        $this->election['event_id'] = $this->event['id'];
+
+        $this->election['user_id'] = Auth::id();
+        $this->election['organization_id'] = Auth::user()->organization_id;
         $this->election['type'] = $this->electionType;
 
         $this->election_detail = Election::updateOrCreate(
             ['id' => isset($this->election_detail) ? $this->election_detail->id : null],
             $this->election
         );
-        $this->next();
+        $this->notification()->success(
+            $title = ' Election Created ',
+            $description = 'Your election was successfully saved'
+        );
+        $this->mount();
+        $this->steps = 'Complete';
+    }
+
+    public function Complete(){
+        $this->redirect(route('election.show', ['election' => $this->election_detail->id]));
     }
 
     public function addElectivePositions(){

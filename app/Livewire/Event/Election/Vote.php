@@ -27,6 +27,11 @@ class Vote extends Component
             $vote->save();
         }
 
+        $this->notification()->success(
+            $title = ' Vote Succesfully Cast ',
+            $description = 'Vote was successfully saved'
+        );
+
     }
     public function render()
     {

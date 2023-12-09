@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('organization.create', ['org' => $organization])
+    @livewire('organization.edit', ['organization' => $organization])
 </x-app-layout>

@@ -3,30 +3,58 @@
 namespace App\Livewire\Organization;
 
 use App\Models\Organization;
+use Filament\Forms\Components\Textarea;
+use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use WireUi\Traits\Actions;
 
-class Create extends Component
+class Create extends Component implements HasForms
 {
-    public $organization = [];
+    use InteractsWithForms, Actions;
+    public ?array $data = [];
+    public  Organization $organization;
 
     protected $rules = [
         'organization.name' => 'required|min:2',
     ];
 
-
-    public function mount($org = null){
-        if ($org){
-            $this->organization = $org->toArray();
-        }
+    public function mount(){
+        $this->form->fill();
     }
-    public function createOrganization(){
-        $this->validate();
-        $org = Organization::updateOrCreate(
-            ['id' => isset($this->organization['id']) ? $this->organization['id'] : null],
-            $this->organization
+
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->required(),
+                TextInput::make('email')
+                    ->email(),
+                Textarea::make('description'),
+                Textarea::make('location'),
+            ])
+            ->statePath('data');
+    }
+
+    public function create(): void
+    {
+        $data = $this->form->getState();
+
+        $org = Organization::create($data);
+
+        $this->notification()->success(
+            $title = 'Organization saved',
+            $description = 'Organization details were successfully saved'
         );
 
-        return redirect()->route('organizations.index')->with('success', true);
+
     }
     public function render()
     {

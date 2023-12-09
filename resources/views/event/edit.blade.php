@@ -1,3 +1,3 @@
 <x-app-layout>
-    @livewire('event.create', ['event' => $event->toArray()])
+    @livewire('event.edit', ['event' => $event])
 </x-app-layout>
