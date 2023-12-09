@@ -246,21 +246,4 @@ class whatsappVoting extends Conversation
         $this->repeat($qstn);
     }
 
-    public function cancelConversation() {
-
-        $this->say('Cancelled by user');
-        $this->votes = [];
-    }
-
-    public function stopsConversation(IncomingMessage $message)
-    {
-
-        $ans = $message->getText();
-        if ($ans == '00') {
-            parent::say("Cancelled by user. Respond with 'Vote' to start over.");
-            $this->votes = [];
-            return  true;
-        }
-        return false;
-    }
 }

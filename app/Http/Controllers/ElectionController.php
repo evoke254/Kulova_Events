@@ -106,10 +106,13 @@ class ElectionController extends Controller
 
         $voterId = $rr;
 
-        $botman->hears('', function($bot) use ($voterId) {
+        $botman->hears('', function(Botman $bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\ussdVoting($voterId));
         });
 
+        $botman->hears('00', function(BotMan $bot) {
+            $bot->reply("Conversation cancelled. Reply with  'vote' to try again'");
+        })->stopsConversation();
         // Start listening
         $botman->listen();
     }
@@ -134,13 +137,13 @@ class ElectionController extends Controller
         DriverManager::loadDriver(whatsapp::class);
 
         //          DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
-
+        dd(new LaravelCache());
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = '+254742968713';
 
         //TODO remove in prod
         $voterId = Invite::updateOrCreate(
-            ['phone_number' => $phoneNumber,],
+            ['phone_number' => $phoneNumber],
             ['phone_number' => $phoneNumber,
                 'name' => 'test user 00',
                 'email' => time().'@gmail.com',
@@ -148,6 +151,9 @@ class ElectionController extends Controller
             ]
         );
 
+        $botman->hears('', function($bot) use ($voterId) {
+            $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
+        });
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
