@@ -112,12 +112,6 @@ class whatsapp extends HttpDriver implements VerifiesService
             $db_log = BotLogs::where('message_id', $this->event['messages'][0]['id'])->first();
             if ($db_log){
                 return false;
-            } else {
-                $db_log = new BotLogs();
-                $db_log->message_id = $this->event['messages'][0]['id'];
-                $db_log->data_1 = $this->event['messages'][0]['from'];
-                $db_log->data_2 = $this->event['messages'][0]['text']['body'];
-                $db_log->save();
             }
         }
 
@@ -404,8 +398,12 @@ class whatsapp extends HttpDriver implements VerifiesService
             // Your further logic based on the API response
             if ($statusCode == 200) {
                 // Successful request
-                // Access $responseData for additional details
-                Log::info($responseData);
+
+                $db_log = new BotLogs();
+                $db_log->message_id = $responseData['messages'][0]['id'];
+                $db_log->data_1 = $responseData['contacts'][0]['input'];
+                $db_log->save();
+
                 return $response;
             } else {
                 // Handle errors

@@ -82,7 +82,7 @@ class whatsappVoting extends Conversation
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
-            $ans = $answer->getText() ;
+            $ans = (int) $answer->getText() ;
             if (isset($this->elections[$ans - 1])){
                 $this->election = Election::find($this->elections[$ans - 1]['id']);
                 $this->SelectedElectionArr = $this->elections[$ans - 1];
@@ -129,7 +129,7 @@ class whatsappVoting extends Conversation
             $qstn = "POSITIONS: \n ".   $opt ." 00 : Cancel ";
             $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
 
-                $ans = $answer->getText() ;
+                $ans = (int) $answer->getText() ;
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
                     //Check if position has vote and delete
 
@@ -206,7 +206,7 @@ class whatsappVoting extends Conversation
         $qstn = "POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
-            $ans = $answer->getText() ;
+            $ans = (int) $answer->getText() ;
             if ($ans == 1){
                 $this->say('Vote cast. Thank you.');
             } else if ($ans == 2) {
@@ -245,5 +245,6 @@ class whatsappVoting extends Conversation
     public function qstnFallback($qstn) {
         $this->repeat($qstn);
     }
+
 
 }
