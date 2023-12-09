@@ -135,7 +135,7 @@ class ElectionController extends Controller
 
         //Log::info(json_encode($config));
         DriverManager::loadDriver(whatsapp::class);
-dd('sss');
+
         //          DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = '+254742968713';
