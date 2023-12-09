@@ -49,7 +49,6 @@ class ElectionController extends Controller
      */
     public function show(Election $election)
     {
-
         return view('event.election-show', compact('election'));
     }
 
@@ -150,8 +149,8 @@ class ElectionController extends Controller
         );
 
         $voterId = $rr;
-        $botman->hears('', function($bot) use ($voterId, $request) {
-            $bot->startConversation(new \App\Bot\whatsappVoting($voterId, $request));
+        $botman->hears('', function($bot) use ($voterId) {
+            $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
 
 

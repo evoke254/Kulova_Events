@@ -2,12 +2,16 @@
 
 namespace App\Bot;
 
+use App\Bot\Driver\whatsapp;
 use App\Models\CandidateElectivePosition;
 use App\Models\Election;
 use App\Models\ElectivePosition;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Vote;
+use BotMan\BotMan\BotManFactory;
+use BotMan\BotMan\Cache\LaravelCache;
+use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
@@ -25,10 +29,12 @@ class whatsappVoting extends Conversation
     public $SelectedElectionArr;
     public $msgType;
 
+    public $bot22;
 
     public function __construct(Invite $voter)
     {
         $this->voter = $voter;
+        $this->bot22 = '$bot22';
     }
     public function run(){
         $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
@@ -251,7 +257,8 @@ class whatsappVoting extends Conversation
 
         $ans = $message->getText();
         if ($ans == '00') {
-            $this->cancelConversation();
+            parent::say("Cancelled by user. Respond with 'Vote' to start over.");
+            $this->votes = [];
             return  true;
         }
         return false;
