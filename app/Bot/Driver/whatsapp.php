@@ -402,6 +402,8 @@ class whatsapp extends HttpDriver implements VerifiesService
                 $db_log = new BotLogs();
                 $db_log->message_id = $responseData['messages'][0]['id'];
                 $db_log->data_1 = $responseData['contacts'][0]['input'];
+                //Log the sent out msg
+                $db_log->data_2 = $payload['text']['body'];
                 $db_log->save();
 
                 return $response;
