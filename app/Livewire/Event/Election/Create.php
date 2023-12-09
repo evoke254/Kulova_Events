@@ -18,7 +18,7 @@ class Create extends Component
     public $steps  = 0;
     public $election_name;
     public $election_date;
-    public $electionTypes = [1 => 'Single Vote', 2 => 'Plural Vote', 3 =>'Resolution Vote'], $electionType;
+    public $electionTypes =  [ 2 => 'Candidate Election', 3 =>'Resolution Election'],$electionType;
 
     public $event_id;
     public $event;
@@ -36,6 +36,7 @@ class Create extends Component
 
 
     public function mount(){
+
         $this->position = null;
         $this->candidate = [];
         $this->election =[];
@@ -152,7 +153,6 @@ class Create extends Component
     }
 
     public function setElectionType($type){
-
         $this->mount();
     }
 

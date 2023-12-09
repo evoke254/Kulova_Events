@@ -44,6 +44,10 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Election::class);
     }
 
+        public function images(): HasMany
+    {
+        return $this->hasMany(EventImage::class);
+    }
     public function registerMediaConversions(Media $media = null): void
     {
         $this

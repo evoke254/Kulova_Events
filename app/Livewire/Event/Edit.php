@@ -3,6 +3,7 @@
 namespace App\Livewire\Event;
 
 use App\Models\EventCategory;
+use App\Models\EventImage;
 use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
 use Livewire\Component;
@@ -36,10 +37,12 @@ class Edit extends Component   implements HasForms
 
         $data = $event->toArray();
         $data['categories'] = $event->tags->pluck('id')->toArray();
-        $data['images'] = $event->getMedia()->pluck('file_name')->toArray();
-      //  dd($data);
+        $data['uploads'] = $event->images->pluck('image')->toArray();
+
+
+        //   dd($data);
         //$data['images'] =
-     //   dd($event->getMedia());
+        //   dd($event->getMedia());
         $this->form->fill($data);
     }
 
@@ -104,12 +107,11 @@ class Edit extends Component   implements HasForms
                         'undo',
                     ]),
 
-                FileUpload::make('images')
+                FileUpload::make('uploads')
                     ->disk('public')
-                    ->multiple()
-                    ->columns(4)
+                    ->image()
                     ->columnSpanFull()
-                    ->reorderable()
+                    ->multiple()
                     ->imageEditor(),
 
 
@@ -121,13 +123,14 @@ class Edit extends Component   implements HasForms
     {
         $data = $this->form->getState();
         $this->event->update($data);
-        foreach ($data['images']  as $file){
-            if (!empty($file)){
 
-            $this->event->addMedia(storage_path('app/public/'.$file))
-                ->withResponsiveImages()
-                ->toMediaCollection();
+        foreach ($data['uploads']  as $file){
+            if ( EventImage::where('image', $file)->get()->empty()) {
+                EventImage::create(
+                    ['event_id' => $this->event->id,
+                        'image' => $file]);
             }
+
         }
         $this->event->syncTags($data['categories']);
         $this->notification()->success(

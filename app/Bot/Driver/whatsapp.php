@@ -2,6 +2,7 @@
 
 namespace App\Bot\Driver;
 
+use App\Models\BotLogs;
 use BotMan\BotMan\Drivers\HttpDriver;
 use BotMan\BotMan\Interfaces\WebAccess;
 use BotMan\BotMan\Messages\Incoming\Answer;
@@ -107,6 +108,19 @@ class whatsapp extends HttpDriver implements VerifiesService
      */
     public function matchesRequest()
     {
+        if (isset($this->event['messages'][0]['id'])){
+            $db_log = BotLogs::where('message_id', $this->event['messages'][0]['id'])->first();
+            if ($db_log){
+                return false;
+            } else {
+                $db_log = new BotLogs();
+                $db_log->message_id = $this->event['messages'][0]['id'];
+                $db_log->data_1 = $this->event['messages'][0]['from'];
+                $db_log->save();
+            }
+        }
+
+
         return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['from']));
     }
 

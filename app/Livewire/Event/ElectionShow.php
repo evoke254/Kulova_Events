@@ -64,7 +64,6 @@ class ElectionShow extends Component implements HasForms
                                 ->label('No. of votes')
                                 ->numeric()
                                 ->minValue(1)
-                                ->maxValue(($this->election->type == 2) ? 100 : 1  )
                                 ->default(1),
 
                             Repeater::make('candidates')

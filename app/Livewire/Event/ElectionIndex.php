@@ -61,9 +61,8 @@ class ElectionIndex extends Component implements HasForms, HasTable
                 TextColumn::make('elct_type')
                     ->label('Type')
                     ->color(fn (string $state): string => match ($state) {
-                        'Single Vote' => 'gray',
-                        'Resolution Vote' => 'warning',
-                        'Plural Vote' => 'success',
+                        'Candidate Election' => 'success',
+                        'Resolution Election' => 'warning',
                     })
                     ->sortable(),
                 ToggleColumn::make('status')

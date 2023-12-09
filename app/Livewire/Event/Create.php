@@ -139,10 +139,10 @@ class Create extends Component   implements HasForms
 
         $event = Event::create($data);
         foreach ($data['images']  as $file){
-            $event->addMedia(storage_path('app/public/'.$file))
+/*            $event->addMedia(storage_path('app/public/'.$file))
                 ->withResponsiveImages()
-                ->toMediaCollection();
-//            EventImage::create(['event_id' => $event->id, 'image' => $file]);
+                ->toMediaCollection();*/
+            EventImage::create(['event_id' => $event->id, 'image' => $file]);
         }
         $event->attachTags($data['categories']);
         $this->notification()->success(

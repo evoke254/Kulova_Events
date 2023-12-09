@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Election extends Model
 {
     use HasFactory;
-    public $electionTypes = [1 => 'Single Vote', 2 => 'Plural Vote', 3 =>'Resolution Vote'];
+    public $electionTypes = [1 => 'Candidate Election', 2 => 'Candidate Election', 3 =>'Resolution Election'];
 
     protected $fillable = [
         'name', 'event_id', 'details', 'election_date', 'type', 'user_id', 'organization_id', 'status'

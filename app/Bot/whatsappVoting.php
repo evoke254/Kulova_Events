@@ -29,7 +29,6 @@ class whatsappVoting extends Conversation
     public function __construct(Invite $voter)
     {
         $this->voter = $voter;
-
     }
     public function run(){
         $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
