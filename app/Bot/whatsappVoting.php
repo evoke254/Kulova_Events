@@ -228,8 +228,8 @@ class whatsappVoting extends Conversation
 
             if ((empty($pstn['votes']) && !empty($pstn['candidates']))) {
                 $this->candidates = $pstn['candidates'];
-                foreach ($this->candidates as $key => $candidate) {
 
+                foreach ($this->candidates as $key => $candidate) {
                     $prev_vote =  $this->voter->castVote($pstn['id'], $candidate['id']);
                     if ($prev_vote){
                         $prev_vote->delete();
@@ -244,6 +244,10 @@ class whatsappVoting extends Conversation
     public function stopsConversation(IncomingMessage $message): bool
     {
         if ($message->getText() == '00') {
+            $this->deleteVote();
+            $welcomeMessage = "Conversation cancelled. Reply at anytime to try again'.\n";
+            $this->startConversation($welcomeMessage);
+
             return true;
         }
 
