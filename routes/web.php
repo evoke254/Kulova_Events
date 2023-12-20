@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('event-category', \App\Http\Controllers\EventCategoryController::class);
     Route::resource('events', \App\Http\Controllers\EventController::class);
     Route::resource('election', \App\Http\Controllers\ElectionController::class);
-
+    Route::resource('members', \App\Http\Controllers\InviteController::class);
 
 
 

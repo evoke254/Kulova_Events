@@ -17,13 +17,25 @@ class Invite extends Model
         'phone_number',
         'email',
         'member_no',
-        'details'
+        'details',
+        'organization_id',
+        'user_id'
     ];
 
 
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function created_by(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function organization(): BelongsTo
+    {
+        return $this->belongsTo(Organization::class);
     }
 
     public function allUserVotes(): HasMany

@@ -33,6 +33,7 @@ class ElectionIndex extends Component implements HasForms, HasTable
 {
     use InteractsWithTable;
     use InteractsWithForms;
+    public Event$event;
 
     public function mount(){
 //

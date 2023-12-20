@@ -3,8 +3,8 @@
 
     <x-button
         onclick="$openModal('createElectionModal')"
-        class="rounded-lg " lime
-        label="Create" icon="document-add" />
+        class="rounded-lg " primary
+        label="Create Election" icon="plus" />
 
 
     <x-modal.card

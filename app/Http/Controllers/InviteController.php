@@ -13,6 +13,7 @@ class InviteController extends Controller
     public function index()
     {
         //
+                return view('event.member');
     }
 
     /**

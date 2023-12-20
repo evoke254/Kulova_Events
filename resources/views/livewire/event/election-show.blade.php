@@ -1,16 +1,18 @@
 <div>
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
 
-    <div class="relative  mt-2 mx-auto  w-full p-4 h-full bg-gray-100 dark:bg-gray-700">
+    <div class="relative mx-auto  w-full h-full bg-gray-100 dark:bg-gray-700">
         <div class="relative w-full">
-            <div class="relative flex justify-center rounded-lg gap-4  p-4 ">
+            <div class="relative flex justify-center rounded-lg gap-4  ">
                 <!-- Event details -->
                 <div class="w-full col-span-3 p-2 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                    <div class="flex gap-2 justify-between border-b border-gray-200 dark:border-gray-600 mb-2 pb-4 ">
+                    <div class="flex gap-2 justify-between border-b border-gray-200 dark:border-gray-600 mb-2 pb-4 mt-2">
                         <div>
                         <h5 class=" text-3xl font-bold text-gray-900 dark:text-white  ">Election :  {{$election->name}}</h5>
-                            <x-badge flat positive lg label="{{ isset($election->type) ?$election->electionTypes[$election->type] : ' ' }}" />
+                            <x-badge flat positive lg label="{{ isset($election->type) ?$election::ELECTION_TYPE[$election->type] : ' ' }}" />
                         </div>
+
+                        <h5 class=" text-2xl font-bold text-gray-900 dark:text-white  ">Update</h5>
 
                         <div class="">
                             @if(!$updating)

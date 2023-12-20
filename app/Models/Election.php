@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Election extends Model
 {
     use HasFactory;
-    public $electionTypes = [1 => 'Candidate Election', 2 => 'Candidate Election', 3 =>'Resolution Election'];
+    const ELECTION_TYPE = [1 => 'Candidate Election', 2 =>'Resolution Election'];
 
     protected $fillable = [
         'name', 'event_id', 'details', 'election_date', 'type', 'user_id', 'organization_id', 'status'
@@ -25,14 +25,14 @@ class Election extends Model
         return $this->hasmany(ElectivePosition::class);
     }
 
-        public function event():belongsTo
-        {
-            return $this->belongsTo(Event::class);
-        }
-
-        public function getElctTypeAttribute()
+    public function event():belongsTo
     {
-        return  isset($this->type) ? $this->electionTypes[$this->type] : ' ';
+        return $this->belongsTo(Event::class);
+    }
+
+    public function getElctTypeAttribute()
+    {
+        return  isset($this->type) ? self::ELECTION_TYPE [$this->type] : ' ';
     }
 
 }
