@@ -424,24 +424,11 @@ class whatsapp extends HttpDriver implements VerifiesService
 
     }
 
-    /**
-     * @return bool
-     */
     public function isConfigured()
     {
         return !empty($this->config->get('token'));
     }
 
-
-
-    /**
-     * Retrieve User information.
-     *
-     * @param  IncomingMessage  $matchingMessage
-     * @return User
-     *
-     * @throws FacebookException
-     */
     public function getUser(IncomingMessage $matchingMessage)
     {
         $firstName = $this->event['contacts'][0]['profile']['name'] ?? null;
@@ -452,10 +439,10 @@ class whatsapp extends HttpDriver implements VerifiesService
     }
 
 
-    /*public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
+    public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
     {
         //TODo method needed for low level
-    }*/
+    }
 
     /**
      * @return string
