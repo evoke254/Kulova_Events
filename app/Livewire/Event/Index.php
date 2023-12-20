@@ -107,9 +107,7 @@ class Index extends Component  implements HasForms, HasTable
                     ->requiresConfirmation()
                     ->action(fn (Event $record) => $record->delete()),
             ])
-            ->emptyStateActions([
-                CreateAction::make(),
-            ]);
+            ->emptyStateActions();
     }
 
     public function render()
