@@ -152,12 +152,6 @@ class ElectionController extends Controller
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
-        $botman->hears('00', function(BotMan $bot) {
-            $bot->reply("Conversation cancelled. Reply with  'vote' to try again'");
-        })->stopsConversation();
-        // Start listening
-        $botman->listen();
-
 
         // Start listening
         $botman->listen();
