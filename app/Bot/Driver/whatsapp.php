@@ -115,6 +115,7 @@ class whatsapp extends HttpDriver implements VerifiesService
                 die();
             }
         }
+        Log::info(json_encode($this->event));
 
 
         return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['from']));
