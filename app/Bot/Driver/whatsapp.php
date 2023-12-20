@@ -451,14 +451,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         return new User($matchingMessage->getSender(), $firstName, $lastName, $username, null);
     }
 
-    /**
-     * Low-level method to perform driver specific API requests.
-     *
-     * @param  string  $endpoint
-     * @param  array  $parameters
-     * @param  IncomingMessage  $matchingMessage
-     * @return Response
-     */
+
     /*public function sendRequest($endpoint, array $parameters, IncomingMessage $matchingMessage)
     {
         //TODo method needed for low level
@@ -472,24 +465,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         return $this->content;
     }
 
-    /**
-     * @param  Response  $facebookResponse
-     * @return mixed
-     *
-     * @throws FacebookException
-     */
-    protected function throwExceptionIfResponseNotOk(Response $facebookResponse)
-    {
-        if ($facebookResponse->getStatusCode() !== 200) {
-            $responseData = json_decode($facebookResponse->getContent(), true);
-            throw new FacebookException('Error sending payload: ' . $responseData['error']['message']);
-        }
-    }
 
-    /**
-     * @param $msg
-     * @return string|null
-     */
     protected function getMessageSender($msg)
     {
         if (isset($msg['sender'])) {
@@ -499,10 +475,7 @@ class whatsapp extends HttpDriver implements VerifiesService
         }
     }
 
-    /**
-     * @param $msg
-     * @return string|null
-     */
+
     protected function getMessageRecipient($msg)
     {
         if (isset($msg['recipient'])) {
@@ -510,13 +483,6 @@ class whatsapp extends HttpDriver implements VerifiesService
         }
     }
 
-    /**
-     * Pass a conversation to the page inbox.
-     *
-     * @param  IncomingMessage  $message
-     * @param $bot
-     * @return Response
-     */
     public function handover(IncomingMessage $message, $bot)
     {
         return $this->http->post($this->facebookProfileEndpoint . 'me/pass_thread_control?access_token=' . $this->config->get('token'), [], [
