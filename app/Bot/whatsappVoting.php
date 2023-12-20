@@ -244,7 +244,9 @@ class whatsappVoting extends Conversation
     public function stopsConversation(IncomingMessage $message): bool
     {
         if ($message->getText() == '00') {
+            if ($this->positions){
             $this->deleteVote();
+            }
             $welcomeMessage = "Conversation cancelled. Reply at anytime to try again'.\n";
             $this->startConversation($welcomeMessage);
 
