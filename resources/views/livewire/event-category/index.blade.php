@@ -11,7 +11,7 @@
                     <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Event Categories</h1>
                 </div>
                 <div class=" flex gap-2">
-                    @livewire('event-category.create')
+
                 </div>
             </div>
         </div>

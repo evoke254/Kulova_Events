@@ -51,9 +51,10 @@ class Index extends Component  implements HasForms, HasTable
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('updated_at')
+                /*TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
+                    ->toggleable()
+                    ->sortable()*/
             ])
             ->filters([
                 /*                SelectFilter::make('tags')
@@ -70,7 +71,7 @@ class Index extends Component  implements HasForms, HasTable
                     ])
                     ->form([
                         TextInput::make('name')
-                        ->required(),
+                            ->required(),
                         Textarea::make('description'),
                     ])
                     ->action(function (array $data, EventCategory $record): void {
@@ -90,8 +91,13 @@ class Index extends Component  implements HasForms, HasTable
                     ->requiresConfirmation()
                     ->action(fn (EventCategory $record) => $record->delete()),
             ])
-            ->emptyStateActions([
-                CreateAction::make(),
+            ->headerActions([
+                CreateAction::make('updateAuthor')
+                    ->form([
+                        TextInput::make('name')
+                            ->required(),
+                        Textarea::make('description'),
+                    ])
             ]);
     }
 
