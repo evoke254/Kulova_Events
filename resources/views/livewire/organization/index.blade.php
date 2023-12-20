@@ -6,14 +6,7 @@
             </div>
             <div class="items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
                 <div class="flex items-center mb-4 sm:mb-0">
-
                     <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Organizations</h1>
-                </div>
-                <div class=" flex gap-2">
-                    <x-button label="Create" icon="plus-circle" class="rounded-lg" lime
-                              x-on:click="$openModal('createOrganizationModal')"
-                    />
-
                 </div>
             </div>
         </div>

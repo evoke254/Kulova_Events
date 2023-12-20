@@ -3,6 +3,10 @@
 namespace App\Livewire\Organization;
 
 use App\Models\Organization;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Filament\Forms\Contracts\HasForms;
@@ -35,7 +39,7 @@ class Index extends Component implements HasForms, HasTable
         $this->organizations = Organization::orderBy('created_at', 'DESC')->get();
     }
 
-        public function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->query(Organization::query()
@@ -74,7 +78,17 @@ class Index extends Component implements HasForms, HasTable
             ->actions([
 
                 EditAction::make()
-                    ->url(fn (Organization $record): string => route('organizations.edit', $record)),
+                    ->form([
+                        TextInput::make('name')->label('Organization Name')->required(),
+                        TextInput::make('email')->label('Admin Email')->email(),
+                        Textarea::make('description'),
+                        Textarea::make('location'),
+                        Repeater::make('departments')
+                            ->relationship('departments')
+                            ->schema([
+                                TextInput::make('name')->label('Department')->required(),
+                            ])
+                    ]),
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Organization $record) => $record->delete())
@@ -88,8 +102,19 @@ class Index extends Component implements HasForms, HasTable
                     ->requiresConfirmation()
                     ->action(fn (Organization $record) => $record->delete()),
             ])
-            ->emptyStateActions([
-                CreateAction::make(),
+            ->headerActions([
+                CreateAction::make()
+                ->form([
+                        TextInput::make('name')->label('Organization Name')->required(),
+                        TextInput::make('email')->label('Admin Email')->unique()->email(),
+                        Textarea::make('description'),
+                        Textarea::make('location'),
+                        Repeater::make('departments')
+                            ->relationship('departments')
+                            ->schema([
+                                TextInput::make('name')->label('Department')->required(),
+                            ])
+                    ])
             ]);
     }
 
