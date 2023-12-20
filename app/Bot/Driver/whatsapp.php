@@ -111,13 +111,11 @@ class whatsapp extends HttpDriver implements VerifiesService
 
         if (isset($this->event['messages'][0]['id'])){
             $db_log = BotLogs::where('message_id', $this->event['messages'][0]['id'])->first();
-            Log::info(json_encode($db_log));
             if ($db_log){
                 die();
             }
         }
 
-        Log::info('we are past this');
 
         return (isset($this->event['messages'][0]) && isset($this->event['messages'][0]['from']));
     }
