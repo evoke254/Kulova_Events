@@ -119,7 +119,6 @@ class ElectionController extends Controller
 
     public function whatsapp(Request $request)
     {
-
         $config = [
             'facebook' => [
                 'from_number' => '+254742968713',
@@ -153,9 +152,9 @@ class ElectionController extends Controller
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
-        $botman->hears('', function($bot) use ($voterId) {
+/*        $botman->hears('00', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
-        });
+        });*/
 
 
         // Start listening
