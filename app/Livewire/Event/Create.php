@@ -79,8 +79,10 @@ class Create extends Component   implements HasForms
                     ->minValue(0)
                     ->required(),
                 DateTimePicker::make('start_date')
+                    ->native(false)
                     ->required(),
                 DateTimePicker::make('end_date')
+                    ->native(false)
                     ->required(),
 
 
