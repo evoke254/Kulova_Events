@@ -247,9 +247,6 @@ class whatsappVoting extends Conversation
             if ($this->positions){
             $this->deleteVote();
             }
-            $welcomeMessage = "Conversation cancelled. Reply at anytime to try again'.\n";
-            $this->startConversation($welcomeMessage);
-
             return true;
         }
 
