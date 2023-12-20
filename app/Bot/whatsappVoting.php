@@ -241,6 +241,15 @@ class whatsappVoting extends Conversation
 
     }
 
+    public function stopsConversation(IncomingMessage $message): bool
+    {
+        if ($message->getText() == '00') {
+            return true;
+        }
+
+        return false;
+    }
+
 
     public function qstnFallback($qstn) {
         $this->repeat($qstn);

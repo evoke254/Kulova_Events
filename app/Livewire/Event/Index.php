@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Filament\Forms\Contracts\HasForms;
@@ -48,12 +49,11 @@ class Index extends Component  implements HasForms, HasTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Events')
-                    ->description(fn ( $record)  =>  substr($record->description,0,30 ))
+                    ->description(fn ( $record)  =>  substr($record->venue,0,30 ))
                     ->wrap()
                     ->limit(100)
                     ->searchable(),
-                TextColumn::make('venue')
-                    ->searchable(),
+                ImageColumn::make('images.image')->label('Image')->width(75)->height(75)->rounded()->limit(2)->stacked(),
                 TextColumn::make('organization.name')
                     ->sortable()
                     ->searchable(),
