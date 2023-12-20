@@ -128,7 +128,7 @@ class ElectionController extends Controller
                 'verification'=>'LoveLivesHere',
             ],
             'botman' => [
-                'conversation_cache_time' => 5
+                'conversation_cache_time' => 300
             ],
         ];
 
@@ -152,11 +152,6 @@ class ElectionController extends Controller
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
         });
-        $botman->hears('00', function(BotMan $bot) {
-            $bot->reply("Conversation cancelled. Reply with  'vote' to try again'");
-        })->stopsConversation();
-        // Start listening
-        $botman->listen();
 
 
         // Start listening
