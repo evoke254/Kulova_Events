@@ -174,11 +174,15 @@
                     </table>
                 </div>
             </div>
-            <div class=" grid grid-cols-1 mt-5 gap-4 ">
-                <div class="mt-3">
+
+            <div class=" grid grid-cols-1 mt-5 gap-4 justify-end ">
+
+                <div class="flex justify-end mx-3">                @livewire('event.import-invites', ['event' => $event])</div>
+                <div class="">
                     @livewire('event.show-invites', ['event' => $event])
                     {{--}}                    @livewire('event.import-invites', ['event' => $event->id]) --}}
                 </div>
+
 
             </div>
 

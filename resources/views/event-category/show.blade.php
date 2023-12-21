@@ -108,7 +108,6 @@
 
 
                 @livewire('event.election.create', ['event' => $event])
-                @livewire('event.election.show', ['event' => $event])
 
 
             </div>

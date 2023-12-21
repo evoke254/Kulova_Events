@@ -1,14 +1,10 @@
 <div>
 
     <!-- Modal toggle -->
-    <button
-        data-modal-target="importInvitesModal"
-        data-modal-toggle="importInvitesModal"
-        class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600
-                                dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
-        Import
-    </button>
 
+<x-button icon="cloud" md primary label="Primary" class="rounded-lg"
+        data-modal-target="importInvitesModal"
+        data-modal-toggle="importInvitesModal" />
     <!-- Main modal -->
     <div id="importInvitesModal"
          wire:ignore.self
