@@ -55,7 +55,6 @@
                         </dt>
                         <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
                             <p class="text-2xl font-semibold text-gray-900"> {{  number_format( 2/($event->count() > 0  ? $event->count() : 1) * 100 , 2 ) }}  %</p>
-
                         </dd>
                     </div>
                 </dl>
@@ -65,7 +64,7 @@
 
             <div class=" grid grid-cols-1 md:grid-cols-2 mt-5 gap-4 ">
                 <div class=" overflow-x-auto rounded-2xl border border-gray-400 ">
-                    <table class="text-left text-gray-700 rounded-lg dark:text-gray-300 ">
+                    <table class="w-full text-left text-gray-700 rounded-lg dark:text-gray-300 ">
                         <tbody>
                         <tr class=" bg-gray-200 dark:bg-gray-800 items-start ">
                             <th scope="row" class="px-6 py-4 font-medium items-start text-gray-900 whitespace-nowrap dark:text-white">
