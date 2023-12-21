@@ -133,8 +133,6 @@ class ElectionShow extends Component implements HasForms
             }
         } else {
             //Update resolutions
-            dd($data);
-            $refrendumOpt = ["Yes", "No"];
             foreach ($data['elective_positions']  as $pstn) {
                 $position = ElectivePosition::updateOrCreate(
                     ['id' => isset($pstn['id']) ? $pstn['id'] : '' ],
