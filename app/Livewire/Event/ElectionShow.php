@@ -7,52 +7,41 @@ use App\Models\Election;
 use App\Models\ElectivePosition;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Wizard;
-use Livewire\Component;
-
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
-use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Illuminate\Contracts\View\View;
+use Filament\Tables\Actions\CreateAction;
+use Livewire\Component;
 use WireUi\Traits\Actions;
+
 
 class ElectionShow extends Component implements HasForms
 {
-    use InteractsWithForms, Actions;
+    use InteractsWithForms;
+    use Actions;
+
     public ?array $data = [];
 
     public Election $election;
     public $elective_positions;
-    public $updating = true;
+    public $updating = false;
 
     public function mount(){
 
         $electivePstn = $this->election->load('elective_positions')->toArray();
 
-        //  $electivePstn =$this->election->toArray();
-
         $this->form->fill($electivePstn);
     }
 
-    //Adds an array of elective positions or resolutions
-    public function addCandidates(Form $form): Form
-    {
-        return $form
-            ->schema([
-
-            ])
-            ->statePath('data');
-    }
 
     public function form(Form $form): Form
     {
 
-        if($this->election->type != 3){
+        if($this->election->type == 1){
+            //candidate Elections
             return $form
                 ->schema([
                     Repeater::make('elective_positions')
@@ -65,23 +54,26 @@ class ElectionShow extends Component implements HasForms
                                 ->numeric()
                                 ->minValue(1)
                                 ->default(1),
-
-                            Repeater::make('candidates')
+                            Section::make('Candidates')
+                                ->description('Position candidates  ')
                                 ->schema([
-                                    FileUpload::make('photo')
-                                        ->disk('public')
-                                        ->image()
-                                        ->required()
-                                        ->imageEditor(),
-                                    TextInput::make('name')->label('Candidate Name')
-                                        ->required(),
-                                    TextInput::make('member_no')
-                                        ->label('Member No.')
-                                        ->required()
-                                        ->numeric(),
-                                ])
+                                    Repeater::make('candidates')
+                                        ->schema([
+                                            FileUpload::make('photo')
+                                                ->disk('public')
+                                                ->image()
+                                                ->required()
+                                                ->imageEditor(),
+                                            TextInput::make('name')->label('Candidate Name')
+                                                ->required(),
+                                            TextInput::make('member_no')
+                                                ->label('Member No.')
+                                                ->required()
+                                                ->numeric(),
+                                        ])
+                                        ->columns(3)
+                                ])->collapsible()
                                 ->columnSpan(2)
-                                ->columns(3)
 
 
 
@@ -98,27 +90,25 @@ class ElectionShow extends Component implements HasForms
                     Repeater::make('elective_positions')
                         ->label('Resolutions')
                         ->schema([
-                            Textarea::make('position')->label('Resolution')->required()->rows(3),
-                            Repeater::make('candidates')
-                                ->label('Resolution Options')
-                                ->schema([
-                                    TextInput::make('name')->label('Option')
-                                        ->required(),
-                                ])
-
-                        ])->columns(2)
+                            Textarea::make('position')->rows(1)->label('Resolution Question')->required(),
+                        ])
                 ])
+                ->columns(2)
                 ->statePath('data');
 
 
         }
     }
 
+
+
+
+
     public function createPositions()
     {
         $data = $this->form->getState();
 
-        if($this->election->type != 3) {
+        if($this->election->type == 1) {
             foreach ($data['elective_positions'] as $pstn) {
                 $position = ElectivePosition::updateOrCreate(
                     ['id' => isset($pstn['id']) ? $pstn['id'] : ' ' ],
@@ -143,7 +133,8 @@ class ElectionShow extends Component implements HasForms
             }
         } else {
             //Update resolutions
-
+            dd($data);
+            $refrendumOpt = ["Yes", "No"];
             foreach ($data['elective_positions']  as $pstn) {
                 $position = ElectivePosition::updateOrCreate(
                     ['id' => isset($pstn['id']) ? $pstn['id'] : '' ],
@@ -154,11 +145,15 @@ class ElectionShow extends Component implements HasForms
                     ]
                 );
 
+                if (!isset($pstn['candidates']) || empty($pstn['candidates']) ){
+                    $pstn['candidates'] = ["Yes", "No"];
+                }
+
                 foreach ($pstn['candidates'] as $cdt ){
                     CandidateElectivePosition::updateOrCreate(
                         ['id' => isset($cdt['id']) ? $cdt['id'] : '' ],
                         [
-                            'name' =>  $cdt['name'],
+                            'name' =>  $cdt,
                             'photo' =>  'n_a',
                             'member_no' =>  -99,
                             'elective_position_id' =>  $position->id,
@@ -171,16 +166,47 @@ class ElectionShow extends Component implements HasForms
 
 
         $this->notification()->success(
-            $title = ' Election Created ',
-            $description = 'Your election was successfully saved'
+            $title = ' Election Succesful ',
+            $description = 'Your election details were successfully saved'
         );
-
+        $this->mount();
     }
 
 
     public function isUpdating()
     {
         $this->updating = !$this->updating;
+        $this->mount();
+    }
+
+    public function cnfmDelete(ElectivePosition $position)
+    {
+        $this->dialog()->confirm([
+            'title'       => 'Are you Sure. Action cannot be reversed?',
+            'description' => 'Delete Position or Resolution with all data associated with it?',
+            'icon'        => 'error',
+            'reject' => [
+                'label'  => 'No, cancel',
+            ],
+            'accept'      => [
+                'label'  => 'Delete',
+                'method' => 'DltPosition',
+                'params' => $position,
+            ],
+        ]);
+    }
+
+    public function DltPosition(ElectivePosition $position)
+    {
+        foreach ($position->votes()->get() as $vote){
+            $vote->delete();
+        }
+        foreach ($position->candidates as $cdt){
+            $cdt->delete();
+        }
+
+        $position->delete();
+        $this->mount();
     }
     public function render()
     {

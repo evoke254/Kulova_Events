@@ -8,7 +8,7 @@
                 <div class="w-full col-span-3 p-2 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex gap-2 justify-between border-b border-gray-200 dark:border-gray-600 mb-2 pb-4 mt-2">
                         <div>
-                        <h5 class=" text-3xl font-bold text-gray-900 dark:text-white  ">Election :  {{$election->name}}</h5>
+                            <h5 class=" text-3xl font-bold text-gray-900 dark:text-white  ">Election :  {{$election->name}}</h5>
                             <x-badge flat positive lg label="{{ isset($election->type) ?$election::ELECTION_TYPE[$election->type] : ' ' }}" />
                         </div>
 
@@ -26,7 +26,72 @@
                     </div>
 
 
+                    @if(!$updating)
+                        <div class="bg-white dark:bg-gray-700 dark:border-gray-800">
 
+
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+                                    <thead class=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-200 py-2">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Position / Resolution
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            Details
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($election->elective_positions as $pstn)
+                                        <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                            <th scope="row" class="px-6  py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <div class="grid grid-cols-1 gap-2">
+                                                    <div> <h5 class="text-xl ">{{$pstn ->position}}</h5></div>
+                                                    <div class="text-sm">Votes: {{$pstn ->votes}}</div>
+                                                </div>
+
+                                                    <div class="  flex justify-start items-baseline mt-5">
+                                                        <x-button negative rounded label="Del" wire:click="cnfmDelete({{$pstn->id}} ) " icon="trash"/>
+                                                    </div>
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                <ul role="list" class="divide-y divide-gray-100">
+                                                    @foreach($pstn->candidates as $cdt)
+                                                        <li class="flex justify-between gap-x-6 py-5">
+                                                            <div class="flex min-w-0 gap-x-4 items-center">
+                                                                @if($election->type == 1)
+                                                                    <img class="h-16 w-16 flex-none rounded-full bg-gray-50" src="{{asset('storage/'. $cdt->photo)}}" alt="">
+                                                                    <div class="min-w-0 flex-auto">
+                                                                        <p class=" text-xl leading-6 text-gray-900 dark:text-gray-300">
+                                                                            {{$cdt->name}}</p>
+                                                                        <p class="mt-1 truncate text-md leading-6 text-gray-800 dark:text-gray-300">Member: {{$cdt ->member_no}}</p>
+                                                                    </div>
+                                                                @else
+                                                                    <x-avatar xl label="{{substr($cdt->name, 0, 3)}}" />
+                                                                        <p class=" text-xl leading-10 items-center text-gray-900 dark:text-gray-300"> {{$cdt->name}}        </p>
+                                                                @endif
+                                                            </div>
+                                                            <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                                                                <p class=" leading-6 text-gray-900 dark:text-gray-300">Co-Founder / CEO</p>
+                                                                <p class="mt-1 text-xs leading-5 text-gray-800 dark:text-gray-300">Last seen <time datetime="2023-01-23T13:23Z">3h ago</time></p>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+
+                                                </ul>
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    @endif
 
 
 
@@ -36,19 +101,20 @@
                     <div class=" bg-white dark:bg-gray-800 dark:border-gray-700">
                         <div class=" mb-2">
                             <div class=" rounded-lg shadow-lg p-6">
-                                   <div class="flex justify-end gap-2">
-                                            <x-button label="Close" wire:click="isUpdating" type="button" icon="plus-circle"  class="rounded-lg my-4" negative />
-                                            <x-button label="Save" type="submit" icon="plus-circle"  class="rounded-lg my-4" positive />
-                                        </div>
+
                                 <form wire:submit="createPositions">
+                                    <div class="flex justify-end gap-2">
+                                        <x-button label="Close" wire:click="isUpdating" type="button" icon="plus-circle"  class="rounded-lg my-4" negative />
+                                        <x-button label="Submit" type="submit"  icon="plus-circle"  class="rounded-lg my-4" positive />
+                                    </div>
                                     {{ $this->form }}
-                                        <div class="flex justify-end gap-2">
+                                    <div class="flex justify-end gap-2">
 
-                                            <x-button label="Close" wire:click="isUpdating" type="button" icon="plus-circle"  class="rounded-lg my-4" negative />
-                                            <x-button label="Submit" type="submit" icon="plus-circle"  class="rounded-lg my-4" positive>
+                                        <x-button label="Close" wire:click="isUpdating" type="button" icon="plus-circle"  class="rounded-lg my-4" negative />
+                                        <x-button label="Submit" type="submit" icon="plus-circle"  class="rounded-lg my-4" positive>
 
-                                            </x-button>
-                                        </div>
+                                        </x-button>
+                                    </div>
                                 </form>
 
                                 <x-filament-actions::modals />
