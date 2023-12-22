@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Manipulations;
@@ -41,7 +42,7 @@ class Event extends Model implements HasMedia
 
     public function elections(): HasMany
     {
-        return $this->hasMany(Election::class);
+        return $this->hasMany(Election::class)->where('organization_id', Auth::user()->organization_id);
     }
 
         public function images(): HasMany

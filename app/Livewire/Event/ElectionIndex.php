@@ -5,9 +5,13 @@ namespace App\Livewire\Event;
 use App\Models\Election;
 use App\Models\Event;
 use App\Models\User;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
@@ -39,12 +43,14 @@ class ElectionIndex extends Component implements HasForms, HasTable
 //
     }
 
+
     public function table(Table $table): Table
     {
 
         return $table
+            ->heading('Elections')
             ->query(Election::query()
-                ->where('id', Auth::user()->organization_id)
+                ->where('organization_id', Auth::user()->organization_id)
                 ->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
@@ -88,28 +94,76 @@ class ElectionIndex extends Component implements HasForms, HasTable
                                     ->multiple()*/
             ])
             ->actions([
+                Action::make('Update Details')
+                    ->button()
+                    ->color('success')
+                    ->url(fn (Election $record): string => route('election.show', $record))
+                ,
 
                 ViewAction::make('show')
+                    ->button()
                     ->url(fn (Election $record): string => route('election.show', $record)),
                 EditAction::make('edit')
-                    ->url(fn (Election $record): string => route('election.edit', $record)),
+                    ->button()
+                    ->form([
+                        TextInput::make('name')->label('Election')->required(),
+                        Select::make('event_id')
+                            ->required()
+                            ->label('Event')
+                            ->placeholder('Select Event')
+                            ->options(\App\Models\Event::query()->pluck('name', 'id')),
+                        TextInput::make('venue'),
+                        Radio::class::make('type')
+                            ->required()
+                            ->options(Election::ELECTION_TYPE),
+                        Toggle::make('status')->default(true),
+
+                        DateTimePicker::make('election_date')
+                            ->minDate(now())
+                            ->native(false)
+                            ->required(),
+                        Textarea::make('details')->label('Description')
+                    ]),
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Election $record) => $record->delete())
             ])
             ->bulkActions([
-
-                /*BulkAction::make('Assign Pool')
-                    ->requiresConfirmation()
-                    ->action(fn (Collection $records) => $records->each->delete()),*/
                 DeleteBulkAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Event $record) => $record->delete()),
             ])
-            ->emptyStateActions([
-                CreateAction::make(),
+            ->headerActions([
+                CreateAction::make()
+                    ->form([
+                        TextInput::make('name')->label('Election')->required(),
+                        Select::make('event_id')
+                            ->required()
+                            ->label('Event')
+                            ->placeholder('Select Event')
+                            ->options(\App\Models\Event::query()->pluck('name', 'id')),
+                        TextInput::make('venue'),
+                        Radio::class::make('type')
+                            ->required()
+                            ->options(Election::ELECTION_TYPE),
+                        Toggle::make('status')->default(true),
+
+                        DateTimePicker::make('election_date')
+                            ->minDate(now())
+                            ->native(false)
+                            ->required(),
+                        Textarea::make('details')->label('Description')
+                    ])
+                    ->mutateFormDataUsing(function ( $data): array{
+                        $data['organization_id'] = Auth::user()->organization_id;
+                        $data['user_id'] = Auth::id();
+                        return $data;
+                    })
             ]);
     }
+
+
+
 
     public function render()
     {

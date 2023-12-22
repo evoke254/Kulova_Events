@@ -42,7 +42,6 @@ class EventElections extends Component implements HasForms, HasTable
     public Event $event;
 
     public function mount(){
-
     }
     public function table(Table $table): Table
     {
@@ -51,6 +50,7 @@ class EventElections extends Component implements HasForms, HasTable
             ->heading($this->event->name. ' - Elections')
             ->query(Election::query()
                 ->where('event_id', $this->event->id)
+                ->where('organization_id', Auth::user()->organization_id)
                 ->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
