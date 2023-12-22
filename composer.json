@@ -21,6 +21,7 @@
         "filament/tables": "^3.0-stable",
         "filament/widgets": "^3.0-stable",
         "guzzlehttp/guzzle": "^7.2",
+        "konnco/filament-import": "^2.0",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
@@ -87,7 +88,7 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "prefer-stable": true
 
 }

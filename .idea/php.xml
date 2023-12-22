@@ -194,6 +194,7 @@
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-translatable" />
       <path value="$PROJECT_DIR$/vendor/spatie/laravel-tags" />
       <path value="$PROJECT_DIR$/vendor/filament/spatie-laravel-media-library-plugin" />
+      <path value="$PROJECT_DIR$/vendor/konnco/filament-import" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

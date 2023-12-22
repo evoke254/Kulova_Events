@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Event;
 
+use App\Filament\Imports\MemberImporter;
 use App\Models\Event;
 use App\Models\Invite;
+use Filament\Tables\Actions\ImportAction;
 use Livewire\Component;
 
 use Filament\Forms\Components\Select;
@@ -47,7 +49,7 @@ class ShowInvites extends Component implements HasForms, HasTable
             ->modelLabel('Member')
             ->striped()
             ->query(Invite::query()
-                ->where('organization_id', Auth::user()->organization_id)
+                ->where('event_id', $this->event->id)
                 ->orderBy('created_at', 'DESC') )
             //         ->defaultPaginationPageOption(100)
             //         ->paginated([10, 25, 50, 100, 'all'])
@@ -85,46 +87,74 @@ class ShowInvites extends Component implements HasForms, HasTable
             ->actions([
                 EditAction::make()
                     ->form([
-                        TextInput::make('first_name')->required(),
-                        TextInput::make('last_name'),
-                        TextInput::make('mail')->label('email')->required()->email(),
-                        Select::make('pools')
-                            ->multiple()
-                            ->relationship('recipientPools', 'name')
-                            ->label('Recipient Pool')
-                            ->options(Invite::query()->pluck('name', 'id') )
+                        TextInput::make('name')
+                            ->label('First Name')
                             ->required(),
-                        Toggle::make('status'),
-                        Textarea::make('description')
+                        TextInput::make('last_name')
+                            ->required(),
+                        TextInput::make('member_no')
+                            ->label('Member Number')
+                            ->unique(ignoreRecord: true)
+                            ->minValue(2)
+                            ->required(),
+                        TextInput::make('phone_number')
+                            ->label('Phone Number')
+                            ->prefix('+254')
+                            ->maxLength(9)
+                            ->minValue(1)
+                            ->numeric()
+                            ->required()
+                            ->tel(),
+                        TextInput::make('email'),
+                        Textarea::make('details'),
                     ]),
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Invite $record) => $record->delete())
             ])
             ->bulkActions([
-                    DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->action(fn (Invite $record) => $record->delete())
+                DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->action(fn (Invite $record) => $record->delete())
             ])
             ->headerActions([
                 CreateAction::make('updateAuthor')
-
                     ->form([
                         TextInput::make('name')
+                            ->label('First Name')
+                            ->required(),
+                        TextInput::make('last_name')
                             ->required(),
                         TextInput::make('member_no')
+                            ->label('Member Number')
+                            ->unique()
                             ->minValue(2)
                             ->required(),
                         TextInput::make('phone_number')
+                            ->label('Phone Number')
+                            ->prefix('+254')
+                            ->maxLength(9)
+                            ->minValue(1)
+                            ->numeric()
+                            ->required()
                             ->tel(),
+                        TextInput::make('email'),
                         Textarea::make('details'),
                     ])
-                 ->mutateFormDataUsing(function ( $data): array{
+                    ->mutateFormDataUsing(function ( $data): array{
                         $data['event_id'] = $this->event->id;
                         $data['organization_id'] = Auth::user()->organization_id;
                         $data['user_id'] = Auth::id();
                         return $data;
-                    })
+                    }),
+/*
+                ImportAction::make()->importer(MemberImporter::class)
+                    ->mutateFormDataUsing(function ( $data): array{
+                        $data['event_id'] = $this->event->id;
+                        $data['organization_id'] = Auth::user()->organization_id;
+                        $data['user_id'] = Auth::id();
+                        return $data;
+                    })*/
             ]);
     }
 

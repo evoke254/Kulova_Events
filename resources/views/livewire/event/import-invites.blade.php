@@ -2,7 +2,7 @@
 
     <!-- Modal toggle -->
 
-<x-button icon="cloud" md primary label="Primary" class="rounded-lg"
+<x-button icon="cloud" md fuchsia label="Import" class="rounded-lg"
         data-modal-target="importInvitesModal"
         data-modal-toggle="importInvitesModal" />
     <!-- Main modal -->
