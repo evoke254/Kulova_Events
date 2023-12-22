@@ -22,7 +22,7 @@ class MemberImporter extends Importer
                 ->rules(['max:255']),
             ImportColumn::make('phone_number')
                 ->requiredMapping()
-                ->rules(['required', 'regex:/^\+254\d{9}$/']),
+                ->rules(['required', 'regex:/^[0-9]{9}$/']),
             ImportColumn::make('email')
                 ->requiredMapping()
                 ->rules(['email']),

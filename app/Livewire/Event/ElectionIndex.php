@@ -44,6 +44,7 @@ class ElectionIndex extends Component implements HasForms, HasTable
 
         return $table
             ->query(Election::query()
+                ->where('id', Auth::user()->organization_id)
                 ->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')

@@ -118,9 +118,6 @@ class EventElections extends Component implements HasForms, HasTable
                     ->action(fn (Election $record) => $record->delete())
             ])
             ->bulkActions([
-        /*BulkAction::make('Assign Pool')
-            ->requiresConfirmation()
-            ->action(fn (Collection $records) => $records->each->delete()),*/
         DeleteBulkAction::make()
             ->requiresConfirmation()
             ->action(fn (Event $record) => $record->delete()),

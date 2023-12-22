@@ -43,7 +43,7 @@ class Index extends Component implements HasForms, HasTable
     {
         return $table
             ->query(Organization::query()
-//                ->where('user_id', Auth::id())
+                ->where('id', Auth::user()->organization_id)
                 ->orderBy('created_at', 'DESC') )
             ->columns([
                 TextColumn::make('name')

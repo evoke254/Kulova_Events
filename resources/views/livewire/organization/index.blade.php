@@ -11,12 +11,10 @@
             </div>
         </div>
     </div>
-
     <div class="flex flex-col ">
         <div class="overflow-x-auto w-100">
             <div class="min-w-full align-middle">
                 <div class="overflow-hidden shadow w-100">
-
                             {{ $this->table }}
                 </div>
             </div>
