@@ -220,9 +220,9 @@ class whatsappVoting extends Conversation
 
                 $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                 if ($this->election->type == 1){
-                    $opt .= "  • ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
+                    $opt .= "  • ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")\n";
                 } else {
-                    $opt .= "  • ".$candidate['name'] . " - ***  \n";
+                    $opt .= "  • ".$candidate['name'] . " - ***\n";
                 }
             }
 
