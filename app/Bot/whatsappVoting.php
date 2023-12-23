@@ -121,7 +121,7 @@ class whatsappVoting extends Conversation
 
                     $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                     if ($this->election->type == 1){
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
                     }
                 }
                 break;
@@ -198,7 +198,7 @@ class whatsappVoting extends Conversation
 
                 $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                 if ($this->election->type == 1){
-                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n";
+                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
                 } else {
                     $opt .= "- " . $candidate['name'] . " - ***  \n";
                 }
