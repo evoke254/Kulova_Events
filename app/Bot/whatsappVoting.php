@@ -54,7 +54,7 @@ class whatsappVoting extends Conversation
         foreach($this->events as $key => $event) {
             $opt .= $key+1 . ": ". $event['name']. "\n";
         }
-        $qstn = $welcomeMessage. "Please select an event: \n ". $opt ." 00 : Cancel ";
+        $qstn = $welcomeMessage. "Please select an event: \n ". $opt ."00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
@@ -71,7 +71,7 @@ class whatsappVoting extends Conversation
                 }
                 $this->selectElection();
             } else{
-                $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
+                $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ."00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
 
@@ -86,7 +86,7 @@ class whatsappVoting extends Conversation
             $opt .= $key+1 . ": ".$election['name']. "\n";
         }
 
-        $qstn = "ELECTIONS:\n". $opt ." 00 : Cancel ";
+        $qstn = "ELECTIONS:\n". $opt ."00 : Cancel ";
 
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
@@ -97,7 +97,7 @@ class whatsappVoting extends Conversation
                 $this->positions = $this->election->elective_positions->toArray();
                 $this->selectElectivePositions();
             } else{
-                $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\n\n ". $opt ." 00 : Cancel ";
+                $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\n\n ". $opt ."00 : Cancel ";
                 $this->qstnFallback($qstn);
             }
         });
@@ -131,7 +131,7 @@ class whatsappVoting extends Conversation
 
         if ($countBallot >0) {
 
-            $qstn = Election::ELECTION_TYPE [$this->election->type]."CON : \n ".   $opt ." 00 : Cancel ";
+            $qstn = Election::ELECTION_TYPE [$this->election->type]." : \n ".   $opt ."00 : Cancel ";
             $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
 
                 $ans = (int) $answer->getText() ;
@@ -156,7 +156,7 @@ class whatsappVoting extends Conversation
 
 
                 } else{
-                    $qstn = " Invalid response - _".$answer->getText()."_. Please check and try again \n
+                    $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\n
                                 : \n ".   $opt ." 00 : Cancel ";
                     $this->qstnFallback($qstn);
                 }
@@ -198,15 +198,15 @@ class whatsappVoting extends Conversation
 
                 $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                 if ($this->election->type == 1){
-                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
+                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n";
                 } else {
-                    $opt .= "- " . $candidate['name'] . " - ***  \n ";
+                    $opt .= "- " . $candidate['name'] . " - ***  \n";
                 }
             }
 
         }
 
-        $qstn = "Cast Votes: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
+        $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
             $ans = (int) $answer->getText() ;
@@ -218,7 +218,7 @@ class whatsappVoting extends Conversation
                 $this->say('Cancelled by user. Text Vote to try again');
             } else {
 
-                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
+                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
                 $this->qstnFallback($qstn);
             }
 
