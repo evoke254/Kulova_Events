@@ -42,7 +42,7 @@ class Event extends Model implements HasMedia
 
     public function elections(): HasMany
     {
-        return $this->hasMany(Election::class)->where('organization_id', Auth::user()->organization_id);
+        return $this->hasMany(Election::class);
     }
 
         public function images(): HasMany

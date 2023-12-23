@@ -23,7 +23,6 @@
 <body class="font-sans text-gray-900">
 
 
-
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-8">
         <a href="{{route('landing')}}" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -69,7 +68,13 @@
 <x-dialog />
 {{ $slot }}
 
-
+<script>
+var botmanWidget = {
+    frameEndpoint: '/botman/chat',
+    chatServer: '/api/voting/ussd'
+};
+</script>
+<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 
 @stack('script')
 {{--}}@livewire('wire-elements-modal') --}}

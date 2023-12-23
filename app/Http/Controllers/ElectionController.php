@@ -78,16 +78,10 @@ class ElectionController extends Controller
 
     public function ussd(Request $request)
     {
-        /*$request->=> $phoneNumber,
-        $request->=> $serviceCode,
-        $request->=> $sessionId,
-        $request->=> $text,
-       */
-
         $config = $request->all();
 
         //   Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
-        DriverManager::loadDriver(ussd::class);
+       // DriverManager::loadDriver(ussd::class);
 
         // Log::info(json_encode($config));
 
@@ -109,11 +103,6 @@ class ElectionController extends Controller
         $botman->hears('', function(Botman $bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\ussdVoting($voterId));
         });
-
-        $botman->hears('00', function(BotMan $bot) {
-            $bot->reply("Conversation cancelled. Reply with  'vote' to try again'");
-        })->stopsConversation();
-        // Start listening
         $botman->listen();
     }
 

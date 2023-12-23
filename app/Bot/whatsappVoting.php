@@ -102,21 +102,16 @@ class whatsappVoting extends Conversation
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
 
-            if (  !empty($pstn['candidates']) && empty($this->voter->castVoteInPstn($pstn['id']) ) ) {
+            if (  !empty($pstn['candidates']) && !$this->voter->castVoteInPstn($pstn['id']) ) {
 
                 $countBallot++;
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
 
-                    $prev_vote = $this->voter->castVote($pstn['id'], $candidate['id']);
-
-                    if ( $prev_vote ){
-                        //Random check to c
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."**Elect  \n ";
-                    }
-                    else {
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."  \n ";
+                    $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+                    if ($this->election->type == 1){
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
                     }
                 }
                 break;
@@ -126,18 +121,11 @@ class whatsappVoting extends Conversation
 
         if ($countBallot >0) {
 
-            $qstn = "POSITIONS: \n ".   $opt ." 00 : Cancel ";
+            $qstn = Election::ELECTION_TYPE [$this->election->type]."CON : \n ".   $opt ." 00 : Cancel ";
             $this->ask($qstn, function(Answer $answer) use ($opt, $pstnKey) {
 
                 $ans = (int) $answer->getText() ;
                 if (isset($this->positions[$pstnKey]) && isset($this->candidates[$ans - 1]['id']) ){
-                    //Check if position has vote and delete
-
-                    $prev_vote =  $this->voter->castVote($this->positions[$pstnKey]['id'], $this->candidates[$ans - 1]['id']);
-
-                    if ($prev_vote){
-                        $prev_vote->delete();
-                    }
 
                     if ($this->voter) {
                         $castVote =  [
@@ -153,10 +141,8 @@ class whatsappVoting extends Conversation
                         $this->markBallot();
 
                     } else {
-
                         $this->say('You are not eligible to vote');
                     }
-
 
 
                 } else{
@@ -192,18 +178,26 @@ class whatsappVoting extends Conversation
 
     public function confirmBallot(){
 
+
         $opt = "";
-        foreach ($this->votes as $vote){
-            $postn = ElectivePosition::find($vote->elective_position_id);
+        foreach ($this->positions as $pstnKey => $pstn){
+            $opt .= "*".$pstn['position']."*";
 
-            $opt .= Str::upper($postn->position). " \n ";
-            $candidate = CandidateElectivePosition::find($vote->candidate_elective_position_id);
+                $opt .= Str::upper($pstn['position']). " \n ";
+                $this->candidates = $pstn['candidates'];
+                foreach ($this->candidates as $key => $candidate){
 
-            $opt .= "- " . $candidate['name'] . " - " . $candidate['member_no'] . "**Elect  \n ";
+                    $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+                    if ($this->election->type == 1){
+                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
+                    } else {
+                                    $opt .= "- " . $candidate['name'] . " - ***  \n ";
+                    }
+                }
 
         }
 
-        $qstn = "POSITIONS: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
+        $qstn = "Cast Votes: \n ".   $opt ."\n 1 : Confirm\n 2 : Cancel and Start";
         $this->ask($qstn, function(Answer $answer) use ($opt) {
 
             $ans = (int) $answer->getText() ;
@@ -230,7 +224,7 @@ class whatsappVoting extends Conversation
                 $this->candidates = $pstn['candidates'];
 
                 foreach ($this->candidates as $key => $candidate) {
-                    $prev_vote =  $this->voter->castVote($pstn['id'], $candidate['id']);
+                    $prev_vote =  $this->voter->castVotes($pstn['id'], $candidate['id']);
                     if ($prev_vote){
                         $prev_vote->delete();
                     }
@@ -245,7 +239,7 @@ class whatsappVoting extends Conversation
     {
         if ($message->getText() == '00') {
             if ($this->positions){
-            $this->deleteVote();
+                $this->deleteVote();
             }
             return true;
         }
