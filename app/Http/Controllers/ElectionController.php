@@ -119,11 +119,10 @@ class ElectionController extends Controller
         //          DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['wa_id'];
-        $voterId = Invite::firstOrCreate( [['phone_number', $phoneNumber]] );
 
 
-        $botman->hears('', function($bot) use ($voterId) {
-            $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
+        $botman->hears('', function($bot) use ($phoneNumber) {
+            $bot->startConversation(new \App\Bot\whatsappVoting($phoneNumber));
         });
 
         // Start listening

@@ -2,7 +2,7 @@
 
 
     <div class="flex flex-col items-center justify-center px-6 pt-28 mt-10 my-auto mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
-        <a href="/" class="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white">
+        <a href="#" class="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white">
             <img src="{{asset('images/logo.jpg')}}" class="mr-4 w-28 rounded-lg">
         </a>
         <!-- Card -->

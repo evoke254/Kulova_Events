@@ -21,7 +21,8 @@ use Illuminate\Support\Str;
 class whatsappVoting extends Conversation
 {
     public $event; public $events;
-    public Invite $voter;
+    public  $phoneNumber;
+    public  Invite $voter;
     public $election; public $elections;
     public $positions;
     public $candidates;
@@ -31,10 +32,10 @@ class whatsappVoting extends Conversation
 
     public $bot22;
 
-    public function __construct(Invite $voter)
+    public function __construct( $phoneNumber)
     {
-        $this->voter = $voter;
-        $this->bot22 = '$bot22';
+        $this->phoneNumber = $phoneNumber;
+
     }
     public function run(){
         $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
@@ -61,6 +62,7 @@ class whatsappVoting extends Conversation
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->elections =  $this->event->elections->toArray();
+                $this->voter = Invite::firstOrCreate( [['phone_number', $this->phoneNumber], ['event_id', $this->event->id]] );
                 $this->selectElection();
             } else{
                 $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
@@ -100,6 +102,8 @@ class whatsappVoting extends Conversation
     public function selectElectivePositions(){
         $countBallot = 0;
         $opt = "";
+
+
         foreach ($this->positions as $pstnKey => $pstn){
 
             if (  !empty($pstn['candidates']) && !$this->voter->castVoteInPstn($pstn['id']) ) {
@@ -182,18 +186,17 @@ class whatsappVoting extends Conversation
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
             $opt .= "*".$pstn['position']."*";
+            $opt .= " \n ";
+            $this->candidates = $pstn['candidates'];
+            foreach ($this->candidates as $key => $candidate){
 
-                $opt .= Str::upper($pstn['position']). " \n ";
-                $this->candidates = $pstn['candidates'];
-                foreach ($this->candidates as $key => $candidate){
-
-                    $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
-                    if ($this->election->type == 1){
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
-                    } else {
-                                    $opt .= "- " . $candidate['name'] . " - ***  \n ";
-                    }
+                $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+                if ($this->election->type == 1){
+                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ."(".$prev_votes->count().")  \n ";
+                } else {
+                    $opt .= "- " . $candidate['name'] . " - ***  \n ";
                 }
+            }
 
         }
 
@@ -209,7 +212,7 @@ class whatsappVoting extends Conversation
                 $this->say('Cancelled by user. Text Vote to try again');
             } else {
 
-                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\nPOSITIONS:\n ". $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
+                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n 2 : Confirm\n 3 : Cancel and Start";
                 $this->qstnFallback($qstn);
             }
 
