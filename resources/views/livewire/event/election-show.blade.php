@@ -51,9 +51,9 @@
                                                     <div class="text-sm">Votes: {{$pstn ->votes}}</div>
                                                 </div>
 
-                                                    <div class="  flex justify-start items-baseline mt-5">
-                                                        <x-button negative rounded label="Del" wire:click="cnfmDelete({{$pstn->id}} ) " icon="trash"/>
-                                                    </div>
+                                                <div class="  flex justify-start items-baseline mt-5">
+                                                    <x-button negative rounded label="Del" wire:click="cnfmDelete({{$pstn->id}} ) " icon="trash"/>
+                                                </div>
                                             </th>
                                             <td class="px-6 py-4">
                                                 <ul role="list" class="divide-y divide-gray-100">
@@ -69,12 +69,10 @@
                                                                     </div>
                                                                 @else
                                                                     <x-avatar xl label="{{substr($cdt->name, 0, 3)}}" />
-                                                                        <p class=" text-xl leading-10 items-center text-gray-900 dark:text-gray-300"> {{$cdt->name}}        </p>
                                                                 @endif
                                                             </div>
-                                                            <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                                                                <p class=" leading-6 text-gray-900 dark:text-gray-300">Co-Founder / CEO</p>
-                                                                <p class="mt-1 text-xs leading-5 text-gray-800 dark:text-gray-300">Last seen <time datetime="2023-01-23T13:23Z">3h ago</time></p>
+                                                            <div class=" flex shrink-0 sm:flex sm:flex-col sm:items-end items-center justify-center">
+                                                                    <h3 class="text-2xl font-bold text-center">{{$cdt->votes->count()}}</h3>
                                                             </div>
                                                         </li>
                                                     @endforeach

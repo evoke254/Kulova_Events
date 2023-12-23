@@ -5,11 +5,10 @@
             </div>
             <div class="items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
                 <div class="flex items-center mb-4 sm:mb-0">
-
                     <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">All Elections</h1>
                 </div>
                 <div class=" flex gap-2">
-                    @livewire('event.election.create')
+{{--}}                    @livewire('event.election.create') --}}
                 </div>
             </div>
         </div>
