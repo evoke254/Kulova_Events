@@ -107,6 +107,7 @@ class whatsappVoting extends Conversation
 
     public function selectElectivePositions(){
         $countBallot = 0;
+        $countCdt = 0;
         $opt = "";
 
 
@@ -118,7 +119,7 @@ class whatsappVoting extends Conversation
                 $opt .= Str::upper($pstn['position']). " \n ";
                 $this->candidates = $pstn['candidates'];
                 foreach ($this->candidates as $key => $candidate){
-
+                    $countCdt++;
                     $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                     if ($this->election->type == 1){
                         $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
@@ -163,103 +164,113 @@ class whatsappVoting extends Conversation
             });
 
 
-        } else {
-            $this->confirmBallot();
         }
-
-    }
-
-    public function markBallot() {
-        $myCastVotes = count($this->votes);
-        $validVotes = 0;
-        foreach ($this->positions as $pstnKey => $pstn){
-            if (!empty($pstn['candidates'])) {
-                $validVotes += 1;
-            }
-        }
-//        dd('valid vote ;'. $validVotes .'cast :'. $myCastVotes);
-        if ($myCastVotes != $validVotes){
-            $this->selectElectivePositions();
-        } else {
-
-            $this->confirmBallot();
-        }
-    }
-
-    public function confirmBallot(){
-
-
-        $opt = "";
-        foreach ($this->positions as $pstnKey => $pstn){
-            $opt .= "*".$pstn['position']."*";
-            $opt .= " \n ";
-            $this->candidates = $pstn['candidates'];
-            foreach ($this->candidates as $key => $candidate){
-
-                $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
-                if ($this->election->type == 1){
-                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
-                } else {
-                    $opt .= "- " . $candidate['name'] . " - ***  \n";
-                }
-            }
-
-        }
-
-        $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
-        $this->ask($qstn, function(Answer $answer) use ($opt) {
-
-            $ans = (int) $answer->getText() ;
-            if ($ans == 1){
-                $this->say('Vote cast. Thank you.');
-            } else if ($ans == 2) {
-                $this->votes = [];
-                $this->deleteVote();
-                $this->say('Cancelled by user. Text Vote to try again');
-            } else {
-
-                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
-                $this->qstnFallback($qstn);
-            }
-
-        });
-    }
-
-    public function deleteVote(){
-
-        foreach ($this->positions as $pstnKey => $pstn) {
-
-            if ((empty($pstn['votes']) && !empty($pstn['candidates']))) {
-                $this->candidates = $pstn['candidates'];
-
-                foreach ($this->candidates as $key => $candidate) {
-                    $prev_vote =  $this->voter->castVotes($pstn['id'], $candidate['id']);
-                    if ($prev_vote){
-                        $prev_vote->delete();
+        elseif ($countCdt == 0){
+            $qstn = "We are currently updating election details: \n99 : Retry";
+            $this->ask($qstn, function(Answer $answer) {
+                    $ans = (int) $answer->getText();
+                    if ($ans == 99){
+                        $this->run();
                     }
+            });
+
+    } else {
+$this->confirmBallot();
+}
+
+}
+
+public function markBallot() {
+    $myCastVotes = count($this->votes);
+    $validVotes = 0;
+    foreach ($this->positions as $pstnKey => $pstn){
+        if (!empty($pstn['candidates'])) {
+            $validVotes += 1;
+        }
+    }
+//        dd('valid vote ;'. $validVotes .'cast :'. $myCastVotes);
+    if ($myCastVotes != $validVotes){
+        $this->selectElectivePositions();
+    } else {
+
+        $this->confirmBallot();
+    }
+}
+
+public function confirmBallot(){
+
+
+    $opt = "";
+    foreach ($this->positions as $pstnKey => $pstn){
+        $opt .= "*".$pstn['position']."*";
+        $opt .= " \n ";
+        $this->candidates = $pstn['candidates'];
+        foreach ($this->candidates as $key => $candidate){
+
+            $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+            if ($this->election->type == 1){
+                $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
+            } else {
+                $opt .= "- " . $candidate['name'] . " - ***  \n";
+            }
+        }
+
+    }
+
+    $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
+    $this->ask($qstn, function(Answer $answer) use ($opt) {
+
+        $ans = (int) $answer->getText() ;
+        if ($ans == 1){
+            $this->say('Vote cast. Thank you.');
+        } else if ($ans == 2) {
+            $this->votes = [];
+            $this->deleteVote();
+            $this->say('Cancelled by user. Text Vote to try again');
+        } else {
+
+            $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
+            $this->qstnFallback($qstn);
+        }
+
+    });
+}
+
+public function deleteVote(){
+
+    foreach ($this->positions as $pstnKey => $pstn) {
+
+        if ((empty($pstn['votes']) && !empty($pstn['candidates']))) {
+            $this->candidates = $pstn['candidates'];
+
+            foreach ($this->candidates as $key => $candidate) {
+                $prev_vote =  $this->voter->castVotes($pstn['id'], $candidate['id']);
+                if ($prev_vote){
+                    $prev_vote->delete();
                 }
             }
         }
-        $this->votes = [];
-
     }
+    $this->votes = [];
 
-    public function stopsConversation(IncomingMessage $message): bool
-    {
-        if ($message->getText() == '00') {
-            if ($this->positions){
-                $this->deleteVote();
-            }
-            return true;
+}
+
+public function stopsConversation(IncomingMessage $message): bool
+{
+    if ($message->getText() == '00') {
+        if ($this->positions){
+            $this->deleteVote();
         }
-
-        return false;
+        return true;
     }
 
+    return false;
+}
 
-    public function qstnFallback($qstn) {
-        $this->repeat($qstn);
-    }
+
+public function qstnFallback($qstn) {
+    $this->repeat($qstn);
+}
 
 
 }
