@@ -17,7 +17,7 @@
                     <article class="flex flex-col items-start justify-between shadow-lg p-4 rounded-lg">
                         <div class="relative w-full">
                             @if($event->getFirstMedia() )
-                                <img src="{{ $event->getFirstMedia()->preview_url  }}" alt=""
+                                <img src="{{ $event->getFirstMedia()->getUrl()  }}" alt=""
                                      class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
                             @endif
                             <a href="{{route('event.view', ['event' => $event->id])}}">
@@ -42,7 +42,7 @@
                                     </a>
                                 </h3>
                                 <p class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-200 ">
-                                    {{ $event->description }}
+                                    {!! $event->description !!}
                                 </p>
                             </div>
                             {{--}}
