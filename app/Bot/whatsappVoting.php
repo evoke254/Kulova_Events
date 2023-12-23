@@ -63,8 +63,10 @@ class whatsappVoting extends Conversation
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->elections =  $this->event->elections->toArray();
-                $this->voter = Invite::where('phone_number', $this->phoneNumber)->where('event_id', $this->event->id)->first();
-                if (!$this->voter){
+                $voter = Invite::where('phone_number', $this->phoneNumber)->where('event_id', $this->event->id)->first();
+                if ($voter){
+                    $this->voter = $voter;
+                } else{
                     $this->voter = Invite::create( ['phone_number'=> $this->phoneNumber, 'event_id'=> $this->event->id, 'name' => $this->userName] );
                 }
                 $this->selectElection();
