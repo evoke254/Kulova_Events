@@ -89,7 +89,7 @@ class ElectionController extends Controller
         $phoneNumber = '+254742968713';
 
         $botman->hears('', function(Botman $bot) use ($phoneNumber) {
-            $bot->startConversation(new \App\Bot\ussdVoting($phoneNumber));
+            $bot->startConversation(new \App\Bot\whatsappVoting($phoneNumber));
         });
         $botman->listen();
     }
