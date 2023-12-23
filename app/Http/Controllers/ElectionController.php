@@ -86,17 +86,9 @@ class ElectionController extends Controller
         // Log::info(json_encode($config));
 
         $botman = BotManFactory::create($config, new LaravelCache());
-        $phoneNumber = $request->get('userId');
+        $phoneNumber = '+254742968713';
 
-        //TODO remove in prod
-        $rr = Invite::updateOrCreate(
-            ['email' => time().'@gmail.com' ],
-            ['phone_number' => $phoneNumber,
-                'name' => 'test user 00',
-                'email' => time().'@gmail.com',
-                'event_id' => 4
-            ]
-        );
+        $rr = Invite::firstOrCreate( [['phone_number', $phoneNumber]] );
 
         $voterId = $rr;
 
@@ -126,17 +118,9 @@ class ElectionController extends Controller
 
         //          DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
         $botman = BotManFactory::create($config, new LaravelCache());
-        $phoneNumber = '+254742968713';
+        $phoneNumber = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['wa_id'];
+        $voterId = Invite::firstOrCreate( [['phone_number', $phoneNumber]] );
 
-        //TODO remove in prod
-        $voterId = Invite::updateOrCreate(
-            ['phone_number' => $phoneNumber],
-            ['phone_number' => $phoneNumber,
-                'name' => 'test user 00',
-                'email' => time().'@gmail.com',
-                'event_id' => 1
-            ]
-        );
 
         $botman->hears('', function($bot) use ($voterId) {
             $bot->startConversation(new \App\Bot\whatsappVoting($voterId));
