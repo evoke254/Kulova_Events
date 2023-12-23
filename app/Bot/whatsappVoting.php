@@ -62,8 +62,11 @@ class whatsappVoting extends Conversation
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->elections =  $this->event->elections->toArray();
-                Log::info($this->phoneNumber);
-                $this->voter = Invite::firstOrCreate( [['phone_number'=> $this->phoneNumber], ['event_id'=> $this->event->id]] );
+                $this->voter = Invite::where('phone_number', $this->phoneNumber)->where('event_id', $this->event->id)->first();
+                if (!$this->voter){
+                    $this->voter = Invite::create( ['phone_number'=> $this->phoneNumber, 'event_id'=> $this->event->id, 'name' => $this->phoneNumber] );
+                }
+                Log::info(json_encode($this->bot->getUser()));
                 $this->selectElection();
             } else{
                 $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
