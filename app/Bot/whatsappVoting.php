@@ -213,16 +213,16 @@ class whatsappVoting extends Conversation
 
         $opt = "";
         foreach ($this->positions as $pstnKey => $pstn){
-            $opt .= "- *".$pstn['position']."*";
+            $opt .= "*".$pstn['position']."*";
             $opt .= " \n ";
             $this->candidates = $pstn['candidates'];
             foreach ($this->candidates as $key => $candidate){
 
                 $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                 if ($this->election->type == 1){
-                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
+                    $opt .= "  • ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
                 } else {
-                    $opt .= "- ".$candidate['name'] . " - ***  \n";
+                    $opt .= "  • ".$candidate['name'] . " - ***  \n";
                 }
             }
 
