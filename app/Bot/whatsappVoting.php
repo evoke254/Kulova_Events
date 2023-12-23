@@ -116,19 +116,22 @@ class whatsappVoting extends Conversation
 
         foreach ($this->positions as $pstnKey => $pstn){
 
-            if (  !empty($pstn['candidates']) && !$this->voter->castVoteInPstn($pstn['id']) ) {
+            if (  !empty($pstn['candidates']) ) {
+                $countCdt++;
+                if ($this->voter->castVoteInPstn($pstn['id'])){
 
-                $countBallot++;
-                $opt .= Str::upper($pstn['position']). " \n ";
-                $this->candidates = $pstn['candidates'];
-                foreach ($this->candidates as $key => $candidate){
-                    $countCdt++;
-                    $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
-                    if ($this->election->type == 1){
-                        $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
+                    $countBallot++;
+                    $opt .= Str::upper($pstn['position']). " \n ";
+                    $this->candidates = $pstn['candidates'];
+                    foreach ($this->candidates as $key => $candidate){
+                        $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+                        if ($this->election->type == 1){
+                            $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
+                        }
                     }
+                    break;
+
                 }
-                break;
             }
 
         }
@@ -217,7 +220,7 @@ class whatsappVoting extends Conversation
 
                 $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                 if ($this->election->type == 1){
-                    $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
+                    $opt .= "- ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n";
                 } else {
                     $opt .= "- " . $candidate['name'] . " - ***  \n";
                 }
