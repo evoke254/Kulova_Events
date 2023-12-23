@@ -87,23 +87,23 @@ class whatsappVoting extends Conversation
         }
         if (empty($this->elections) ){
             $this->retryPrcs();
+        } else {
+
+            $qstn = "ELECTIONS:\n". $opt ."00 : Cancel ";
+            $this->ask($qstn, function(Answer $answer) use ($opt) {
+
+                $ans = (int) $answer->getText() ;
+                if (isset($this->elections[$ans - 1])){
+                    $this->election = Election::find($this->elections[$ans - 1]['id']);
+                    $this->SelectedElectionArr = $this->elections[$ans - 1];
+                    $this->positions = $this->election->elective_positions->toArray();
+                    $this->selectElectivePositions();
+                } else{
+                    $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\n\n ". $opt ."00 : Cancel ";
+                    $this->qstnFallback($qstn);
+                }
+            });
         }
-
-        $qstn = "ELECTIONS:\n". $opt ."00 : Cancel ";
-
-        $this->ask($qstn, function(Answer $answer) use ($opt) {
-
-            $ans = (int) $answer->getText() ;
-            if (isset($this->elections[$ans - 1])){
-                $this->election = Election::find($this->elections[$ans - 1]['id']);
-                $this->SelectedElectionArr = $this->elections[$ans - 1];
-                $this->positions = $this->election->elective_positions->toArray();
-                $this->selectElectivePositions();
-            } else{
-                $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\n\n ". $opt ."00 : Cancel ";
-                $this->qstnFallback($qstn);
-            }
-        });
 
     }
 
@@ -187,7 +187,6 @@ class whatsappVoting extends Conversation
             }
         });
 
-        die();
     }
     public function markBallot() {
         $myCastVotes = count($this->votes);
