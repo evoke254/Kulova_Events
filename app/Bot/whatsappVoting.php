@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
 class whatsappVoting extends Conversation
 {
     public $event; public $events;
-    public  $phoneNumber;
+    public  $phoneNumber; public $userName;
     public  Invite $voter;
     public $election; public $elections;
     public $positions;
@@ -32,13 +32,14 @@ class whatsappVoting extends Conversation
 
     public $bot22;
 
-    public function __construct( $phoneNumber)
+    public function __construct( $phoneNumber, $userName)
     {
+        $this->userName = $userName;
         $this->phoneNumber = $phoneNumber;
-
     }
     public function run(){
-        $welcomeMessage = "Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
+
+        $welcomeMessage = "Hello ".$this->userName." Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
         $this->startConversation($welcomeMessage);
     }
 
@@ -64,9 +65,8 @@ class whatsappVoting extends Conversation
                 $this->elections =  $this->event->elections->toArray();
                 $this->voter = Invite::where('phone_number', $this->phoneNumber)->where('event_id', $this->event->id)->first();
                 if (!$this->voter){
-                    $this->voter = Invite::create( ['phone_number'=> $this->phoneNumber, 'event_id'=> $this->event->id, 'name' => $this->phoneNumber] );
+                    $this->voter = Invite::create( ['phone_number'=> $this->phoneNumber, 'event_id'=> $this->event->id, 'name' => $this->userName] );
                 }
-                Log::info(json_encode($this->bot->getUser()));
                 $this->selectElection();
             } else{
                 $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ." 00 : Cancel ";
