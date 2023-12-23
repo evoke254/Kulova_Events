@@ -16,18 +16,22 @@ use Illuminate\Support\Str;
 
 class ussdVoting extends Conversation
 {
+
     public $event; public $events;
-    public Invite $voter;
+    public  $phoneNumber;
+    public  Invite $voter;
     public $election; public $elections;
     public $positions;
     public $candidates;
     public $votes = [];
     public $SelectedElectionArr;
+    public $msgType;
 
+    public $bot22;
 
-    public function __construct(Invite $voter)
+    public function __construct( $phoneNumber)
     {
-        $this->voter = $voter;
+        $this->phoneNumber = $phoneNumber;
 
     }
     public function run(){
@@ -52,6 +56,7 @@ class ussdVoting extends Conversation
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->elections =  $this->event->elections->toArray();
+                $this->voter = Invite::firstOrCreate( [['phone_number', $this->phoneNumber], ['event_id', $this->event->id]] );
                 $this->selectElection();
             } else{
                 $qstn = "CON Invalid response. Please check and try again \n
