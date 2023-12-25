@@ -127,6 +127,9 @@ class whatsappVoting extends Conversation
                         $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                         if ($this->election->type == 1){
                             $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
+                        } else {
+                            $opt .= $key+1 . ": ".$candidate['name']."\n ";
+
                         }
                     }
                     break;
@@ -209,42 +212,51 @@ class whatsappVoting extends Conversation
     }
 
     public function confirmBallot(){
+        if(empty($this->votes)){
+            $this->alreadyVoted();
+        } else {
+            $opt = "";
+            foreach ($this->positions as $pstnKey => $pstn){
+                $opt .= "*".$pstn['position']."*";
+                $opt .= " \n ";
+                $this->candidates = $pstn['candidates'];
+                foreach ($this->candidates as $key => $candidate){
 
-
-        $opt = "";
-        foreach ($this->positions as $pstnKey => $pstn){
-            $opt .= "*".$pstn['position']."*";
-            $opt .= " \n ";
-            $this->candidates = $pstn['candidates'];
-            foreach ($this->candidates as $key => $candidate){
-
-                $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
-                if ($this->election->type == 1){
-                    $opt .= "  • ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")\n";
-                } else {
-                    $opt .= "  • ".$candidate['name'] . " - ***\n";
+                    $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
+                    if ($this->election->type == 1){
+                        if ($prev_votes->count() > 0) {
+                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . " (" . $prev_votes->count() . ")\n";
+                        } else{
+                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . " \n";
+                        }
+                    } else {
+                        if ($prev_votes->count() > 0) {
+                            $opt .= "  • ".$candidate['name'] . "✅ \n";
+                        } else {
+                            $opt .= "  • ".$candidate['name'] . "\n";
+                        }
+                    }
                 }
+
             }
+
+            $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
+            $this->ask($qstn, function(Answer $answer) use ($opt) {
+
+                $ans = (int) $answer->getText() ;
+                if ($ans == 1){
+                    $this->say('Vote cast. Thank you.');
+                } else if ($ans == 2) {
+                    $this->votes = [];
+                    $this->deleteVote();
+                    $this->say('Cancelled by user. Text Vote to try again');
+                } else {
+                    $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
+                    $this->qstnFallback($qstn);
+                }
+            });
 
         }
-
-        $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
-        $this->ask($qstn, function(Answer $answer) use ($opt) {
-
-            $ans = (int) $answer->getText() ;
-            if ($ans == 1){
-                $this->say('Vote cast. Thank you.');
-            } else if ($ans == 2) {
-                $this->votes = [];
-                $this->deleteVote();
-                $this->say('Cancelled by user. Text Vote to try again');
-            } else {
-
-                $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
-                $this->qstnFallback($qstn);
-            }
-
-        });
     }
 
     public function deleteVote(){
@@ -276,6 +288,17 @@ class whatsappVoting extends Conversation
         }
 
         return false;
+    }
+
+    public function alreadyVoted(){
+        $qstn = "You have already voted. \n99 : HOME";
+
+        $this->ask($qstn, function(Answer $answer) {
+            $ans = (int) $answer->getText();
+            if ($ans == 99){
+                $this->run();
+            }
+        });
     }
 
 
