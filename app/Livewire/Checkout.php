@@ -81,13 +81,6 @@ class Checkout extends Component
             [ 'regex' => ' Enter a valid kenyan Number',
             ]);
 
-        $validatedData = $this->validate([
-            'full_names' => 'required|min:2',
-            'email' => 'required|email',
-            'phoneNumber' => ['required', 'regex:/^(0|(\+|254)(7\d{8}))$/'],
-        ],
-            [ 'regex' => ' Enter a valid kenyan Number',
-            ]);
 
         $this->payment_status = true;
         $this->payment_method = 'MPESA';
@@ -99,11 +92,11 @@ class Checkout extends Component
         $Remarks = 'Event ticket Purchase';
         $TransactionType = "CustomerPayBillOnline";
         $Amount = $this->total;
-        $PartyA = $this->phoneNumber;
+        $PartyA = 254 . substr($this->phoneNumber, -9);
         $PartyB =$BusinessShortCode;
-        $PhoneNumber =$this->phoneNumber;
+        $PhoneNumber = $PartyA;
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
-        $LipaNaMpesaPasskey = env('MPESA_CONSUMER_KEY');
+        $LipaNaMpesaPasskey = env('MPESA_PassKey');
         $AccountReference = null;
 
         $stkPushSimulation=$mpesa->STKPushSimulation($BusinessShortCode,

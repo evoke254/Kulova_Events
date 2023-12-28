@@ -246,6 +246,18 @@ class whatsappVoting extends Conversation
                 $ans = (int) $answer->getText() ;
                 if ($ans == 1){
                     $this->say('Vote cast. Thank you.');
+                    $prov_rslts = $this->getProvisionalRslts();
+                    $this->say($prov_rslts);
+
+
+
+
+
+
+
+
+
+
                 } else if ($ans == 2) {
                     $this->votes = [];
                     $this->deleteVote();
@@ -291,7 +303,8 @@ class whatsappVoting extends Conversation
     }
 
     public function alreadyVoted(){
-        $qstn = "You have already voted. \n99 : HOME";
+        $prov_rslts = $this->getProvisionalRslts();
+        $qstn = "You have already voted.\n \n". $prov_rslts." \n \n99 : HOME";
 
         $this->ask($qstn, function(Answer $answer) {
             $ans = (int) $answer->getText();
@@ -299,6 +312,28 @@ class whatsappVoting extends Conversation
                 $this->run();
             }
         });
+    }
+
+    public function getProvisionalRslts()
+    {
+        $opt = "";
+        foreach ($this->positions as $pstnKey => $pstn){
+            $opt .= "*".$pstn['position']."*";
+            $opt .= " \n ";
+            $this->candidates = $pstn['candidates'];
+            $totalVotes = ElectivePosition::find($pstn['id'])->votes()->get()->count();
+            foreach ($this->candidates as $key => $candidate){
+                $candidateVotes = CandidateElectivePosition::find($candidate['id'])->votes()->get()->count();
+                $rslts = ceil($candidateVotes/ ($totalVotes > 0) ? $totalVotes : 1 * 100);
+                if ($this->election->type == 1){
+                    $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "   _". $rslts ."_ % \n";
+                } else {
+                    $opt .= "  • ".$candidate['name'] . "- _".$rslts."_ % \n";
+                }
+            }
+        }
+
+        return $opt;
     }
 
 
