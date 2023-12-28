@@ -106,7 +106,7 @@
 
                        <div class="mt-3">
                             <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number <span class="text-danger-500 mr-2">*</span></label>
-                            <input type="phoneNumber" wire:model="phoneNumber" id="phoneNumber" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            <input type="tel" wire:model="phoneNumber" id="phoneNumber" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                    placeholder="0712345678">
                            <p class="text-gray-300 dark:text-gray-600 text-sm mx-auto">MPESA registered number to receive payment prompt</p>
                         </div>
@@ -121,15 +121,15 @@
                             warning
                             label="Test"
                             class="w-full rounded-md px-4 py-3 text-gray-900"
-                            x-on:click="prcsCashPayment"
+                            wire:click="prcsCashPayment"
                         />
-                        <x-button
+{{--}}                        <x-button
                             icon="cash"
                             warning
                             label="Paypal"
                             class="w-full rounded-md px-4 py-3 text-gray-900"
                             x-on:click="prcsPayPalPayment"
-                        />
+                        /> --}}
                         <x-button
                             icon="credit-card"
                             lime label="MPESA"

@@ -26,7 +26,7 @@ class Checkout extends Component
     public $batchId;
     public $phoneNumber;
 
-        protected $rules = [
+    protected $rules = [
         'tickets' => 'required|numeric|min:1',
     ];
     public $orderId;
@@ -54,6 +54,14 @@ class Checkout extends Component
 
     public function prcsCashPayment()
     {
+        $validatedData = $this->validate([
+            'full_names' => 'required|min:2',
+            'email' => 'required|email',
+            'phoneNumber' => ['required', 'regex:/^(0|\+254|254)\d{9}$/'],
+        ],
+            [ 'regex' => ' Enter a valid kenyan Number',
+            ]);
+
         $this->payment_status = true;
         $this->payment_method = 'CASH';
         $this->notification()->success(
@@ -87,7 +95,7 @@ class Checkout extends Component
         $PartyB =$BusinessShortCode;
         $PhoneNumber =$this->phoneNumber;
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
-        $LipaNaMpesaPasskey = null;
+        $LipaNaMpesaPasskey = env('MPESA_CONSUMER_KEY');
         $AccountReference = null;
 
         $stkPushSimulation=$mpesa->STKPushSimulation($BusinessShortCode,
@@ -101,7 +109,7 @@ class Checkout extends Component
             $AccountReference,
             $TransactionDesc,
             $Remarks);
-
+dd($stkPushSimulation);
         $this->notification()->success(
             $title = 'Payment Received',
             $description = 'Thank you for purchasing tickets'
@@ -124,10 +132,10 @@ class Checkout extends Component
                 'status' => $status,
             ]
         );
-        /*$this->notification()->success(
+        $this->notification()->success(
             $title = 'Order Generated',
-            $description = 'waiting for payment'
-        );*/
+            $description = 'waiting for payment confirmation'
+        );
         $this->orderId = $this->order->id;
     }
     public function render()
