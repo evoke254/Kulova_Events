@@ -324,7 +324,7 @@ class whatsappVoting extends Conversation
             $totalVotes = ElectivePosition::find($pstn['id'])->votes()->get()->count();
             foreach ($this->candidates as $key => $candidate){
                 $candidateVotes = CandidateElectivePosition::find($candidate['id'])->votes()->get()->count();
-                $rslts = round(($candidateVotes/ (($totalVotes > 0) ? $totalVotes : 1) * 100) , 2);
+                $rslts = round(($candidateVotes/ (($totalVotes > 0) ? $totalVotes : 1) * 100) , 1);
                 if ($this->election->type == 1){
                     $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "   _". $rslts ."_ % \n";
                 } else {
