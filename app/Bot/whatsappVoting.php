@@ -328,7 +328,7 @@ class whatsappVoting extends Conversation
                 if ($this->election->type == 1){
                     $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "   _". $rslts ."_ % \n";
                 } else {
-                    $opt .= "  • ".$candidate['name'] . "- _".$rslts."_ % \n";
+                    $opt .= "  • ".$candidate['name'] . " - _".$rslts."_ % \n";
                 }
             }
         }
