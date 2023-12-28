@@ -68,6 +68,7 @@ class ElectionShow extends Component implements HasForms
                                                 ->required(),
                                             TextInput::make('member_no')
                                                 ->label('Member No.')
+                                                ->unique()
                                                 ->required()
                                                 ->numeric(),
                                         ])

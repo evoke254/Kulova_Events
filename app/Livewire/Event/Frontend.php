@@ -28,8 +28,8 @@ class Frontend extends Component
         // use a full syntax
         $this->dialog()->confirm([
             'title'       => 'Buy Tickets?',
-            'class' => 'text-xl, ',
-            'description' => 'Proceed to checkout?',
+            'class' => 'text-xl , ',
+            'description' => 'Proceed to buy ticket?',
             'icon'        => 'question',
             'accept'      => [
                 'label'  => 'Yes, checkout',
@@ -47,12 +47,7 @@ class Frontend extends Component
             ],
         ]);
     }
-        public function initCheckout(){
-        $this->step = $this->steps[1];
-        $this->cycle = 3;
-        $this->qty = 1;
 
-    }
 
     public function mount(){
         $this->events = Event::orderBy('start_date', 'Desc')

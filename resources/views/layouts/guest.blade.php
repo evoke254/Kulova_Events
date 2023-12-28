@@ -26,7 +26,7 @@
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-8">
         <a href="{{route('landing')}}" class="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo">
+            <img src="{{asset('images/logo.jpg')}}" class="h-14 rounded-lg" alt="{{env('APP_NAME')}} Logo">
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Text-40</span>
         </a>
         <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -49,13 +49,13 @@
                     <a href="{{route('landing')}}" class="block py-2 px-3 rounded md:bg-transparent {{request()->routeIs('landing') ? 'text-blue-700 dark:text-blue-500' : ' text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-700'}} md:p-0 "
                        aria-current="page">Home</a>
                 </li>
-                <li>
+               {{--}} <li>
                     <a href="{{route('events.frontend')}}" class="block py-2 px-3 rounded md:bg-transparent {{request()->routeIs('events.frontend') ? 'text-blue-700 dark:text-blue-500' : ' text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-700'}} md:p-0 "
                     >Browse Events</a>
                 </li>
                 <li>
                     <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                 </li>

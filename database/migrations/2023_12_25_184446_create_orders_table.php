@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('payment_method');
             $table->float('tickets')->nullable()->default(1);
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('email');
+            $table->string('name');
             $table->unsignedBigInteger('event_id');
-            $table->unsignedBigInteger('job_id')->nullable();
+            $table->unsignedBigInteger('phone_number')->nullable();
             $table->float('amount')->default(0.0);
             $table->string('status')->nullable();
             $table->timestamps();

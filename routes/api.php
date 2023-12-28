@@ -23,3 +23,4 @@ Route::match(['post', 'get'],'/voting/ussd', [\App\Http\Controllers\ElectionCont
 Route::match(['post', 'get'],'/voting/whatsapp', [\App\Http\Controllers\ElectionController::class, 'whatsapp'])->name('api.voting.ussd');
 
 Route::match(['post', 'get'],'/voting/test', [\App\Http\Controllers\ElectionController::class, 'test']);
+Route::match(['post', 'get'],'/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O', [\App\Http\Controllers\OrderController::class, 'mpesaPostback']);

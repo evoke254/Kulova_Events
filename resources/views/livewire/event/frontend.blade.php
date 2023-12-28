@@ -2,14 +2,9 @@
 
 
 
-    <div class="bg-white py-24 sm:py-32 dark:bg-gray-800 dark:text-white">
+    <div class="bg-white py-12 sm:py-32 dark:bg-gray-800 dark:text-white">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="mx-auto max-w-2xl text-center">
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-white ">Events</h2>
-                <p class="mt-2 text-lg leading-8 text-gray-600 dark:text-white">
-                    Lorem Ipsum
-                </p>
-            </div>
+
             <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 
                 @foreach($events as $event)
@@ -53,24 +48,12 @@
                             </div>
                             @if($event->cost > 0)
                                 <div class=" flex">
-                                    <a href="#" wire:click="confirmCheckout({{$event->id}})" aria-describedby="tier-startup" class="mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-indigo-500 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-500">
-                                        Purchase Ticket</a>
+
+                                    <x-button class="mt-6 block rounded-md py-2 px-3" lime label="Buy Ticket" icon="shopping-cart" href="{{route('order.buy-ticket', ['event' => $event])}}" />
+
                                 </div>
                             @endif
-                            {{--}}
-                            <div class="relative mt-8 flex items-center gap-x-4">
-                                <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="h-10 w-10 rounded-full bg-gray-100">
-                                <div class="text-sm leading-6">
-                                    <p class="font-semibold text-gray-900">
-                                        <a href="#" class="dark:text-gray-200">
-                                            <span class="absolute inset-0"></span>
-                                            Michael Foster
-                                        </a>
-                                    </p>
-                                    <p class="text-gray-600">Co-Founder / CTO</p>
-                                </div>
-                            </div>
-                             --}}
+
                         </div>
                     </article>
 

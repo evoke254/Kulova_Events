@@ -24,18 +24,23 @@ Route::get('/dashboardjkkjjkjkjkjjkkjkjjkjkj', function () {
 
 
 Route::get('/', [landingpageController::class, 'index'])->name('landing');
-Route::get('/home', [landingpageController::class, 'home'])->name('home');
+Route::get('/home', [landingpageController::class, 'index'])->name('home');
 Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'display'])
     ->name('events.frontend');
 Route::get('/event/{event}', [\App\Http\Controllers\EventController::class, 'showEvent'])
     ->name('event.view');
+
+
+//buy tickets
+
+Route::get('/buy-tickets/{event}', [\App\Http\Controllers\OrderController::class, 'buyTicket'])->name('order.buy-ticket');
+
 
 Route::middleware('auth')->group(function () {
 
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

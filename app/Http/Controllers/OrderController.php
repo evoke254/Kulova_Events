@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,13 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function buyTicket(Request $request, Event $event)
+    {
+        return view('buy-tickets', compact('event'));
+
+    }
+
     public function index()
     {
         //
