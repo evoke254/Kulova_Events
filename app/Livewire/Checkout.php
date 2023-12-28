@@ -76,6 +76,14 @@ class Checkout extends Component
         $validatedData = $this->validate([
             'full_names' => 'required|min:2',
             'email' => 'required|email',
+            'phoneNumber' => ['required', 'regex:/^(0|\+254|254)\d{9}$/'],
+        ],
+            [ 'regex' => ' Enter a valid kenyan Number',
+            ]);
+
+        $validatedData = $this->validate([
+            'full_names' => 'required|min:2',
+            'email' => 'required|email',
             'phoneNumber' => ['required', 'regex:/^(0|(\+|254)(7\d{8}))$/'],
         ],
             [ 'regex' => ' Enter a valid kenyan Number',
@@ -109,7 +117,7 @@ class Checkout extends Component
             $AccountReference,
             $TransactionDesc,
             $Remarks);
-dd($stkPushSimulation);
+        dd($stkPushSimulation);
         $this->notification()->success(
             $title = 'Payment Received',
             $description = 'Thank you for purchasing tickets'
