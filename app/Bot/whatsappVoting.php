@@ -316,7 +316,8 @@ class whatsappVoting extends Conversation
 
     public function getProvisionalRslts()
     {
-        $opt = "";
+        $opt = "PROVISIONAL RSLTS \n";
+        $opt .= " =========== \n";
         foreach ($this->positions as $pstnKey => $pstn){
             $opt .= "*".$pstn['position']."*";
             $opt .= " \n ";
