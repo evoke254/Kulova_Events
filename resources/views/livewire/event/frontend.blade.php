@@ -11,9 +11,8 @@
 
                     <article class="flex flex-col items-start justify-between shadow-lg p-4 rounded-lg">
                         <div class="relative w-full">
-                            {{dd($event->getFirstMedia())}}
-                            @if($event->getFirstMedia() )
-                                <img src="{{ $event->getFirstMedia()->getUrl()  }}" alt=""
+                            @if($event->images() )
+                                <img src="{{ $event->images()->first()->image  }}" alt=""
                                      class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
                             @endif
                             <a href="{{route('event.view', ['event' => $event->id])}}">

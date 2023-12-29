@@ -110,8 +110,10 @@ class Edit extends Component   implements HasForms
                     ]),
 
                 FileUpload::make('uploads')
+                    ->label('Event Images')
                     ->disk('public')
                     ->image()
+                    ->required()
                     ->columnSpanFull()
                     ->multiple()
                     ->imageEditor(),

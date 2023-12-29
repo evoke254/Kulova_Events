@@ -123,6 +123,7 @@ class Create extends Component   implements HasForms
 
                 FileUpload::make('images.image')
                     ->disk('public')
+                    ->required()
                     ->multiple()
                     ->columns(4)
                     ->columnSpanFull()
