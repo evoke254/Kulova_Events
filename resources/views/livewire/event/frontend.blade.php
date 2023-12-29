@@ -8,11 +8,10 @@
             <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 
                 @foreach($events as $event)
-
                     <article class="flex flex-col items-start justify-between shadow-lg p-4 rounded-lg">
                         <div class="relative w-full">
-                            @if(!$event->images()->isEmpty() )
-                                <img src="{{ $event->images()->first()->image  }}" alt=""
+                            @if(!$event->images()->get()->isEmpty() )
+                                <img src="{{ asset('storage/'. $event->images()->first()->image)  }}" alt=""
                                      class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
                             @endif
                             <a href="{{route('event.view', ['event' => $event->id])}}">
@@ -22,12 +21,19 @@
 
                         <div class="max-w-xl">
                             <div class="mt-8 flex items-center gap-x-4 text-xs">
+                                <x-icon name="clock" class="w-5 h-5" solid />
                                 <time datetime="2020-03-16" class="text-gray-500 dark:text-gray-200">
                                     {{Carbon\Carbon::parse($event->start_date)->format('M jS Y')}}, {{ Carbon\Carbon::parse($event->start_date)->diffForHumans() }}
                                 </time>
                                 <a href="{{route('event.view', ['event' => $event->id])}}" class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
                                     {{$event->category?->name}}
                                 </a>
+                            </div>
+                            <div class="pt-3 flex items-center gap-x-1 text-xs">
+                                <x-icon name="location-marker" class="w-5 h-5" solid />
+                               <p class="mx-2 text-md text-gray-600 dark:text-gray-300">
+                                   {{$event->venue }}
+                               </p>
                             </div>
                             <div class="group relative">
                                 <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
