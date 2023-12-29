@@ -12,7 +12,7 @@
                         <div class="relative w-full">
                             @if(!$event->images()->get()->isEmpty() )
                                 <img src="{{ asset('storage/'. $event->images()->first()->image)  }}" alt=""
-                                     class=" w-full max-h-72 rounded-2xl bg-gray-100 object-cover">
+                                     class=" w-full max-h-72 rounded-2xl bg-gray-100">
                             @endif
                             <a href="{{route('event.view', ['event' => $event->id])}}">
                                 <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>

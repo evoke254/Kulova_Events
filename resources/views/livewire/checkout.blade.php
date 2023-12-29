@@ -24,7 +24,10 @@
                                             </h3>
                                         </div>
                                         <div class="mt-1 flex text-sm">
-                                            <img src="{{$event->getFirstMedia()->getUrl()}}" class=" rounded my-4">
+                                            @if(!$event->images()->get()->isEmpty() )
+                                                <img src="{{ asset('storage/'. $event->images()->first()->image)  }}" alt=""
+                                                     class=" w-full rounded-2xl bg-gray-100">
+                                            @endif
                                         </div>
                                         <p class="mt-1 text-sm font-medium text-gray-900">${{number_format($event->cost)}}</p>
                                     </div>
@@ -86,9 +89,9 @@
 
 
 
-            <div class=" space-y-2.5">
-                <x-errors class="mt-2 text-md text-red-600 dark:text-red-500" />
-            </div>
+                    <div class=" space-y-2.5">
+                        <x-errors class="mt-2 text-md text-red-600 dark:text-red-500" />
+                    </div>
 
                     <div class="mt-8">
                         <div>
@@ -97,19 +100,19 @@
                                    placeholder="Kevin Simiyu">
                         </div>
                     </div>
-                       <div class="mt-3">
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email <span class="text-danger-500 mr-2">*</span></label>
-                            <input type="email" wire:model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                   placeholder="abc@example.com">
-                        </div>
+                    <div class="mt-3">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email <span class="text-danger-500 mr-2">*</span></label>
+                        <input type="email" wire:model="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                               placeholder="abc@example.com">
+                    </div>
 
 
-                       <div class="mt-3">
-                            <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number <span class="text-danger-500 mr-2">*</span></label>
-                            <input type="tel" wire:model="phoneNumber" id="phoneNumber" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                   placeholder="0712345678">
-                           <p class="text-gray-300 dark:text-gray-600 text-sm mx-auto">MPESA registered number to receive payment prompt</p>
-                        </div>
+                    <div class="mt-3">
+                        <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number <span class="text-danger-500 mr-2">*</span></label>
+                        <input type="tel" wire:model="phoneNumber" id="phoneNumber" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                               placeholder="0712345678">
+                        <p class="text-gray-300 dark:text-gray-600 text-sm mx-auto">MPESA registered number to receive payment prompt</p>
+                    </div>
 
 
 
@@ -123,13 +126,13 @@
                             class="w-full rounded-md px-4 py-3 text-gray-900"
                             wire:click="prcsCashPayment"
                         />
-{{--}}                        <x-button
-                            icon="cash"
-                            warning
-                            label="Paypal"
-                            class="w-full rounded-md px-4 py-3 text-gray-900"
-                            x-on:click="prcsPayPalPayment"
-                        /> --}}
+                        {{--}}                        <x-button
+                                                    icon="cash"
+                                                    warning
+                                                    label="Paypal"
+                                                    class="w-full rounded-md px-4 py-3 text-gray-900"
+                                                    x-on:click="prcsPayPalPayment"
+                                                /> --}}
                         <x-button
                             icon="credit-card"
                             lime label="MPESA"
