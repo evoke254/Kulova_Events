@@ -81,7 +81,7 @@ class ElectionController extends Controller
         $config = $request->all();
 
         //   Ussd_Call::updateOrCreate(  ['sessionId' => $config['sessionId']],        $config  );
-       // DriverManager::loadDriver(ussd::class);
+        // DriverManager::loadDriver(ussd::class);
 
         // Log::info(json_encode($config));
 
@@ -124,10 +124,25 @@ class ElectionController extends Controller
         $botman->listen();
     }
 
-    public function vote(Election $election)
+
+
+
+
+    public function vote(Request $request, Election $election)
     {
+        if (!$request->hasValidSignature()) {
+
+                    return view('send-verification-sms');
+        }
+
         return view('event.election.vote', compact('election'));
 
+    }
+
+        private function sendVerificationSMS($phoneNumber)
+    {
+
+            $this->sendVerificationSMS(Auth::user()->phone);
     }
 
 }

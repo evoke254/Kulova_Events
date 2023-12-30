@@ -48,6 +48,17 @@
                                                 {{Carbon\Carbon::parse($event->start_date)->format('M jS Y')}}, {{ Carbon\Carbon::parse($event->start_date)->diffForHumans() }}
                                             </dd>
                                         </div>
+                                        @if($event->cost > 0)
+
+                                            <div class="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+                                                <dt class="text-sm font-medium leading-6 text-gray-900">Attend</dt>
+                                                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                                    <x-button class="block rounded-md py-2 px-3" lime label="Buy Ticket" icon="shopping-cart" href="{{route('order.buy-ticket', ['event' => $event])}}" />
+                                                </dd>
+                                            </div>
+
+                                        @endif
+
                                         <div class="bg-gray-50 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
                                             <dt class="text-sm font-medium leading-6 text-gray-900">Info</dt>
                                             <dd class="mt-1 sm:col-span-2 sm:mt-0">
@@ -139,12 +150,12 @@
                                     </div>
 
                                     @foreach($election->elective_positions as $position)
-                                            <div class="flex  justify-between gap-x-4 py-3">
-                                                <dt class="text-gray-500">{{$position->position}}</dt>
-                                                <dd class="flex items-start gap-x-2">
-                                                    <div class="font-medium text-gray-900">{{$position?->candidates()->count()}} Positions</div>
-                                                </dd>
-                                            </div>
+                                        <div class="flex  justify-between gap-x-4 py-3">
+                                            <dt class="text-gray-500">{{$position->position}}</dt>
+                                            <dd class="flex items-start gap-x-2">
+                                                <div class="font-medium text-gray-900">{{$position?->candidates()->count()}} Positions</div>
+                                            </dd>
+                                        </div>
                                     @endforeach
                                 </dl>
                             </li>

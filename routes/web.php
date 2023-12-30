@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\landingpageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VerifyVoterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,11 +30,13 @@ Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'dis
 Route::get('/event/{event}', [\App\Http\Controllers\EventController::class, 'showEvent'])
     ->name('event.view');
 
+Route::post('/send-sms', [VerifyVoterController::class, 'store'])->name('send-sms');
 
 //buy tickets
-
 Route::get('/buy-tickets/{event}', [\App\Http\Controllers\OrderController::class, 'buyTicket'])->name('order.buy-ticket');
-
+    //Online Voting
+    Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
+        ->name('election.vote');
 
 Route::middleware('auth')->group(function () {
 
@@ -63,9 +65,7 @@ Route::middleware('auth')->group(function () {
     //Create Election
     Route::get('/event/{event}/create-election', [\App\Http\Controllers\ElectionController::class, 'create'])->name('election.create');
 
-    //Voting
-    Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
-        ->name('election.vote');
+
     //Online Voting
     Route::get('/event/{event}/voteOnline', [\App\Http\Controllers\EventController::class, 'voteOnline'])
         ->name('event.vote.online');

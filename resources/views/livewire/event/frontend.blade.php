@@ -13,6 +13,12 @@
                             @if(!$event->images()->get()->isEmpty() )
                                 <img src="{{ asset('storage/'. $event->images()->first()->image)  }}" alt=""
                                      class=" w-full max-h-72 rounded-2xl bg-gray-100">
+                            @else
+
+                                <img src="{{ asset('images/def_event.jpg')  }}" alt=""
+                                     class=" w-full max-h-72 rounded-2xl bg-gray-100">
+
+
                             @endif
                             <a href="{{route('event.view', ['event' => $event->id])}}">
                                 <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
@@ -31,10 +37,23 @@
                             </div>
                             <div class="pt-3 flex items-center gap-x-1 text-xs">
                                 <x-icon name="location-marker" class="w-5 h-5" solid />
-                               <p class="mx-2 text-md text-gray-600 dark:text-gray-300">
-                                   {{$event->venue }}
-                               </p>
+                                <p class="mx-2 text-md text-gray-600 dark:text-gray-300">
+                                    {{$event->venue }}
+                                </p>
                             </div>
+
+                            @if($event->elections()?->count() > 0)
+                                <div class="pt-3 flex items-center gap-x-1 text-xs">
+                                    <x-badge.circle positive class="w-5 h-5" icon="check" />
+                                    <p class="mx-2 text-md text-gray-600 dark:text-gray-300">
+                                        Elections
+                                    </p>
+
+                                </div>
+
+                            @endif
+
+
                             <div class="group relative">
                                 <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
                                     <a href="{{route('event.view', ['event' => $event->id])}}" class="dark:text-white">
