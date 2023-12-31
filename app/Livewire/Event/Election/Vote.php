@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Event\Election;
 
+use App\Models\Invite;
 use Livewire\Component;
 use WireUi\Traits\Actions;
 
@@ -9,10 +10,31 @@ class Vote extends Component
 {
     use Actions;
     public $election;
+    public Invite $voter;
     public $ballot_papers = [];
     public $elective_positions;
     public function mount(){
         $this->elective_positions =  $this->election?->elective_positions;
+
+    }
+
+
+    public function castVote(){
+        dd($this->ballot_papers);
+        foreach ($this->ballot_papers as $elective_position_id => $cast_vote){
+dd($this->ballot_papers);
+            $this->ballot_papers = [];
+        }
+/*
+        $this->notification()->success(
+            $title = ' Vote Cast ',
+            $description = 'Vote was successfully cast'
+        );*/
+
+    }
+
+    public function confirm()
+    {
 
     }
 

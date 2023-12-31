@@ -37,6 +37,8 @@ Route::get('/buy-tickets/{event}', [\App\Http\Controllers\OrderController::class
     //Online Voting
     Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
         ->name('election.vote');
+        Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionController::class, 'vote'])
+        ->name('election.vote.verified');
 
 Route::middleware('auth')->group(function () {
 

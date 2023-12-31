@@ -128,20 +128,20 @@ class ElectionController extends Controller
 
 
 
-    public function vote(Request $request, Election $election)
+    public function vote(Request $request, Election $election, $voter_id=null)
     {
         if (!$request->hasValidSignature()) {
-                    return view('send-verification-sms', compact('election'));
+            return view('send-verification-sms', compact('election'));
+        } else {
+            $voter = Invite::find($voter_id);
+            return view('event.election.vote', compact('election', 'voter'));
         }
-
-        return view('event.election.vote', compact('election'));
-
     }
 
-        private function sendVerificationSMS($phoneNumber)
+    private function sendVerificationSMS($phoneNumber)
     {
 
-            $this->sendVerificationSMS(Auth::user()->phone);
+        $this->sendVerificationSMS(Auth::user()->phone);
     }
 
 }

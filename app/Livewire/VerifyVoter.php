@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use AfricasTalking\SDK\AfricasTalking;
 use App\Models\Election;
+use App\Models\Invite;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\URL;
 use Livewire\Component;
@@ -18,6 +19,7 @@ class VerifyVoter extends Component
     public $code;
 
     public Election $election;
+    public Invite $voter;
 
 
     public function mount()
@@ -39,6 +41,21 @@ class VerifyVoter extends Component
         $senderId = 'Text40';
         $phoneNumber = $this->phone_no;
         $no = substr($phoneNumber, -9);
+
+        //Check if user has been invited to the Election
+        $phoneNumbers = ["+254" . $no, "+254" . $no, "0" . $no ];
+        $this->voter = Invite::where('event_id', $this->election->event_id)
+            ->whereIn('phone_number', $phoneNumbers)
+            ->first();
+        if (!$this->voter){
+                $this->notification()->error(
+                    $title = ' Error ',
+                    $description = 'Please request the administrator to invite you for the event'
+                );
+            return false;
+        }
+
+        //Check if there is  a pending notification
         $pendingVrfctn = VoterDetails::where('phone_no', $no)
             ->where('status', false)
             ->first();
@@ -102,7 +119,7 @@ class VerifyVoter extends Component
             $pendingVrfctn->status = true;
             $pendingVrfctn->save();
             $signedUrl = URL::signedRoute(
-                'election.vote', ['election' => $this->election->id]
+                'election.vote.verified', ['election' => $this->election->id, 'vote' => $this->voter->id]
             );
 
             return redirect()->to($signedUrl);
