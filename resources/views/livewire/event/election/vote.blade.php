@@ -12,60 +12,42 @@
                     <form >
                         <div class="mt-8 flow-root sm:mt-12 space-y-2.5">
 
-{{--}}
-
-                            <nav aria-label="Progress">
-                                <ol role="list" class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0">
-                                    <li class="relative md:flex md:flex-1">
-                                        <!-- Completed Step -->
-                                        <a href="#" class="group flex w-full items-center">
-                                            <span class="flex items-center px-6 py-4 text-sm font-medium">
-                                              <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
-                                                <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                                  <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z" clip-rule="evenodd" />
-                                                </svg>
-                                              </span>
-                                              <span class="ml-4 text-sm font-medium text-gray-900">Job details</span>
-                                            </span>
-                                        </a>
-                                        <!-- Arrow separator for lg screens and up -->
-                                        <div class="absolute right-0 top-0 hidden h-full w-5 md:block" aria-hidden="true">
-                                            <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
-                                                <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </li>
-                                    <li class="relative md:flex md:flex-1">
-                                        <!-- Current Step -->
-                                        <a href="#" class="flex items-center px-6 py-4 text-sm font-medium" aria-current="step">
-                                            <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-indigo-600">
-                                              <span class="text-indigo-600">02</span>
-                                            </span>
-                                            <span class="ml-4 text-sm font-medium text-indigo-600">Application form</span>
-                                        </a>
-                                        <!-- Arrow separator for lg screens and up -->
-                                        <div class="absolute right-0 top-0 hidden h-full w-5 md:block" aria-hidden="true">
-                                            <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
-                                                <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
-                                            </svg>
-                                        </div>
-                                    </li>
-                                    <li class="relative md:flex md:flex-1">
-                                        <!-- Upcoming Step -->
-                                        <a href="#" class="group flex items-center">
-                                            <span class="flex items-center px-6 py-4 text-sm font-medium">
-                                              <span class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-gray-300 group-hover:border-gray-400">
-                                                <span class="text-gray-500 group-hover:text-gray-900">03</span>
-                                              </span>
-                                              <span class="ml-4 text-sm font-medium text-gray-500 group-hover:text-gray-900">Preview</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                </ol>
-                            </nav> --}}
-
-
-
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-screen">
+                                @foreach($elective_positions as $key => $pstn)
+                                    <div class="justify-center">
+                                        <h1 class="text-xl text-center font-semibold tracking-tight text-gray-900 my-2 "> {{$pstn->position}}</h1>
+                                        <ul role="list" class="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                                            @foreach($pstn?->candidates as $counter => $cdt)
+                                                <li class="relative flex justify-between gap-x-6 px-4 py-5 hover:bg-gray-50 sm:px-6">
+                                                    <div class="flex min-w-0 gap-x-4">
+                                                        <img class="h-20 w-20 flex-none rounded-full bg-gray-50" src="{{asset('storage/'.$cdt->photo)}}" alt="">
+                                                        <div class="min-w-0 flex-auto">
+                                                            <p class="text-sm font-semibold leading-6 text-gray-900">
+                                                                <a href="#">
+                                                                    <span class="absolute inset-x-0 -top-px bottom-0"></span>
+                                                                    Leslie Alexander
+                                                                </a>
+                                                            </p>
+                                                            <p class="mt-1 flex text-xs leading-5 text-gray-500">
+                                                                <a href="mailto:leslie.alexander@example.com" class="relative truncate hover:underline">leslie.alexander@example.com</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex shrink-0 items-center gap-x-4">
+                                                        <div class="hidden sm:flex sm:flex-col sm:items-end">
+                                                            <p class="text-sm leading-6 text-gray-900">Co-Founder / CEO</p>
+                                                            <p class="mt-1 text-xs leading-5 text-gray-500">Last seen <time datetime="2023-01-23T13:23Z">3h ago</time></p>
+                                                        </div>
+                                                        <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                            <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endforeach
+                            </div>
 
                             @foreach($elective_positions as $key => $pstn)
                                 <div class=" rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4 my-2 mb-4">

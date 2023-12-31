@@ -131,8 +131,7 @@ class ElectionController extends Controller
     public function vote(Request $request, Election $election)
     {
         if (!$request->hasValidSignature()) {
-
-                    return view('send-verification-sms');
+                    return view('send-verification-sms', compact('election'));
         }
 
         return view('event.election.vote', compact('election'));

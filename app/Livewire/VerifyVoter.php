@@ -3,21 +3,34 @@
 namespace App\Livewire;
 
 use AfricasTalking\SDK\AfricasTalking;
+use App\Models\Election;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 use App\Models\VerifyVoter as VoterDetails;
+use WireUi\Traits\Actions;
 
 class VerifyVoter extends Component
 {
+    use Actions;
 
     public $phone_no;
-    public $sentVrfctnCode = false;
+    public $code;
+
+    public Election $election;
 
 
+    public function mount()
+    {
+
+    }
     public function store()
     {
         $this->validate([
             'phone_no' => ['required',   'regex:/^(0|\+254|254)\d{9}$/'],
-        ]);
+        ],
+            [ 'regex' => ' Enter a valid Kenyan number',
+            ]);
         $username = 'vf567gfgg';
         $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
 
@@ -28,37 +41,72 @@ class VerifyVoter extends Component
         $no = substr($phoneNumber, -9);
         $pendingVrfctn = VoterDetails::where('phone_no', $no)
             ->where('status', false)
-            ->get();
+            ->first();
 
-            $new_req = new VoterDetails();
+        if ($pendingVrfctn){
+            $createdAt = new Carbon($pendingVrfctn->created_at);
+            $currentTime = Carbon::now();
+            if ($currentTime->diffInMinutes($createdAt) < 2) {
+                $this->notification()->error(
+                    $title = ' Error ',
+                    $description = 'Please wait for 2 minutes before requesting another code'
+                );
+                return false;
+            }
+        }
+
+        $new_req = new VoterDetails();
         $new_req->phone_no = $no;
-        $new_req->vrfctn_code = random_int(100000, 999999);
+        $new_req->vrfctn_code = $this->vrfctn_code = random_int(1000, 9999);
         $new_req->save();
-        $this->sentVrfctnCode = true ;
 
         $message = "Your election verification code is ". $this->vrfctn_code ;
-
-
-
         try {
-            // Send the SMS
             $result = $sms->send([
                 'to'      => $phoneNumber,
                 'message' => $message,
-                'from'    => $senderId,
+//                'from'    => $senderId,
             ]);
 
-            // Log the result or perform other actions if needed
-            \Log::info('SMS sent successfully: ' . json_encode($result));
+            $this->notification()->success(
+                $title = ' Verification Sent Succesfully',
+                $description = 'Please share the code received via SMS'
+            );
 
-            return response()->json(['message' => 'SMS sent successfully']);
         } catch (\Exception $e) {
-            // Handle the exception
-            \Log::error('Error sending SMS: ' . $e->getMessage());
 
-            return response()->json(['error' => 'Failed to send SMS'], 500);
+            $this->notification()->error(
+                $title = 'Technical Error',
+                $description = $e->getMessage()
+            );
+
         }
 
+
+    }
+
+    public function submit()
+    {
+        $this->validate([
+            'code' => 'required|min:4'
+        ]);
+
+        $phoneNumber = $this->phone_no;
+        $no = substr($phoneNumber, -9);
+        $pendingVrfctn = VoterDetails::where('phone_no', $no)
+            ->where('vrfctn_code', $this->code)
+            ->where('status', false)
+            ->first();
+
+        if ($pendingVrfctn){
+            $pendingVrfctn->status = true;
+            $pendingVrfctn->save();
+            $signedUrl = URL::signedRoute(
+                'election.vote', ['election' => $this->election->id]
+            );
+
+            return redirect()->to($signedUrl);
+        }
 
     }
     public function render()
