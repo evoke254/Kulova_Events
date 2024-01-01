@@ -67,7 +67,8 @@ class VerifyVoter extends Component
             if ($currentTime->diffInMinutes($createdAt) < 2) {
                 $this->notification()->error(
                     $title = ' Error ',
-                    $description = 'Please wait for 2 minutes before requesting another code'
+                    $description = 'Wrong Code. Try again'
+                    // 'Please wait for 2 minutes before requesting another code'
                 );
                 return false;
             }
