@@ -3,7 +3,7 @@
 
 Vote in {{$election->name}}
 
-<x-mail::button :url="{{  route('election.vote', ['election' => $election->id])  }}">
+<x-mail::button :url="$url">
 Vote
 </x-mail::button>
 

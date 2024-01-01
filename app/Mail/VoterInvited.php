@@ -16,6 +16,7 @@ class VoterInvited extends Mailable
     use Queueable, SerializesModels;
     public Election $election;
     public Invite $voter;
+    public $url;
 
     /**
      * Create a new message instance.
@@ -24,6 +25,7 @@ class VoterInvited extends Mailable
     {
         $this->election = $election;
         $this->voter = $voter;
+        $this->url = route('election.vote', ['election' => $election->id]);
     }
 
     /**
