@@ -1,11 +1,13 @@
 <x-mail::message>
 # {{$voter->name}}, You are invited to vote
 
-Vote in {{$election->name}}
-
+We are reaching out to invite you to participate in the following elections.
+@foreach($elections as $key => $election)
+{{$key+1}} {{$election->name}}
+@endforeach
 @foreach($elections as $election)
 <x-mail::button :url="$urls[$election]">
-Vote
+Vote : {{$election->name}}
 </x-mail::button>
  @endforeach
 
