@@ -34,7 +34,6 @@
                     @if(!$updating)
                         <div class="bg-white dark:bg-gray-700 dark:border-gray-800">
 
-
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead
@@ -63,7 +62,7 @@
                                                 </div>
 
                                                 <div class="  flex justify-start items-baseline mt-5">
-                                                    <x-button negative rounded label="Del"
+                                                    <x-button negative rounded
                                                               wire:click="cnfmDelete({{$postn->id}} ) " icon="trash"/>
                                                 </div>
                                             </th>
