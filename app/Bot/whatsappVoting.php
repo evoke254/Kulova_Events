@@ -137,6 +137,8 @@ class whatsappVoting extends Conversation
                         $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                         if ( !$prev_votes->contains('candidate_elective_position_id', $candidate['id'])){
                             if ($this->election->type == 1){
+//                                $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." \n ";
+
                                 $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." \n ";
                             } else {
                                 $opt .= $key+1 . ": ".$candidate['name']."\n ";
@@ -236,9 +238,9 @@ class whatsappVoting extends Conversation
                     $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                     if ($this->election->type == 1){
                         if ($prev_votes->count() > 0) {
-                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . " ✅  \n";
+                            $opt .= "  • " . $candidate['name'] . " ✅  \n";
                         } else{
-                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "\n";
+                            $opt .= "  • " . $candidate['name'] . " \n";
                         }
                     } else {
                         if ($prev_votes->count() > 0) {
@@ -329,7 +331,7 @@ class whatsappVoting extends Conversation
                 $candidateVotes = CandidateElectivePosition::find($candidate['id'])->votes()->get()->count();
                 $rslts = round(($candidateVotes/ (($totalVotes > 0) ? $totalVotes : 1) * 100) , 1);
                 if ($this->election->type == 1){
-                    $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "   _". $rslts ."_ % \n";
+                    $opt .= "  • " . $candidate['name'] . " -   _". $rslts ."_ % \n";
                 } else {
                     $opt .= "  • ".$candidate['name'] . " - _".$rslts."_ % \n";
                 }
