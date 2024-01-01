@@ -108,9 +108,10 @@
                             </div>
 
                         </div>
-                        <img src="{{$event?->getFirstMedia()?->getUrl()}}" alt=""
-                             class="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0
-                             lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36">
+
+                        @if($event->images()->first())
+                        <img src="{{ $event->images()->first()->image  }}" alt=""  class="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0  lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36">
+                        @endif
                     </div>
                 </div>
                 <div class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32"></div>
