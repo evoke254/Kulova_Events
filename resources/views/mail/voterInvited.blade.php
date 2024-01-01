@@ -9,10 +9,10 @@ We are reaching out to invite you to participate in  {{$event->name}} elections.
 <x-mail::button :url="' https://wa.link/n8zk3s' ">
     WhatasApp {{$election->name}}
 </x-mail::button>
-=========
 <x-mail::button :url="$urls[$election->id]">
     Web : {{$election->name}}
 </x-mail::button>
+=========
  @endforeach
 
 Thanks,<br>
