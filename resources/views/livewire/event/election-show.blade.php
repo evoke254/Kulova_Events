@@ -93,7 +93,7 @@
                                                             </div>
                                                             <div
                                                                 class=" flex shrink-0 sm:flex sm:flex-col sm:items-end items-center justify-center">
-                                                                <h3 class="text-2xl font-bold text-center">{{$candt->votes->count()}}</h3>
+                                                                <h3 class="text-2xl font-bold text-center">Votes - {{$candt->votes->count()}}</h3>
                                                                 <h3 class="text-2xl font-bold text-center">{{$rslts}} %</h3>
                                                             </div>
                                                         </li>
