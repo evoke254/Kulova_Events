@@ -86,15 +86,15 @@ class VerifyVoter extends Component
                     );*/
 
         try {
-            /*$result = $sms->send([
+            $result = $sms->send([
                 'to'      => $phoneNumber,
                 'message' => $message,
 //                'from'    => $senderId,
-            ]);*/
+            ]);
 
             $this->notification()->success(
                 $title = ' Verification Sent Succesfully',
-                $description = 'Please share the code received via SMS'. $message
+                $description = 'Please share the code received via SMS'
             );
 
         } catch (\Exception $e) {
