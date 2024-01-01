@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Election;
+use App\Models\Event;
 use App\Models\Invite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,6 +18,7 @@ class VoterInvited extends Mailable
     public  $elections;
     public Invite $voter;
     public $urls = [];
+    public $event;
 
     /**
      * Create a new message instance.
@@ -27,7 +29,8 @@ class VoterInvited extends Mailable
         $this->voter = $voter;
         foreach ($elections as $election){
             $this->urls[$election->id] = route('election.vote', ['election' => $election->id]);
-        };
+        }
+        $this->event = Event::find($voter->event_id);
     }
 
     /**
@@ -36,7 +39,7 @@ class VoterInvited extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->election->name. ' Election Invitation',
+            subject: $this->event->name. ' Event Election Invitation',
         );
     }
 
