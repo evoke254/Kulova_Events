@@ -136,6 +136,11 @@ class VerifyVoter extends Component
             );
 
             return redirect()->to($signedUrl);
+        } else {
+                        $this->notification()->error(
+                $title = 'Please request A new Code',
+                $description = "Request new OTP"
+            );
         }
 
     }
