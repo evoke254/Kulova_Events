@@ -129,13 +129,13 @@ class Invite extends Model
         $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
 
         $AT       = new AfricasTalking($username, $apiKey);
-        if (preg_match('/^(?:\+254|254|0)(7\d{8})$/', $phoneNumber)) {
+
             $sms      = $AT->sms();
-            /*$result   = $sms->send([
+            $result   = $sms->send([
                 'to'      => $phoneNumber,
-                'message' => "You have been invited to attend\nSwift Apps Africa "
-            ]);*/
-        }
+                'message' => "You have been invited to vote on WhatsApp \nhttps://wa.link/n8zk3s "
+            ]);
+
 
     }
 
