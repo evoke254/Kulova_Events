@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use AfricasTalking\SDK\AfricasTalking;
+use App\Mail\VoterInvited;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class Invite extends Model
 {
@@ -23,6 +26,7 @@ class Invite extends Model
         'user_id'
     ];
 
+    protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
 
     public function event(): BelongsTo
     {
@@ -72,14 +76,54 @@ class Invite extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->sendSMS($model->phone_number);
+            $this->electionInvitation($model);
         });
+    }
+
+    public function electionInvitation($model)
+    {
+        $event = Event::find($model->event_id)->first();
+        $elections = Event::find($model->event_id)->elections()->get();
+        foreach ($elections as $elctn){
+            $pattern = '/^(0|\+254|254)\d{9}$/';
+            if (preg_match($pattern, $model->phone_number)) {
+                $this->sendWhatsapp($model->phone_number, $elctn);
+                //$this->sendSMS($model->phone_number);
+            }
+            if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
+                Mail::to($model->email)->send(new VoterInvited($elctn, $model));
+            }
+
+        }
+
+        //           $model->sendSMS($model->phone_number);
+    }
+
+    public function sendWhatsapp($to, $election)
+    {
+        $body = "You are invited in the upcoming  *" . $election->name . "* .\nReply with *Vote* to cast your vote  \n" ;
+        $payload = [
+            "messaging_product" => "whatsapp",
+            "recipient_type" => "individual",
+            "to" => "+254" . substr($to, -9) ,
+            "type" => "text",
+            "text" => [
+                "preview_url" => true,
+                "body" => $body
+            ]
+        ];
+        $response = Http::withHeaders([
+            'Authorization' => env('waba_admin_token'),
+            'Content-Type'=> 'application/json'
+        ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
+
     }
 
     protected function sendSMS($phoneNumber)
     {
-        $username = 'Voke_wa_swiftapps'; // use 'sandbox' for development in the test environment
-        $apiKey   = '29412cb64f18704ff64ded618ff9dc900807bc4ef7f96ea487a437d6dcf95f66'; // use your sandbox app API key for development in the test environment
+        $username = 'vf567gfgg';
+        $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
+
         $AT       = new AfricasTalking($username, $apiKey);
         if (preg_match('/^(?:\+254|254|0)(7\d{8})$/', $phoneNumber)) {
             $sms      = $AT->sms();
