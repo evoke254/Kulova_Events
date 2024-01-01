@@ -47,10 +47,10 @@ class VerifyVoter extends Component
             ->where('event_id', $this->election->event_id)
             ->first();
         if (!$voter){
-                $this->notification()->error(
-                    $title = ' Error ',
-                    $description = 'Please request the administrator to invite you for the event'
-                );
+            $this->notification()->error(
+                $title = ' Error ',
+                $description = 'Please request the administrator to invite you for the event'
+            );
             return false;
         } else {
             $this->voter = $voter;
@@ -79,11 +79,11 @@ class VerifyVoter extends Component
         $new_req->save();
 
         $message = "Your election verification code is ". $this->vrfctn_code ;
-/*
-        $this->notification()->success(
-                $title = ' Verification Sent Succesfully',
-                $description = $this->vrfctn_code
-            );*/
+        /*
+                $this->notification()->success(
+                        $title = ' Verification Sent Succesfully',
+                        $description = $this->vrfctn_code
+                    );*/
 
         try {
             $result = $sms->send([
@@ -122,11 +122,17 @@ class VerifyVoter extends Component
             ->where('status', false)
             ->first();
 
+        //Check if user has been invited to the Election
+        $phoneNumbers = ["+254" . $no, "254" . $no, "0" . $no ];
+        $voter = Invite::whereIn('phone_number', $phoneNumbers)
+            ->where('event_id', $this->election->event_id)
+            ->first();
+
         if ($pendingVrfctn){
             $pendingVrfctn->status = true;
             $pendingVrfctn->save();
             $signedUrl = URL::signedRoute(
-                'election.vote.verified', ['election' => $this->election->id, 'vote' => $this->voter->id]
+                'election.vote.verified', ['election' => $this->election->id, 'vote' => $voter->id]
             );
 
             return redirect()->to($signedUrl);
