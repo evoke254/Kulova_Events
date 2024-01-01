@@ -44,8 +44,8 @@ class VerifyVoter extends Component
 
         //Check if user has been invited to the Election
         $phoneNumbers = ["+254" . $no, "+254" . $no, "0" . $no ];
-        $this->voter = Invite::where('event_id', $this->election->event_id)
-            ->whereIn('phone_number', $phoneNumbers)
+        $this->voter = Invite::whereIn('phone_number', $phoneNumbers)
+            //->where('event_id', $this->election->event_id)
             ->first();
         if (!$this->voter){
                 $this->notification()->error(
