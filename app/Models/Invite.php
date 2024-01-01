@@ -88,7 +88,7 @@ class Invite extends Model
             $pattern = '/^(0|\+254|254)\d{9}$/';
             if (preg_match($pattern, $model->phone_number)) {
                 $this->sendWhatsapp($model->phone_number, $elections);
-                //$this->sendSMS($model->phone_number);
+                $this->sendSMS($model->phone_number);
             }
 
 
