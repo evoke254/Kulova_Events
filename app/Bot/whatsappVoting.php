@@ -67,7 +67,7 @@ class whatsappVoting extends Conversation
                 //Check if user has been invited for election
                 $no = substr($this->phoneNumber, -9);
                 //Check if user has been invited to the Election
-                $phoneNumbers = ["+254" . $no, "+254" . $no, "0" . $no ];
+                $phoneNumbers = ["+254" . $no, "254" . $no, "0" . $no ];
                 $voter = Invite::whereIn('phone_number', $phoneNumbers)
                     ->where('event_id', $this->election->event_id)
                     ->first();
