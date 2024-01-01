@@ -53,6 +53,7 @@ class Invite extends Model
             ->get();
     }
 
+    //Checks whether user can cast vote in a position
     public function castVoteInPstn($elective_position_id) :bool
     {
         $allowed_votes = ElectivePosition::find($elective_position_id)->votes;

@@ -125,11 +125,12 @@ class whatsappVoting extends Conversation
                     $this->candidates = $pstn['candidates'];
                     foreach ($this->candidates as $key => $candidate){
                         $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
-                        if ($this->election->type == 1){
-                            $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." (".$prev_votes->count().")  \n ";
-                        } else {
-                            $opt .= $key+1 . ": ".$candidate['name']."\n ";
-
+                        if ( !$prev_votes->contains('candidate_elective_position_id', $candidate['id'])){
+                            if ($this->election->type == 1){
+                                $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." \n ";
+                            } else {
+                                $opt .= $key+1 . ": ".$candidate['name']."\n ";
+                            }
                         }
                     }
                     break;
@@ -225,7 +226,7 @@ class whatsappVoting extends Conversation
                     $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                     if ($this->election->type == 1){
                         if ($prev_votes->count() > 0) {
-                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . " ✅  " . $prev_votes->count() ."\n";
+                            $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . " ✅  \n";
                         } else{
                             $opt .= "  • " . $candidate['name'] . " - " . $candidate['member_no'] . "\n";
                         }
@@ -248,15 +249,6 @@ class whatsappVoting extends Conversation
                     $this->say('Vote cast. Thank you.');
                     $prov_rslts = $this->getProvisionalRslts();
                     $this->say($prov_rslts);
-
-
-
-
-
-
-
-
-
 
                 } else if ($ans == 2) {
                     $this->votes = [];
