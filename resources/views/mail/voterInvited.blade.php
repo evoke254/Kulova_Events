@@ -3,9 +3,11 @@
 
 Vote in {{$election->name}}
 
-<x-mail::button :url="$url">
+@foreach($elections as $election)
+<x-mail::button :url="$urls[$election]">
 Vote
 </x-mail::button>
+ @endforeach
 
 Thanks,<br>
 {{ config('app.name') }}

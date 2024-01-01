@@ -84,24 +84,28 @@ class Invite extends Model
     {
         $event = Event::find($model->event_id)->first();
         $elections = Event::find($model->event_id)->elections()->get();
-        foreach ($elections as $elctn){
+
             $pattern = '/^(0|\+254|254)\d{9}$/';
             if (preg_match($pattern, $model->phone_number)) {
-                $this->sendWhatsapp($model->phone_number, $elctn);
+                $this->sendWhatsapp($model->phone_number, $elections);
                 //$this->sendSMS($model->phone_number);
             }
-            if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
-                Mail::to($model->email)->send(new VoterInvited($elctn, $model));
-            }
 
+
+        if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
+            Mail::to($model->email)->send(new VoterInvited($elections, $model));
         }
 
         //           $model->sendSMS($model->phone_number);
     }
 
-    public function sendWhatsapp($to, $election)
+    public function sendWhatsapp($to, $elections)
     {
-        $body = "You are invited in the upcoming  *" . $election->name . "* .\nReply with *Vote* to cast your vote  \n" ;
+        $opt = "";
+        foreach ($elections as $election) {
+            $opt .= $election->name .",\n ";
+        }
+        $body = "You are invited in the upcoming\n  *" . $opt . "* .\nReply with *Vote* to cast your vote  \n" ;
         $payload = [
             "messaging_product" => "whatsapp",
             "recipient_type" => "individual",

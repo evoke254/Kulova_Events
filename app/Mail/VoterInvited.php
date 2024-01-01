@@ -14,18 +14,20 @@ use Illuminate\Queue\SerializesModels;
 class VoterInvited extends Mailable
 {
     use Queueable, SerializesModels;
-    public Election $election;
+    public  $elections;
     public Invite $voter;
-    public $url;
+    public $urls = [];
 
     /**
      * Create a new message instance.
      */
-    public function __construct($election, $voter)
+    public function __construct($elections, $voter)
     {
-        $this->election = $election;
+        $this->elections = $elections;
         $this->voter = $voter;
-        $this->url = route('election.vote', ['election' => $election->id]);
+        foreach ($elections as $election){
+            $this->urls[$election->id] = route('election.vote', ['election' => $election->id]);
+        };
     }
 
     /**
