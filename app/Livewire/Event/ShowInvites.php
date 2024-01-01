@@ -31,9 +31,11 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Concerns\InteractsWithForms;
+use WireUi\Traits\Actions;
+
 class ShowInvites extends Component implements HasForms, HasTable
 {
-    use InteractsWithTable;
+    use InteractsWithTable, Actions;
     use InteractsWithForms;
     public Event $event;
 
@@ -87,8 +89,8 @@ class ShowInvites extends Component implements HasForms, HasTable
                         ])*/
             ->actions([
                 EditAction::make()
-                      ->fillForm(fn (Invite $record): array => [
-                          'name' => $record->name,
+                    ->fillForm(fn (Invite $record): array => [
+                        'name' => $record->name,
                         'last_name' => $record->last_name,
                         'member_no' => $record->member_no,
                         'email' => $record->email,
@@ -121,7 +123,9 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
                         if (strlen($data['phone_number']) == 9 && substr($data['phone_number'], 0, 9))
-                        $data['phone_number'] = '+254' . $data['phone_number'];
+                            $data['phone_number'] = '+254' . $data['phone_number'];
+
+
                         return $data;
                     }),
                 DeleteAction::make()
@@ -163,16 +167,22 @@ class ShowInvites extends Component implements HasForms, HasTable
                         $data['phone_number'] = '+254' . $data['phone_number'];
                         $data['organization_id'] = Auth::user()->organization_id;
                         $data['user_id'] = Auth::id();
+
+                        $this->notification()->success(
+                            $title = 'Member Added',
+                            $description = 'you have successfully invited someone to this event'
+                        );
+
                         return $data;
                     }),
-/*
-                ImportAction::make()->importer(MemberImporter::class)
-                    ->mutateFormDataUsing(function ( $data): array{
-                        $data['event_id'] = $this->event->id;
-                        $data['organization_id'] = Auth::user()->organization_id;
-                        $data['user_id'] = Auth::id();
-                        return $data;
-                    })*/
+                /*
+                                ImportAction::make()->importer(MemberImporter::class)
+                                    ->mutateFormDataUsing(function ( $data): array{
+                                        $data['event_id'] = $this->event->id;
+                                        $data['organization_id'] = Auth::user()->organization_id;
+                                        $data['user_id'] = Auth::id();
+                                        return $data;
+                                    })*/
             ]);
     }
 
