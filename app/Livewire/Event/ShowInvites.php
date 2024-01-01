@@ -88,7 +88,7 @@ class ShowInvites extends Component implements HasForms, HasTable
             ->actions([
                 EditAction::make()
                       ->fillForm(fn (Invite $record): array => [
-                        'phone_number' => substr($record->name, -9),
+                        'phone_number' => substr($record->phone_number, -9),
                     ])
                     ->form([
                         TextInput::make('name')
