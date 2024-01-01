@@ -110,7 +110,7 @@ class Checkout extends Component
             $AccountReference,
             $TransactionDesc,
             $Remarks);
-
+dd($stkPushSimulation);
         $this->notification()->warning(
             $title = 'TEST TEST',
             $description = 'Test Bed'
