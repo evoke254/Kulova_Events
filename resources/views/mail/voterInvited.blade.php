@@ -6,7 +6,11 @@ We are reaching out to invite you to participate in  {{$event->name}} elections.
 {{$key+1}} {{$election->name}},
 @endforeach
 @foreach($elections as $election)
-<x-mail::button :url="' https://wa.link/n8zk3s' ">
+    @php
+            $urlencodedtext = urlencode('Hey, Text40 Bot.');
+            $url = "https://wa.me/254792782923?text=". $urlencodedtext;
+            @endphp
+<x-mail::button :url="$url">
     WhatasApp {{$election->name}}
 </x-mail::button>
 <x-mail::button :url="$urls[$election->id]">

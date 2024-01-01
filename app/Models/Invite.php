@@ -131,9 +131,11 @@ class Invite extends Model
         $AT       = new AfricasTalking($username, $apiKey);
 
             $sms      = $AT->sms();
+            $urlencodedtext = urlencode('Hey, Text40 Bot.');
+            $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $result   = $sms->send([
                 'to'      => $phoneNumber,
-                'message' => "You have been invited to vote on WhatsApp \nhttps://wa.link/n8zk3s "
+                'message' => "You have been invited to vote on WhatsApp \n" . $url
             ]);
 
 
