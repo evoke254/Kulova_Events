@@ -87,6 +87,9 @@ class ShowInvites extends Component implements HasForms, HasTable
                         ])*/
             ->actions([
                 EditAction::make()
+                      ->fillForm(fn (Invite $record): array => [
+                        'phone_number' => substr($record->name, -9),
+                    ])
                     ->form([
                         TextInput::make('name')
                             ->label('First Name')
@@ -100,8 +103,9 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->required(),
                         TextInput::make('phone_number')
                             ->label('Phone Number')
+                            ->placeholder('702755928')
                             ->prefix('+254')
-                            ->maxLength(14)
+                            ->maxLength(9)
                             ->minValue(1)
                             ->numeric()
                             ->required()
@@ -110,6 +114,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                         Textarea::make('details'),
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
+                        if (strlen($data['phone_number']) == 9 && substr($data['phone_number'], 0, 9))
                         $data['phone_number'] = '+254' . $data['phone_number'];
                         return $data;
                     }),
@@ -138,7 +143,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                         TextInput::make('phone_number')
                             ->label('Phone Number')
                             ->prefix('+254')
-                            ->maxLength(14)
+                            ->maxLength(9)
                             ->minValue(1)
                             ->numeric()
                             ->required()
