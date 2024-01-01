@@ -43,11 +43,12 @@
                                                 <ul role="list"  class="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
                                                     @foreach($pstn->candidates as $counter => $cdt)
                                                         @php
-                                                            if ($pstn->type == 1){
+                                                            if ($election->type == 1){
                                                                 $prev_votes = $this->voter->castVotes($pstn->id, $cdt->id);
                                                                 }else{
                                                                 $prev_votes = $pstn->votes()->get();
                                                                 }
+
                                                         @endphp
                                                         @if(!$prev_votes->count() > 0)
 

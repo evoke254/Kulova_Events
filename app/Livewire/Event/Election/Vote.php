@@ -66,10 +66,12 @@ class Vote extends Component
                 }
             }
         }
+        $this->ballot_papers = [];
         $this->notification()->success(
             $title = ' Vote Cast ',
             $description = 'Vote was successfully cast'
         );
+        $this->mount();
 
     }
     public function render()
