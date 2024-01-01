@@ -62,7 +62,7 @@
                                                 </div>
 
                                                 <div class="  flex justify-start items-baseline mt-5">
-                                                    <x-button negative rounded
+                                                    <x-button negative rounded sm
                                                               wire:click="cnfmDelete({{$postn->id}} ) " icon="trash"/>
                                                 </div>
                                             </th>
