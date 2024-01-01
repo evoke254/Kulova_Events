@@ -63,13 +63,23 @@ class whatsappVoting extends Conversation
             if (isset($this->events[$ans - 1])){
                 $this->event = Event::find($this->events[$ans - 1]['id']);
                 $this->elections =  $this->event->elections->toArray();
-                $voter = Invite::where('phone_number', $this->phoneNumber)->where('event_id', $this->event->id)->first();
+
+                //Check if user has been invited for election
+                $no = substr($this->phoneNumber, -9);
+                //Check if user has been invited to the Election
+                $phoneNumbers = ["+254" . $no, "+254" . $no, "0" . $no ];
+                $voter = Invite::whereIn('phone_number', $phoneNumbers)
+                    ->where('event_id', $this->election->event_id)
+                    ->first();
+
                 if ($voter){
                     $this->voter = $voter;
+                     $this->selectElection();
                 } else{
-                    $this->voter = Invite::create( ['phone_number'=> $this->phoneNumber, 'event_id'=> $this->event->id, 'name' => $this->userName] );
+                    $qstn = "You have not been invited to this event/election. \n\nPlease select an event: \n ". $opt ."00 : Cancel" ;
+                    $this->qstnFallback($qstn);
                 }
-                $this->selectElection();
+
             } else{
                 $qstn = "Invalid response - _".$answer->getText()."_. Please check and try again\nEVENTS:\n". $opt ."00 : Cancel ";
                 $this->qstnFallback($qstn);

@@ -41,18 +41,19 @@ class VerifyVoter extends Component
         $senderId = 'Text40';
         $phoneNumber = $this->phone_no;
         $no = substr($phoneNumber, -9);
-
         //Check if user has been invited to the Election
         $phoneNumbers = ["+254" . $no, "+254" . $no, "0" . $no ];
-        $this->voter = Invite::whereIn('phone_number', $phoneNumbers)
-            //->where('event_id', $this->election->event_id)
+        $voter = Invite::whereIn('phone_number', $phoneNumbers)
+            ->where('event_id', $this->election->event_id)
             ->first();
-        if (!$this->voter){
+        if (!$voter){
                 $this->notification()->error(
                     $title = ' Error ',
                     $description = 'Please request the administrator to invite you for the event'
                 );
             return false;
+        } else {
+            $this->voter = $voter;
         }
 
         //Check if there is  a pending notification
@@ -78,6 +79,12 @@ class VerifyVoter extends Component
         $new_req->save();
 
         $message = "Your election verification code is ". $this->vrfctn_code ;
+/*
+        $this->notification()->success(
+                $title = ' Verification Sent Succesfully',
+                $description = $this->vrfctn_code
+            );*/
+
         try {
             $result = $sms->send([
                 'to'      => $phoneNumber,

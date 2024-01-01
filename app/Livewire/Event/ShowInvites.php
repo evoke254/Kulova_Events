@@ -45,6 +45,7 @@ class ShowInvites extends Component implements HasForms, HasTable
 
     public function table(Table $table): Table
     {
+
         return $table
             ->modelLabel('Member')
             ->striped()
@@ -62,7 +63,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
-                TextColumn::make('phone')
+                TextColumn::make('phone_number')
                     ->searchable(),
                 TextColumn::make('created_by.name')
                     ->label('Created By')
@@ -107,7 +108,11 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->tel(),
                         TextInput::make('email'),
                         Textarea::make('details'),
-                    ]),
+                    ])
+                    ->mutateFormDataUsing(function ( $data): array{
+                        $data['phone_number'] = '+254' . $data['phone_number'];
+                        return $data;
+                    }),
                 DeleteAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Invite $record) => $record->delete())
@@ -143,6 +148,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
                         $data['event_id'] = $this->event->id;
+                        $data['phone_number'] = '+254' . $data['phone_number'];
                         $data['organization_id'] = Auth::user()->organization_id;
                         $data['user_id'] = Auth::id();
                         return $data;

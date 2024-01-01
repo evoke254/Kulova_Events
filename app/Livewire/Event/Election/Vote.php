@@ -25,20 +25,13 @@ class Vote extends Component
         $prevcast = $this->countTrueFalseOccurrences($this->ballot_papers[$pstn->id]['candidate']);
         if ( $prevcast > $pstn->votes  ){
             unset($this->ballot_papers[$pstn->id]['candidate'][$candidate]);
+            $this->notification()->error(
+                $title = ' Error  ',
+                $description = 'You have reached the maximum allowed votes for this position. Unselect a candidate to vote for another.'
+            );
         }
 
-        foreach ($this->ballot_papers as $elective_position_id => $cast_vote){
 
-            foreach ($cast_vote['candidate'] as $cdtId => $vt){
-                if($vt){
-                    $vote = new \App\Models\Vote();
-                    $vote->elective_position_id = $elective_position_id;
-                    $vote->invite_id = $this->voter->id;
-                    $vote->candidate_elective_position_id = $cdtId;
-                    $vote->save();
-                }
-            }
-        }
 
 
     }
@@ -61,6 +54,18 @@ class Vote extends Component
 
     public function submit(){
         $this->ballotCast = true;
+        foreach ($this->ballot_papers as $elective_position_id => $cast_vote){
+
+            foreach ($cast_vote['candidate'] as $cdtId => $vt){
+                if($vt){
+                    $vote = new \App\Models\Vote();
+                    $vote->elective_position_id = $elective_position_id;
+                    $vote->invite_id = $this->voter->id;
+                    $vote->candidate_elective_position_id = $cdtId;
+                    $vote->save();
+                }
+            }
+        }
         $this->notification()->success(
             $title = ' Vote Cast ',
             $description = 'Vote was successfully cast'
