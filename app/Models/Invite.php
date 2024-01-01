@@ -76,7 +76,7 @@ class Invite extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $this->electionInvitation($model);
+            $model->electionInvitation($model);
         });
     }
 
