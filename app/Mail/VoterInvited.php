@@ -42,7 +42,7 @@ class VoterInvited extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.voterInvited',
+            view: 'mail.voterInvited',
         );
     }
 
