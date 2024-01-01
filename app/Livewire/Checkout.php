@@ -97,7 +97,7 @@ class Checkout extends Component
         $PhoneNumber = $PartyA;
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
         $LipaNaMpesaPasskey = env('MPESA_PassKey');
-        $AccountReference = null;
+        $AccountReference = 'TEXT40';
 
         $stkPushSimulation=$mpesa->STKPushSimulation($BusinessShortCode,
             $LipaNaMpesaPasskey,
