@@ -110,10 +110,10 @@ class Checkout extends Component
             $AccountReference,
             $TransactionDesc,
             $Remarks);
-        dd($stkPushSimulation);
-        $this->notification()->success(
-            $title = 'Payment Received',
-            $description = 'Thank you for purchasing tickets'
+
+        $this->notification()->warning(
+            $title = 'TEST TEST',
+            $description = 'Test Bed'
         );
         $this->createOrder('PAID');
 
@@ -127,7 +127,7 @@ class Checkout extends Component
                 'phone_number' => $this->phoneNumber,
                 'email' => $this->email,
                 'event_id' => $this->event->id,
-                'full_names' => $this->full_names,
+                'name' => $this->full_names,
                 'amount' => $this->total,
                 'payment_method' => $this->payment_method,
                 'status' => $status,
