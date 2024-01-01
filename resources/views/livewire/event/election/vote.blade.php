@@ -39,6 +39,7 @@
                                                         @php
                                                             $totalVotes = ElectivePosition::find($postn->id)->votes()->get()->count();
                                                         @endphp
+
                                                         @foreach($postn->candidates as $candt )
                                                             @php
                                                                 $prev_votes = $this->voter->castVotes($postn->id, $candt->id);
