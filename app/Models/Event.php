@@ -40,6 +40,8 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Invite::class);
     }
 
+
+
     public function elections(): HasMany
     {
         return $this->hasMany(Election::class);

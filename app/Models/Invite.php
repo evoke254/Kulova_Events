@@ -23,7 +23,8 @@ class Invite extends Model
         'member_no',
         'details',
         'organization_id',
-        'user_id'
+        'user_id',
+        'ticket'
     ];
 
     protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
@@ -69,7 +70,10 @@ class Invite extends Model
         return($allowed_votes > $votes);
 
     }
-
+        public function attendance(): HasMany
+    {
+        return $this->hasMany(EventAttendance::class);
+    }
 
     protected static function boot()
     {

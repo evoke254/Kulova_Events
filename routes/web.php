@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\landingpageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VerifyVoterController;
@@ -34,13 +35,18 @@ Route::post('/send-sms', [VerifyVoterController::class, 'store'])->name('send-sm
 
 //buy tickets
 Route::get('/buy-tickets/{event}', [\App\Http\Controllers\OrderController::class, 'buyTicket'])->name('order.buy-ticket');
-    //Online Voting
-    Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
-        ->name('election.vote');
-        Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionController::class, 'vote'])
-        ->name('election.vote.verified');
+//Online Voting
+Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionController::class, 'vote'])
+    ->name('election.vote');
+Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionController::class, 'vote'])
+    ->name('election.vote.verified');
+//Grab tickets
+    Route::get('/ticket/{user}', [\App\Http\Controllers\InviteController::class, 'tickets'])->name('event.ticket');
+    Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
+
 
 Route::middleware('auth')->group(function () {
+
 
 
 
@@ -60,8 +66,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('event-category', \App\Http\Controllers\EventCategoryController::class);
     Route::resource('events', \App\Http\Controllers\EventController::class);
     Route::resource('election', \App\Http\Controllers\ElectionController::class);
-    Route::resource('members', \App\Http\Controllers\InviteController::class);
+    Route::resource('members', InviteController::class);
 
+    Route::get('/show_attendance/{user}', [InviteController::class, 'showAttendance'])->name('attendance.show');
 
 
     //Create Election

@@ -3,9 +3,16 @@
 namespace App\Livewire\Event;
 
 use App\Filament\Imports\MemberImporter;
+use App\Livewire\EventAttendance;
 use App\Models\Event;
 use App\Models\Invite;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ImportAction;
+
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
@@ -29,7 +36,6 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Concerns\InteractsWithForms;
 use WireUi\Traits\Actions;
@@ -89,6 +95,9 @@ class ShowInvites extends Component implements HasForms, HasTable
                                 ->multiple()
                         ])*/
             ->actions([
+                Action::make('attendance')
+                    ->url(fn (Invite $record): string => route('attendance.show', ['user' =>$record]))
+                    ->openUrlInNewTab(),
                 EditAction::make()
                     ->fillForm(fn (Invite $record): array => [
                         'name' => $record->name,
