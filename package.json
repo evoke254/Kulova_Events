@@ -40,6 +40,7 @@
         "axios": "^1.5.0",
         "flowbite": "^2.2.0",
         "grapesjs-blocks-bootstrap4": "^0.2.3",
-        "livewire": "^0.6.1"
+        "livewire": "^0.6.1",
+        "puppeteer": "^21.7.0"
     }
 }

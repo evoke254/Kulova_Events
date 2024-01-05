@@ -8,6 +8,7 @@ use App\Models\Invite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class InviteController extends Controller
@@ -28,13 +29,25 @@ class InviteController extends Controller
 
         $qrCode = QrCode::size(150)->generate($scanUrl);
         $event = Event::find($user->event_id);
-        $ticket = Pdf::view('ticket', ['user' => $user, 'event' => $event, 'qrCode'=>$qrCode])
-            ->format('a4')
-            ->save('invoice.pdf');
-        $user->ticket = $ticket;
-        $user->save();
         return view('ticket', compact('user', 'qrCode', 'event'));
 
+    }
+
+    public function TestTicket(Invite $user){
+        $scanUrl = URL::signedRoute('attend.event', ['user' => $user]);
+
+        $route = route('event.ticket', ['user' => $user]);
+   //     dd($route);
+        Browsershot::url($route)
+            ->select('.ticketContent')
+            ->setChromePath('/usr/bin/chromium-browser')
+            ->waitUntilNetworkIdle()
+            ->noSandbox()
+            ->newHeadless()
+            ->save(public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png'));
+
+        $user->ticket = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+        $user->save();
     }
 
     public function scanAttendance(Request $request, Invite $user)

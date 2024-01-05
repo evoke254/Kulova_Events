@@ -21,9 +21,7 @@
 
 </head>
 <body class=" text-gray-900">
-
-<div class="max-w-2xl mx-auto mt-8" id="ticket">
-    <div class="bg-white grid grid-cols-1 md:grid-cols-3 gap-3 rounded-lg shadow-md items-center">
+   <div class="bg-white grid grid-cols-1 md:grid-cols-3 gap-3 rounded-lg shadow-md items-center">
         <div class=" p-2 rounded-lg">
             <img src="{{ asset('storage/'. $event->images()->first()->image) }}" alt="{{ $user->name }} {{ $user->last_name }}"
                  class="w-48 h-48 object-cover rounded-lg">
@@ -46,9 +44,5 @@
         </div>
 
     </div>
-</div>
-
-
-
 </body>
 </html>

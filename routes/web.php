@@ -45,6 +45,8 @@ Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionCo
     Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
 
 
+    Route::get('/TestTicket/{user}', [\App\Http\Controllers\InviteController::class, 'TestTicket'])->name('TestTicket');
+
 Route::middleware('auth')->group(function () {
 
 
