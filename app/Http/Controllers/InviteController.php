@@ -30,7 +30,11 @@ class InviteController extends Controller
         $event = Event::find($user->event_id);
         $html = View::make('ticket', compact('user', 'qrCode', 'event'))->render();
         $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
-        SnappyImage::loadHTML($html)->setOption('enable-local-file-access', true)->save($path);
+        SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
+                                    ->setOption('enable-local-file-access', true)
+                                    ->save($path);
+        $user->ticket = $path;
+        $user->save();
         return response($path)->header('Content-Type', 'image/png');
 
     }
