@@ -3,13 +3,18 @@
 namespace App\Models;
 
 use AfricasTalking\SDK\AfricasTalking;
+use App\Mail\EventInvitation;
 use App\Mail\VoterInvited;
+use Barryvdh\Snappy\Facades\SnappyImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Invite extends Model
 {
@@ -70,7 +75,7 @@ class Invite extends Model
         return($allowed_votes > $votes);
 
     }
-        public function attendance(): HasMany
+    public function attendance(): HasMany
     {
         return $this->hasMany(EventAttendance::class);
     }
@@ -80,36 +85,58 @@ class Invite extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->electionInvitation($model);
+            //Create Ticket
+            $scanUrl = URL::signedRoute('attend.event', ['user' => $model]);
+            $qrCode = QrCode::size(150)->generate($scanUrl);
+            $event = Event::find($model->event_id);
+            $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+            $user = $model;
+            SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
+                ->setOption('enable-local-file-access', true)
+                ->save($path);
+            $model->ticket = $path;
+
+            //Send Email invitation
+            if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
+                Mail::to($model->email)->send(new EventInvitation($model));
+            }
+
+            $elections = Event::find($model->event_id)->elections()->get();
+            if (!$elections->isEmpty()){
+                $model->electionInvitation($model, $elections);
+            }
         });
     }
 
-    public function electionInvitation($model)
+    public function electionInvitation($model, $elections)
     {
-        $event = Event::find($model->event_id)->first();
-        $elections = Event::find($model->event_id)->elections()->get();
 
-            $pattern = '/^(0|\+254|254)\d{9}$/';
-            if (preg_match($pattern, $model->phone_number)) {
-                $this->sendWhatsapp($model->phone_number, $elections);
-                $this->sendSMS($model->phone_number);
+        $pattern = '/^(0|\+254|254)\d{9}$/';
+        if (preg_match($pattern, $model->phone_number)) {
+
+            //Whatsapp Message
+            $opt = "";
+            foreach ($elections as $election) {
+                $opt .= $election->name .",\n ";
             }
+            $message = "You are invited in the upcoming\n  *" . $opt . "* .\nReply with *Vote* to cast your vote  \n" ;
+            $this->sendWhatsapp($model->phone_number, $message);
 
+
+            $urlencodedtext = urlencode('Hey, Text40 Bot.');
+            $url = "https://wa.me/254792782923?text=". $urlencodedtext;
+            $message = "You have been invited to vote on WhatsApp \n" . $url;
+            $this->sendSMS($model->phone_number, $message);
+        }
 
         if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
             Mail::to($model->email)->send(new VoterInvited($elections, $model));
         }
 
-        //           $model->sendSMS($model->phone_number);
     }
 
-    public function sendWhatsapp($to, $elections)
+    public function sendWhatsapp($to, $message)
     {
-        $opt = "";
-        foreach ($elections as $election) {
-            $opt .= $election->name .",\n ";
-        }
-        $body = "You are invited in the upcoming\n  *" . $opt . "* .\nReply with *Vote* to cast your vote  \n" ;
         $payload = [
             "messaging_product" => "whatsapp",
             "recipient_type" => "individual",
@@ -117,7 +144,7 @@ class Invite extends Model
             "type" => "text",
             "text" => [
                 "preview_url" => true,
-                "body" => $body
+                "body" => $message
             ]
         ];
         $response = Http::withHeaders([
@@ -127,20 +154,18 @@ class Invite extends Model
 
     }
 
-    protected function sendSMS($phoneNumber)
+    protected function sendSMS($phoneNumber, $message)
     {
         $username = 'vf567gfgg';
         $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
 
         $AT       = new AfricasTalking($username, $apiKey);
 
-            $sms      = $AT->sms();
-            $urlencodedtext = urlencode('Hey, Text40 Bot.');
-            $url = "https://wa.me/254792782923?text=". $urlencodedtext;
-            $result   = $sms->send([
-                'to'      => $phoneNumber,
-                'message' => "You have been invited to vote on WhatsApp \n" . $url
-            ]);
+        $sms      = $AT->sms();
+        $result   = $sms->send([
+            'to'      => $phoneNumber,
+            'message' => $message
+        ]);
 
 
     }

@@ -4,6 +4,7 @@ namespace App\Livewire\Event;
 
 use App\Filament\Imports\MemberImporter;
 use App\Livewire\EventAttendance;
+use App\Mail\EventInvitation;
 use App\Models\Event;
 use App\Models\Invite;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -13,6 +14,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ImportAction;
 
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
@@ -143,63 +145,78 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->action(fn (Invite $record) => $record->delete())
             ])
             ->bulkActions([
-                DeleteBulkAction::make()
+                BulkAction::make('Resend invitation')
                     ->requiresConfirmation()
-                    ->action(fn (Invite $record) => $record->delete())
-            ])
-            ->headerActions([
-                CreateAction::make('updateAuthor')
-                    ->form([
-                        TextInput::make('name')
-                            ->label('First Name')
-                            ->required(),
-                        TextInput::make('last_name')
-                            ->required(),
-                        TextInput::make('member_no')
-                            ->label('Member Number')
-                            ->minValue(2)
-                            ->required(),
-                        TextInput::make('phone_number')
-                            ->label('Phone Number')
-                            ->prefix('+254')
-                            ->maxLength(9)
-                            ->minValue(1)
-                            ->numeric()
-                            ->required()
-                            ->tel(),
-                        TextInput::make('email'),
-                        Textarea::make('details'),
-                    ])
-                    ->mutateFormDataUsing(function ( $data): array{
-                        $data['event_id'] = $this->event->id;
-                        $data['phone_number'] = '+254' . $data['phone_number'];
-                        $data['organization_id'] = Auth::user()->organization_id;
-                        $data['user_id'] = Auth::id();
+                    ->icon('heroicon-m-plus-circle')
+                    ->action(function (array $data, Collection $records): void {
 
+                        foreach ($records as $key => $record){
+                            Mail::to($record->email)->send(new EventInvitation($record));
+                    }
                         $this->notification()->success(
-                            $title = 'Member Added',
-                            $description = 'you have successfully invited someone to this event'
+                            $title = 'Invitation Resent',
+                            $description = 'We have sent new invitation emails to selected users'
                         );
-
-                        return $data;
+                        $this->resetTable();
                     }),
-                /*
-                                ImportAction::make()->importer(MemberImporter::class)
-                                    ->mutateFormDataUsing(function ( $data): array{
-                                        $data['event_id'] = $this->event->id;
-                                        $data['organization_id'] = Auth::user()->organization_id;
-                                        $data['user_id'] = Auth::id();
-                                        return $data;
-                                    })*/
-            ]);
-    }
+
+DeleteBulkAction::make()
+->requiresConfirmation()
+->action(fn (Invite $record) => $record->delete())
+])
+->headerActions([
+CreateAction::make('updateAuthor')
+->form([
+TextInput::make('name')
+->label('First Name')
+->required(),
+TextInput::make('last_name')
+->required(),
+TextInput::make('member_no')
+->label('Member Number')
+->minValue(2)
+->required(),
+TextInput::make('phone_number')
+->label('Phone Number')
+->prefix('+254')
+->maxLength(9)
+->minValue(1)
+->numeric()
+->required()
+->tel(),
+TextInput::make('email'),
+Textarea::make('details'),
+])
+->mutateFormDataUsing(function ( $data): array{
+    $data['event_id'] = $this->event->id;
+    $data['phone_number'] = '+254' . $data['phone_number'];
+    $data['organization_id'] = Auth::user()->organization_id;
+    $data['user_id'] = Auth::id();
+
+    $this->notification()->success(
+        $title = 'Member Added',
+        $description = 'you have successfully invited someone to this event'
+    );
+
+    return $data;
+}),
+    /*
+                    ImportAction::make()->importer(MemberImporter::class)
+                        ->mutateFormDataUsing(function ( $data): array{
+                            $data['event_id'] = $this->event->id;
+                            $data['organization_id'] = Auth::user()->organization_id;
+                            $data['user_id'] = Auth::id();
+                            return $data;
+                        })*/
+]);
+}
 
 
 
 
 
-    public function render()
-    {
-        return view('livewire.event.show-invites');
-    }
+public function render()
+{
+    return view('livewire.event.show-invites');
+}
 }
