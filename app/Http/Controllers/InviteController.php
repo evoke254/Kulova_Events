@@ -7,6 +7,7 @@ use App\Models\EventAttendance;
 use App\Models\Invite;
 use Barryvdh\Snappy\Facades\SnappyImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -22,7 +23,9 @@ class InviteController extends Controller
 
     public function tickets(Invite $user)
     {
-
+        if (isset($user->ticket)){;
+            File::delete(public_path($user->ticket));
+        }
         // Generate a unique QR code for the ticket
         $scanUrl = URL::signedRoute('attend.event', ['user' => $user]);
 
@@ -31,11 +34,11 @@ class InviteController extends Controller
         $html = View::make('ticket', compact('user', 'qrCode', 'event'))->render();
         $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
         SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
-                                    ->setOption('enable-local-file-access', true)
-                                    ->save($path);
+            ->setOption('enable-local-file-access', true)
+            ->save($path);
         $user->ticket = $path;
         $user->save();
-        return response($path)->header('Content-Type', 'image/png');
+
 
     }
 
@@ -43,7 +46,7 @@ class InviteController extends Controller
         $scanUrl = URL::signedRoute('attend.event', ['user' => $user]);
 
         $route = route('event.ticket', ['user' => $user]);
-   //     dd($route);
+        //     dd($route);
         Browsershot::url($route)
             ->select('.ticketContent')
             ->setChromePath('/usr/bin/chromium-browser')
