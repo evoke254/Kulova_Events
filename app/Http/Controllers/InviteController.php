@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\EventAttendance;
 use App\Models\Invite;
+use Barryvdh\Snappy\Facades\SnappyImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Spatie\Browsershot\Browsershot;
-use Spatie\LaravelPdf\Facades\Pdf;
-
 class InviteController extends Controller
 {
     /**
@@ -29,8 +28,9 @@ class InviteController extends Controller
 
         $qrCode = QrCode::size(150)->generate($scanUrl);
         $event = Event::find($user->event_id);
-        return view('ticket', compact('user', 'qrCode', 'event'));
-
+        $html = View::make('ticket', compact('user', 'qrCode', 'event'))->render();
+        $ticket = SnappyImage::loadHTML($html)->output();
+dd($ticket);
     }
 
     public function TestTicket(Invite $user){
