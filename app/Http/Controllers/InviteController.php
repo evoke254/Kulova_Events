@@ -29,7 +29,7 @@ class InviteController extends Controller
         $qrCode = QrCode::size(150)->generate($scanUrl);
         $event = Event::find($user->event_id);
         $html = View::make('ticket', compact('user', 'qrCode', 'event'))->render();
-        $ticket = SnappyImage::loadHTML($html)->output();
+        $ticket = SnappyImage::loadHTML($html)->setOption('enable-local-file-access', true)->save(public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png'));
 dd($ticket);
     }
 
