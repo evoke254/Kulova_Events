@@ -42,7 +42,6 @@ Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionCo
     ->name('election.vote.verified');
 //Grab tickets
     Route::get('/ticket/{user}', [\App\Http\Controllers\InviteController::class, 'tickets'])->name('event.ticket');
-    Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
 
 
     Route::get('/TestTicket/{user}', [\App\Http\Controllers\InviteController::class, 'TestTicket'])->name('TestTicket');
@@ -50,6 +49,7 @@ Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionCo
 Route::middleware('auth')->group(function () {
 
 
+    Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
 
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
