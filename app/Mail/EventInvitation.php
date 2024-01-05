@@ -49,7 +49,7 @@ class EventInvitation extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.eventInvitation',
+            markdown: 'mail.eventInvitation',
         );
     }
 
@@ -64,4 +64,6 @@ class EventInvitation extends Mailable
             Attachment::fromPath(public_path($this->user->ticket))
         ];
     }
+
+
 }
