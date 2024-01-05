@@ -61,7 +61,7 @@ class EventInvitation extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(public_path($this->user->ticket))
+            Attachment::fromPath($this->user->ticket)
         ];
     }
 
