@@ -6,6 +6,7 @@ use App\Filament\Imports\MemberImporter;
 use App\Models\Event;
 use App\Models\Invite;
 use Filament\Tables\Actions\ImportAction;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
 use Filament\Forms\Components\Select;
@@ -147,13 +148,11 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->required(),
                         TextInput::make('member_no')
                             ->label('Member Number')
-                            ->unique()
                             ->minValue(2)
                             ->required(),
                         TextInput::make('phone_number')
                             ->label('Phone Number')
                             ->prefix('+254')
-                            ->unique()
                             ->maxLength(9)
                             ->minValue(1)
                             ->numeric()
