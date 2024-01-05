@@ -171,5 +171,18 @@ class Invite extends Model
     }
 
 
+    public function createTicket()
+    {
+        $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
+        $qrCode = QrCode::size(150)->generate($scanUrl);
+        $event = Event::find($this->event_id);
+        $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+        $user = $this;
+        SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
+            ->setOption('enable-local-file-access', true)
+            ->save($path);
+        $this->ticket = $path;
+        $this->save();
+    }
 
 }

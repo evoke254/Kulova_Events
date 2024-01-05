@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Event;
+use App\Models\Invite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -23,6 +24,9 @@ class EventInvitation extends Mailable
      */
     public function __construct($user)
     {
+        if (!isset($user->ticket)){
+            $user->createTicket();
+        }
         $this->user = $user;
         $this->url = asset($user->ticket);
         $this->event = Event::find($user->event_id);

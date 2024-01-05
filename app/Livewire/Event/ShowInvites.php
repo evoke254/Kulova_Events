@@ -58,6 +58,7 @@ class ShowInvites extends Component implements HasForms, HasTable
     {
 
         return $table
+            ->heading('Event Members')
             ->modelLabel('Member')
             ->striped()
             ->query(Invite::query()
