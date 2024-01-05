@@ -21,12 +21,14 @@
 
 </head>
 <body class=" text-gray-900">
-   <div class="bg-white grid grid-cols-3 gap-3 rounded-lg shadow-md items-center">
-        <div class=" p-2 rounded-lg">
+
+<table class="bg-white w-full rounded-lg shadow-md">
+    <tr>
+        <td class="p-2 rounded-lg">
             <img src="{{ asset('storage/'. $event->images()->first()->image) }}" alt="{{ $user->name }} {{ $user->last_name }}"
                  class="w-48 h-48 object-cover rounded-lg">
-        </div>
-        <div>
+        </td>
+        <td class="p-4">
             <h2 class="text-3xl font-semibold text-gray-800">{{ $user->name }} {{ $user->last_name }}</h2>
             <p class="text-sm text-gray-600 mb-2">{{ $user->member_no }}</p>
             <p class="text-sm text-gray-600 mb-2">{{ $user->email }}</p>
@@ -34,15 +36,13 @@
             <p class="text-sm text-gray-600 mb-2">
                 Event Date: {{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}
             </p>
-        </div>
-        <div class="mt-6">
-            <div class="p-6 ">
-               <div class="">
-                    {!! $qrCode !!}
-               </div>
+        </td>
+        <td class="p-6">
+            <div class="">
+                {!! $qrCode !!}
             </div>
-        </div>
-
-    </div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
