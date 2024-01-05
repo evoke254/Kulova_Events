@@ -28,7 +28,8 @@ class EventInvitation extends Mailable
             $user->createTicket();
         }
         $this->user = $user;
-        $this->url = asset($user->ticket);
+        $parts = explode("/", $user->ticket);
+        $this->url = asset('images/tickets/'. end($parts));
         $this->event = Event::find($user->event_id);
     }
 
