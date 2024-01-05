@@ -8,6 +8,7 @@ use App\Models\Invite;
 use Barryvdh\Snappy\Facades\SnappyImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -24,14 +25,14 @@ class InviteController extends Controller
     public function tickets(Invite $user)
     {
         if (isset($user->ticket)){;
-            File::delete(public_path($user->ticket));
+            Storage::delete(public_path($user->ticket));
         }
         // Generate a unique QR code for the ticket
         $scanUrl = URL::signedRoute('attend.event', ['user' => $user]);
 
         $qrCode = QrCode::size(150)->generate($scanUrl);
         $event = Event::find($user->event_id);
-        $html = View::make('ticket', compact('user', 'qrCode', 'event'))->render();
+
         $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
         SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
             ->setOption('enable-local-file-access', true)
@@ -39,6 +40,7 @@ class InviteController extends Controller
         $user->ticket = $path;
         $user->save();
 
+        return view('ticket', compact('user', 'qrCode', 'event'));
 
     }
 
