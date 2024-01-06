@@ -51,7 +51,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
 
-
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

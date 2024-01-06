@@ -5,6 +5,7 @@ namespace App\Livewire\Event;
 use App\Filament\Imports\MemberImporter;
 use App\Livewire\EventAttendance;
 use App\Mail\EventInvitation;
+use App\Mail\VoterInvited;
 use App\Models\Event;
 use App\Models\Invite;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -47,10 +48,11 @@ class ShowInvites extends Component implements HasForms, HasTable
     use InteractsWithTable, Actions;
     use InteractsWithForms;
     public Event $event;
+    public $elections;
 
 
     public function mount(){
-
+        $this->elections = $elections = $this->event->elections()->get();
     }
 
 
@@ -152,7 +154,10 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->action(function (array $data, Collection $records): void {
 
                         foreach ($records as $key => $record){
-                            Mail::to($record->email)->send(new EventInvitation($record));
+                         //   Mail::to($record->email)->send(new EventInvitation($record));
+                            if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
+                                Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
+                            }
                         }
                         $this->notification()->success(
                             $title = 'Invitation Resent',

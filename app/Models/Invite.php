@@ -84,7 +84,7 @@ class Invite extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::created(function ($model) {
             //Create Ticket
             $scanUrl = URL::signedRoute('attend.event', ['user' => $model]);
             $qrCode = QrCode::size(150)->generate($scanUrl);
