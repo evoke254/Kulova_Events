@@ -64,7 +64,7 @@ class Index extends Component  implements HasForms, HasTable
                     ->badge()
                       ->listWithLineBreaks()
                     ->searchable(),
-                ToggleColumn::make('is_featured')
+                ToggleColumn::make('check_registration_status')
                     ->sortable(),
 
                 TextColumn::make('start_date')

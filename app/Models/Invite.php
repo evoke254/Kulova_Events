@@ -25,6 +25,7 @@ class Invite extends Model
         'last_name',
         'phone_number',
         'email',
+        'registration_status',
         'member_no',
         'details',
         'organization_id',
@@ -34,6 +35,10 @@ class Invite extends Model
 
     protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
 
+     public function getRegistrationAttribute()
+    {
+        return $this->attributes['registration_status'] ? 'Yes' : 'No';
+    }
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -97,7 +102,7 @@ class Invite extends Model
             $model->ticket = $path;
 
             //Send Email invitation
-            if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
+            if (filter_var($model->email, FILTER_VALIDATE_EMAIL) && $event->check_registration_status){
                 Mail::to($model->email)->send(new EventInvitation($model));
             }
 
@@ -107,6 +112,7 @@ class Invite extends Model
             }
         });
     }
+
 
     public function electionInvitation($model, $elections)
     {

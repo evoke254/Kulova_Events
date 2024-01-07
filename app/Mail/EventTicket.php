@@ -2,16 +2,15 @@
 
 namespace App\Mail;
 
-use App\Models\Event;
-use App\Models\Invite;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EventInvitation extends Mailable
+class EventTicket extends Mailable
 {
     use Queueable, SerializesModels;
     public Invite $user;
@@ -23,11 +22,14 @@ class EventInvitation extends Mailable
      */
     public function __construct($user)
     {
+        if (!isset($user->ticket)){
+            $user->createTicket();
+        }
         $this->user = $user;
-        $this->url = URL::signedRoute('route.name', ['parameter' => 'value']);;
+        $parts = explode("/", $user->ticket);
+        $this->url = asset('images/tickets/'. end($parts));
         $this->event = Event::find($user->event_id);
     }
-
 
     /**
      * Get the message envelope.
@@ -35,7 +37,7 @@ class EventInvitation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'REGISTER FOR '. $this->event->name,
+            subject: 'Event Ticket - ' . $this->event->name,
         );
     }
 
@@ -45,7 +47,7 @@ class EventInvitation extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.eventInvitation',
+            markdown: 'mail.event-tickets',
         );
     }
 
@@ -56,9 +58,8 @@ class EventInvitation extends Mailable
      */
     public function attachments(): array
     {
-
-        return [];
+                return [
+            Attachment::fromPath($this->user->ticket)
+        ];
     }
-
-
 }

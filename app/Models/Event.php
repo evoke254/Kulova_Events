@@ -21,7 +21,7 @@ class Event extends Model implements HasMedia
 
     protected $fillable =[
         'name', 'description','venue', 'organization_id', 'is_active', 'is_featured', 'user_id',
-        'cost', 'start_date', 'end_date', 'event_category_id'
+        'cost', 'start_date', 'end_date', 'event_category_id', 'check_registration_status'
     ];
 
     protected $casts = [];

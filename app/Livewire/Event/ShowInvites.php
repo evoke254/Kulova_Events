@@ -77,6 +77,15 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
+
+                 TextColumn::make('registration')
+                    ->label('Registered')
+                    ->badge()
+                //     ->state(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
+                    ->color(fn (string $state): string => match ($state) {
+                        'Yes' => 'success',
+                        'No' => 'danger',
+                    }),
                 TextColumn::make('phone_number')
                     ->searchable(),
                 TextColumn::make('created_by.name')
