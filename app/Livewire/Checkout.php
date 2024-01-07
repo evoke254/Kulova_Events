@@ -88,7 +88,7 @@ class Checkout extends Component
         $mpesa= new \Safaricom\Mpesa\Mpesa();
 
         $BusinessShortCode = "767219";
-        $TransactionDesc ="Event Tickets Purchase Text-40";
+        $TransactionDesc ="Event Tickets Purchase Text40";
         $Remarks = 'Event ticket Purchase';
         $TransactionType = "CustomerPayBillOnline";
         $Amount = $this->total;

@@ -47,6 +47,10 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Election::class);
     }
 
+        public function merchandise(): HasMany
+    {
+        return $this->hasMany(EventMerchandise::class);
+    }
         public function images(): HasMany
     {
         return $this->hasMany(EventImage::class);

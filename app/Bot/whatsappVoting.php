@@ -39,7 +39,7 @@ class whatsappVoting extends Conversation
     }
     public function run(){
 
-        $welcomeMessage = "Hello ".$this->userName.", \nwelcome to Text-40 Digital Voting System. I'm here to assist you cast your vote.\n";
+        $welcomeMessage = "Hello ".$this->userName.", \nwelcome to Text40 Digital Voting System. I'm here to assist you cast your vote.\n";
         $this->startConversation($welcomeMessage);
     }
 

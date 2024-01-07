@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class EventInvitation extends Mailable
 {
@@ -24,7 +25,7 @@ class EventInvitation extends Mailable
     public function __construct($user)
     {
         $this->user = $user;
-        $this->url = URL::signedRoute('route.name', ['parameter' => 'value']);;
+        $this->url = URL::signedRoute('event.registration', ['user' => $user]);;
         $this->event = Event::find($user->event_id);
     }
 

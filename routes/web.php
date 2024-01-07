@@ -40,8 +40,11 @@ Route::get('/election/{election}/vote', [\App\Http\Controllers\ElectionControlle
     ->name('election.vote');
 Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionController::class, 'vote'])
     ->name('election.vote.verified');
-//Grab tickets
+
+
     Route::get('/ticket/{user}', [\App\Http\Controllers\InviteController::class, 'tickets'])->name('event.ticket');
+//Grab tickets
+    Route::match(['get','post'],'/event_registration/{user}', [\App\Http\Controllers\InviteController::class, 'registration'])->name('event.registration');
 
 
     Route::get('/TestTicket/{user}', [\App\Http\Controllers\InviteController::class, 'TestTicket'])->name('TestTicket');

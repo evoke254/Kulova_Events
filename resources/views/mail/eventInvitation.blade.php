@@ -1,11 +1,11 @@
 <x-mail::message>
 # {{$user->name}}, You have been invited to attend an event
 
-Please find attached your ticket to  {{$event->name}}.
+Please click on the link below to register for the event
 <x-mail::button :url="$url">
-    View Ticket
+    Register
 </x-mail::button>
-
+#{{$url}}
 Thanks,<br>
 {{ config('app.name') }}
 </x-mail::message>

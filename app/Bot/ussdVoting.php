@@ -35,7 +35,7 @@ class ussdVoting extends Conversation
 
     }
     public function run(){
-        $welcomeMessage = "CON  Welcome to Text-40 Digital Voting System. I'm here to assist you cast your vote. \n";
+        $welcomeMessage = "CON  Welcome to Text40 Digital Voting System. I'm here to assist you cast your vote. \n";
         $this->startConversation($welcomeMessage);
     }
 

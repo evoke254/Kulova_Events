@@ -30,6 +30,7 @@
 
                         </dd>
                     </div>
+
                     <div class="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
                         <dt>
                             <div class="absolute rounded-md bg-indigo-500 p-3">
@@ -112,12 +113,14 @@
                             </td>
                         </tr>
 
+
+
                         <tr class=" bg-gray-300 dark:bg-gray-900 ">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 Created At
                             </th>
                             <td class="px-6 py-4">
-                                {{date('D, d M Y H:i:s',strtotime($event->created_at))}}
+                                {{ date('D, d M Y H:i:s', strtotime($event->created_at)) }}
                             </td>
                         </tr>
                         </tbody>
@@ -125,7 +128,7 @@
                 </div>
 
                 <div class=" overflow-x-auto rounded-2xl border border-gray-400 ">
-                    <table class="w-full shadow-lg   text-left text-gray-500 rounded-lg dark:text-gray-400 ">
+                    <table class="w-full shadow-lg text-left text-gray-500 rounded-lg dark:text-gray-400 ">
                         <tbody>
                         <tr class=" bg-gray-100 dark:bg-gray-900 ">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -164,6 +167,22 @@
                                     <div>
                                         Kshs. {{ number_format($event->cost) }}
 
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class=" bg-gray-200 dark:bg-gray-800 items-start ">
+                            <th scope="row" class="px-6 py-4 font-medium items-start text-gray-900 whitespace-nowrap dark:text-white">
+                                Merchandise
+                            </th>
+                            <td class="px-6 py-4">
+                                <div class="grid grid-cols-2 gap-2 ">
+                                    <div>
+                                        {{ $event->merchandise()->get()->count() }}
+                                    </div>
+                                    <div>
+                                                @livewire('event-merchandises')
                                     </div>
                                 </div>
                             </td>

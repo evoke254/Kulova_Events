@@ -78,10 +78,10 @@ class ShowInvites extends Component implements HasForms, HasTable
                 TextColumn::make('email')
                     ->searchable(),
 
-                 TextColumn::make('registration')
+                TextColumn::make('registration')
                     ->label('Registered')
                     ->badge()
-                //     ->state(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
+                    //     ->state(fn (string $state): string => $state === '1' ? 'Yes' : 'No')
                     ->color(fn (string $state): string => match ($state) {
                         'Yes' => 'success',
                         'No' => 'danger',
@@ -157,24 +157,40 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->action(fn (Invite $record) => $record->delete())
             ])
             ->bulkActions([
-                BulkAction::make('Resend invitation')
-                    ->requiresConfirmation()
-                    ->icon('heroicon-m-plus-circle')
-                    ->action(function (array $data, Collection $records): void {
+                BulkActionGroup::make([
+                    BulkAction::make('Event Invitation')
+                        ->requiresConfirmation()
+                        ->action(function (array $data, Collection $records): void {
 
-                        foreach ($records as $key => $record){
-                         //   Mail::to($record->email)->send(new EventInvitation($record));
-                            if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
-                                Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
+                            foreach ($records as $key => $record){
+                                //   Mail::to($record->email)->send(new EventInvitation($record));
+                                if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
+                                   Mail::to($record->email)->send(new EventInvitation($record));
+                                }
                             }
-                        }
-                        $this->notification()->success(
-                            $title = 'Invitation Resent',
-                            $description = 'We have sent new invitation emails to selected users'
-                        );
-                        $this->resetTable();
-                    }),
+                            $this->notification()->success(
+                                $title = 'Event Invitation Resent',
+                                $description = 'We have sent new invitation emails to selected users'
+                            );
+                            $this->resetTable();
+                        }),
+                    BulkAction::make('Election')
+                        ->requiresConfirmation()
+                        ->action(function (array $data, Collection $records): void {
 
+                            foreach ($records as $key => $record){
+                                //   Mail::to($record->email)->send(new EventInvitation($record));
+                                if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
+                                    Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
+                                }
+                            }
+                            $this->notification()->success(
+                                $title = 'Election Resent',
+                                $description = 'Selected voters re-invited'
+                            );
+                            $this->resetTable();
+                        })
+                ])->label('Invitations'),
                 DeleteBulkAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Invite $record) => $record->delete())
