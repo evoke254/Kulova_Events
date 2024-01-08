@@ -16,7 +16,7 @@ Thank you for registering for the {{ $event->name }} event. Your registration wa
 
 We look forward to seeing you at the event!
 
-@component('mail::button', ['url' => route('event.view', ['event', $event->id])])
+@component('mail::button', ['url' =>url('/event/'.$event->id) ])
 View Event Details
 @endcomponent
 @if($user->ticket)
