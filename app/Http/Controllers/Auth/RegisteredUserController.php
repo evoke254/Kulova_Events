@@ -20,6 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        dd("We don't do that here");
         return view('auth.register');
     }
 
@@ -30,6 +31,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        dd("We don't do that here");
         $request->validate([
             'remember' => 'required',
             'name' => ['required', 'string', 'max:255'],

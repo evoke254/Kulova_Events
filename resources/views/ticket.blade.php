@@ -31,8 +31,7 @@
         <td class="p-4">
             <h2 class="text-3xl font-semibold text-gray-800">{{ $user->name }} {{ $user->last_name }}</h2>
             <p class="text-sm text-gray-600 mb-2">{{ $user->member_no }}</p>
-            <p class="text-sm text-gray-600 mb-2">{{ $user->email }}</p>
-            <p class="text-sm text-gray-600 mb-2">{{ $user->phone_number }}</p>
+{{--}}            <p class="text-sm text-gray-600 mb-2">{{ $user->email }}</p> --}}
             <p class="text-sm text-gray-600 mb-2">
                 Event Date: {{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}
             </p>
