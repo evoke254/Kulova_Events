@@ -65,7 +65,7 @@ class RegisterForEvent extends Component implements HasForms
 
                 $merchandiseFields[] = Select::make('merchandise.' . $mcds->id . '.option')->options($mcds->variants()->get()->pluck('name', 'id')->toArray())
                     ->required()
-                    ->label($mcds->name . ' Option');
+                    ->label($mcds->name);
             }
         }
 
