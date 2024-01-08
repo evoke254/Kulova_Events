@@ -20,8 +20,9 @@ We look forward to seeing you at the event!
 View Event Details
 @endcomponent
 
-**Event Image:**
-![Event Image]({{ asset($event->images()->first()->image) }})
+@component('mail::image', ['url' => asset($event->images()->first()->image)])
+![Event Image](attachment:image.jpg)
+@endcomponent
 
 If you have any questions or need further assistance, feel free to contact us.
 
