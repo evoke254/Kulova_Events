@@ -8,6 +8,8 @@ use App\Mail\EventInvitation;
 use App\Mail\VoterInvited;
 use App\Models\Event;
 use App\Models\Invite;
+use App\Models\Vote;
+use Closure;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -50,9 +52,15 @@ class ShowInvites extends Component implements HasForms, HasTable
     use InteractsWithForms;
     public Event $event;
     public $elections;
+    public $member_nos;
+    public $data;
+    public $phone_nos;
 
 
     public function mount(){
+
+        $this->member_nos = Invite::where('event_id', $this->event->id)->get()->pluck('member_no')->toArray();
+        $this->phone_nos = Invite::where('event_id', $this->event->id)->get()->pluck('phone_number')->toArray();
         $this->elections = $elections = $this->event->elections()->get();
     }
 
@@ -130,19 +138,46 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->required(),
                         TextInput::make('member_no')
                             ->label('Member Number')
-                            ->unique(ignoreRecord: true)
+
+                            ->rules([
+                                function (Invite $record) {
+                                    return function (string $attribute, $value, Closure $fail) use ($record) {
+                                        $invite = Invite::where('member_no', $value)
+                                            ->where('id', '!=', $record->id)
+                                            ->where('event_id', $this->event->id)
+                                            ->first();
+                                        if ($invite) {
+                                            return $fail('The :attribute has already been taken.');
+                                        }
+                                    };
+                                },
+                            ])
                             ->minValue(2)
                             ->required(),
                         TextInput::make('phone_number')
                             ->label('Phone Number')
-                            ->placeholder('702755928')
-                            ->unique(ignoreRecord: true)
                             ->prefix('+254')
-                            ->maxLength(9)
-                            ->minValue(1)
-                            ->numeric()
+                            ->placeholder('0702755928')
                             ->required()
-                            ->tel(),
+                            ->rules([
+                                function (Invite $record) {
+                                    return function (string $attribute, $value, Closure $fail) use ($record) {
+
+                                        if (!preg_match('/^\d{9}$/', $value)) {
+                                         return   $fail('Invalid :attribute format. Example format 702755928.');
+                                        } else {
+                                            $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
+                                            $invite = Invite::whereIn('phone_number', $phoneNumbers)
+                                                ->where('id', '!=', $record->id)
+                                                ->where('event_id', $this->event->id)
+                                                ->first();
+                                            if ($invite) {
+                                                return $fail('The :attribute has already been taken.');
+                                            }
+                                        }
+                                    };
+                                },
+                            ]),
                         TextInput::make('email'),
                         Textarea::make('details'),
                     ])
@@ -153,7 +188,10 @@ class ShowInvites extends Component implements HasForms, HasTable
                     }),
                 DeleteAction::make()
                     ->requiresConfirmation()
-                    ->action(fn (Invite $record) => $record->delete())
+                    ->action(function (Invite $record){
+                        Vote::destroy($record->allUserVotes()->get()->pluck('id'));
+                        $record->delete();
+                    })
             ])
             ->bulkActions([
                 BulkActionGroup::make([
@@ -164,7 +202,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                             foreach ($records as $key => $record){
                                 //   Mail::to($record->email)->send(new EventInvitation($record));
                                 if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
-                                   Mail::to($record->email)->send(new EventInvitation($record));
+                                    Mail::to($record->email)->send(new EventInvitation($record));
                                 }
                             }
                             $this->notification()->success(
@@ -205,15 +243,36 @@ class ShowInvites extends Component implements HasForms, HasTable
                         TextInput::make('member_no')
                             ->label('Member Number')
                             ->minValue(2)
+                            ->rules([
+                                function () {
+                                    return function (string $attribute, $value, Closure $fail) {
+                                        $invite = Invite::where('event_id', $this->event->id)->where('member_no', $value)->first();
+                                        if ($invite) {
+                                            $fail('The :attribute has already been taken.');
+                                        }
+                                    };
+                                },
+                            ])
                             ->required(),
                         TextInput::make('phone_number')
                             ->label('Phone Number')
                             ->prefix('+254')
-                            ->maxLength(9)
-                            ->minValue(1)
-                            ->numeric()
+                            ->placeholder('702755928')
+                            ->regex('/^\d{9}$/')
                             ->required()
-                            ->tel(),
+                            ->rules([
+                                function () {
+                                    return function (string $attribute, $value, Closure $fail) {
+                                        $phoneNumbers = ["+254" .$value, "254" .$value, "0" .$value ];
+                                        $invite = Invite::whereIn('phone_number', $phoneNumbers)
+                                            ->where('event_id', $this->event->id)
+                                            ->first();
+                                        if ($invite) {
+                                            $fail('The :attribute already exists.');
+                                        }
+                                    };
+                                },
+                            ]),
                         TextInput::make('email'),
                         Textarea::make('details'),
                     ])

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use AfricasTalking\SDK\AfricasTalking;
 use App\Mail\EventInvitation;
+use App\Mail\EventTicket;
 use App\Mail\VoterInvited;
 use Barryvdh\Snappy\Facades\SnappyImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,13 +30,13 @@ class Invite extends Model
         'member_no',
         'details',
         'organization_id',
-        'user_id',
-        'ticket'
+        'user_id', 'merchandise',
+        'ticket', 'attendance_mode'
     ];
 
     protected $facebookProfileEndpoint = 'https://graph.facebook.com/v18.0/';
 
-     public function getRegistrationAttribute()
+    public function getRegistrationAttribute()
     {
         return $this->attributes['registration_status'] ? 'Yes' : 'No';
     }
@@ -90,17 +91,7 @@ class Invite extends Model
         parent::boot();
 
         static::created(function ($model) {
-            //Create Ticket
-            $scanUrl = URL::signedRoute('attend.event', ['user' => $model]);
-            $qrCode = QrCode::size(150)->generate($scanUrl);
             $event = Event::find($model->event_id);
-            $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
-            $user = $model;
-            SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
-                ->setOption('enable-local-file-access', true)
-                ->save($path);
-            $model->ticket = $path;
-
             //Send Email invitation
             if (filter_var($model->email, FILTER_VALIDATE_EMAIL) && $event->check_registration_status){
                 Mail::to($model->email)->send(new EventInvitation($model));
@@ -109,6 +100,21 @@ class Invite extends Model
             $elections = Event::find($model->event_id)->elections()->get();
             if (!$elections->isEmpty()){
                 $model->electionInvitation($model, $elections);
+            }
+        });
+
+
+        static::saving(function ($model) {
+            if ($model->isDirty('registration_status') && $model->registration_status) {
+                //Send Ticket
+                if ($model->attendance_mode == 'Physical'){
+                    //Create Ticket
+                    $model->createTicket();
+                    Mail::to($model->email)->send(new EventTicket($model));
+
+                } else {
+                    //TODO Send virtual event Link
+                }
             }
         });
     }

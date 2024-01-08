@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('invites', function (Blueprint $table) {
             $table->boolean('registration_status')->nullable()->default(false);
+            $table->string('attendance_mode')->nullable();
+            $table->json('merchandise')->nullable();
         });
     }
 
@@ -23,6 +25,9 @@ return new class extends Migration
     {
         Schema::table('invites', function (Blueprint $table) {
             //
+            $table->dropColumn('registration_status');
+            $table->dropColumn('attendance_mode');
+            $table->dropColumn('merchandise');
         });
     }
 };

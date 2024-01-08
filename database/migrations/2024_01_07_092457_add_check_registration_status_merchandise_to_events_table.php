@@ -25,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             //
+            $table->dropColumn('check_registration_status');
         });
     }
 };
