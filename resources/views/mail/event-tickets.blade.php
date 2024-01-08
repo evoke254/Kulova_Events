@@ -19,14 +19,9 @@ We look forward to seeing you at the event!
 @component('mail::button', ['url' => route('event.view', ['event', $event->id])])
 View Event Details
 @endcomponent
-
-<table style="margin: 0 auto;">
-    <tr>
-        <td style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <img src="{{ asset($event->images()->first()->image) }}" alt="Event Image" style="display: block; margin: 0 auto; border-radius: 8px;">
-        </td>
-    </tr>
-</table>
+@if($event->ticket)
+**We have attached your ticket**
+@endif
 
 If you have any questions or need further assistance, feel free to contact us.
 
