@@ -20,9 +20,13 @@ We look forward to seeing you at the event!
 View Event Details
 @endcomponent
 
-@component('mail::image', ['url' => asset($event->images()->first()->image)])
-![Event Image](attachment:image.jpg)
-@endcomponent
+<table style="margin: 0 auto;">
+    <tr>
+        <td style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <img src="{{ asset($event->images()->first()->image) }}" alt="Event Image" style="display: block; margin: 0 auto; border-radius: 8px;">
+        </td>
+    </tr>
+</table>
 
 If you have any questions or need further assistance, feel free to contact us.
 
