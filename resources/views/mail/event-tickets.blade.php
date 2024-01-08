@@ -19,7 +19,7 @@ We look forward to seeing you at the event!
 @component('mail::button', ['url' => route('event.view', ['event', $event->id])])
 View Event Details
 @endcomponent
-@if($event->ticket)
+@if($user->ticket)
 **We have attached your ticket**
 @endif
 
