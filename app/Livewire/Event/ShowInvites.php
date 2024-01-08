@@ -162,9 +162,8 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->rules([
                                 function (Invite $record) {
                                     return function (string $attribute, $value, Closure $fail) use ($record) {
-
                                         if (!preg_match('/^\d{9}$/', $value)) {
-                                         return   $fail('Invalid :attribute format. Example format 702755928.');
+                                            return   $fail('Invalid :attribute format. Example format 702755928.');
                                         } else {
                                             $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
                                             $invite = Invite::whereIn('phone_number', $phoneNumbers)
@@ -258,19 +257,24 @@ class ShowInvites extends Component implements HasForms, HasTable
                             ->label('Phone Number')
                             ->prefix('+254')
                             ->placeholder('702755928')
-                            ->regex('/^\d{9}$/')
                             ->required()
                             ->rules([
                                 function () {
+
                                     return function (string $attribute, $value, Closure $fail) {
-                                        $phoneNumbers = ["+254" .$value, "254" .$value, "0" .$value ];
-                                        $invite = Invite::whereIn('phone_number', $phoneNumbers)
-                                            ->where('event_id', $this->event->id)
-                                            ->first();
-                                        if ($invite) {
-                                            $fail('The :attribute already exists.');
+                                        if (!preg_match('/^\d{9}$/', $value)) {
+                                            return   $fail('Invalid :attribute format. Example format 702755928.');
+                                        } else {
+                                            $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
+                                            $invite = Invite::whereIn('phone_number', $phoneNumbers)
+                                                ->where('event_id', $this->event->id)
+                                                ->first();
+                                            if ($invite) {
+                                                return $fail('The :attribute has already been taken.');
+                                            }
                                         }
                                     };
+
                                 },
                             ]),
                         TextInput::make('email'),

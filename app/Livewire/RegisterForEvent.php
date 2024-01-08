@@ -100,16 +100,19 @@ class RegisterForEvent extends Component implements HasForms
                     ->required()
                     ->rules([
                         function () {
-                            return function (string $attribute, $value, Closure $fail) {
-                                $phoneNumbers = ["+254" .$value, "254" .$value, "0" .$value ];
-                                $invite = Invite::whereIn('phone_number', $phoneNumbers)
-                                    ->where('event_id', $this->event->id)
-                                    ->where('id', '!=', $this->user->id)
-                                    ->first();
-                                if ($invite) {
-                                    $fail('The :attribute already exists.');
-                                }
-                            };
+                                    return function (string $attribute, $value, Closure $fail) {
+                                        if (!preg_match('/^\d{9}$/', $value)) {
+                                            return   $fail('Invalid :attribute format. Example format 702755928.');
+                                        } else {
+                                            $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
+                                            $invite = Invite::whereIn('phone_number', $phoneNumbers)
+                                                ->where('event_id', $this->event->id)
+                                                ->first();
+                                            if ($invite) {
+                                                return $fail('The :attribute has already been taken.');
+                                            }
+                                        }
+                                    };
                         },
                     ]),
                 Radio::make('attendance_mode')
