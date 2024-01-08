@@ -107,6 +107,7 @@ class RegisterForEvent extends Component implements HasForms
                                             $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
                                             $invite = Invite::whereIn('phone_number', $phoneNumbers)
                                                 ->where('event_id', $this->event->id)
+                                                ->where('id', '!=', $this->user->id)
                                                 ->first();
                                             if ($invite) {
                                                 return $fail('The :attribute has already been taken.');
