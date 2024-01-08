@@ -11,7 +11,6 @@ use App\Models\Invite;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ImportAction;
 
 use Filament\Tables\Table;
@@ -24,6 +23,9 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Contracts\HasForms;
+
+use WireUi\Traits\Actions;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
@@ -41,7 +43,6 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Concerns\InteractsWithForms;
-use WireUi\Traits\Actions;
 
 class ShowInvites extends Component implements HasForms, HasTable
 {
@@ -148,8 +149,6 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->mutateFormDataUsing(function ( $data): array{
                         if (strlen($data['phone_number']) == 9 && substr($data['phone_number'], 0, 9))
                             $data['phone_number'] = '+254' . $data['phone_number'];
-
-
                         return $data;
                     }),
                 DeleteAction::make()

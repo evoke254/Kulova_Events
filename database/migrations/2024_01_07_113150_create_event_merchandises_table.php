@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->string('attribute');
-            $table->string('value');
+            $table->string('attribute')->nullable();
+            $table->string('value')->nullable();
             $table->timestamps();
         });
     }

@@ -182,7 +182,9 @@
                                         {{ $event->merchandise()->get()->count() }}
                                     </div>
                                     <div>
-                                                @livewire('event-merchandises')
+                                        <x-button class="rounded-lg" primary label="View | Add Merchandise"
+                                                  data-modal-target="eventMerchandisesModal"
+                                                  data-modal-toggle="eventMerchandisesModal" />
                                     </div>
                                 </div>
                             </td>
@@ -194,30 +196,57 @@
                 </div>
             </div>
 
-            <div class=" grid grid-cols-1 mt-5 gap-4 justify-end ">
 
-                <div class="flex justify-end mx-3">                @livewire('event.import-invites', ['event' => $event])</div>
-                <div class="">
+            <div class="mt-5  rounded-lg bg-gray-300 dark:bg-gray-900" >
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-700 dark:text-gray-200" data-tabs-toggle="#fullWidthTabContent" role="tablist">
+                        <li class="me-2">
+                            <button id="users_members-tab" data-tabs-target="#users_members" type="button" role="tab" aria-controls="users_members" aria-selected="true"
+                                    class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group">
+                                Attendees
+                            </button>
+                        </li>
+                        <li class="me-2">
+                            <button id="event_elctns-tab" data-tabs-target="#event_elctns" type="button" role="tab" aria-controls="event_elctns" aria-selected="false"
+                                    class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group">
+                                Event Elections
+                            </button>
+                        </li>
+
+                        <li class="me-2">
+                            <button id="event_mcds-tab" data-tabs-target="#event_mcds" type="button" role="tab" aria-controls="event_mcds" aria-selected="false"
+                                    class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group">
+                                Merchandise
+                            </button>
+                        </li>
+
+                        <li class="my-2 flex items-center self-end">
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class=" grid grid-cols-1 mt-5 gap-4 justify-end " id="fullWidthTabContent">
+
+                <div class="" id="users_members" role="tabpanel" aria-labelledby="users_members-tab">
+                    <div class="flex justify-end my-2">
+                        @livewire('event.import-invites', ['event' => $event])
+                    </div>
+
                     @livewire('event.show-invites', ['event' => $event])
                     {{--}}                    @livewire('event.import-invites', ['event' => $event->id]) --}}
+                </div>
+                <div class="" id="event_elctns" role="tabpanel" aria-labelledby="event_elctns-tab">
+                    @livewire('event.event-elections', ['event' => $event])
+                </div>
+
+                <div class="" id="event_mcds" role="tabpanel" aria-labelledby="event_mcds-tab">
+                    @livewire('event-merchandises', ['event' => $event])
                 </div>
 
 
             </div>
-
-
         </div>
 
-
-
-        <div class="relative  mt-2 mx-auto  w-full h-full">
-            <div class="relative w-full">
-
-                @livewire('event.event-elections', ['event' => $event])
-
-
-
-
-            </div>
-        </div>
 </x-app-layout>
