@@ -8,8 +8,8 @@ Thank you for registering for the {{ $event->name }} event. Your registration wa
 **Event Details:**
 - **Event Name:** {{ $event->name }}
 - **Venue:** {{ $event->venue }}
-- **Start Date:** {{ $event->start_date->format('F d, Y') }}
-- **End Date:** {{ $event->end_date->format('F d, Y') }}
+- **Start Date Time:** {{ \Carbon\Carbon::parse($event->start_date)->format('D, d M Y H:i')  }}
+- **End Date Time:** {{  \Carbon\Carbon::parse($event->end_date)->format('D, d M Y H:i:s') }}
 
 **Your Registration Details:**
 - **Member Number:** {{ $user->member_no }}
