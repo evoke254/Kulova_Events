@@ -1,7 +1,7 @@
 <div >
 
     <section style="background-image: url('{{asset('images/landing_pg_bg.jpg')}}');"
-             class="bg-[url('{{url('images/landing_pg_bg.jpg')}}')] mt-10 bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply">
+             class="bg-[url('{{url('images/landing_pg_bg.jpg')}}')] mt-10 bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply ">
         <div class="relative py-8 px-4 mx-auto max-w-screen-xl text-white lg:py-16 xl:px-0 z-1">
             <div class="mb-6 max-w-screen-md lg:mb-0">
                 <h1
@@ -52,10 +52,11 @@
         </div>
     </section>
 
-    <div class="bg-white py-12 sm:py-32 dark:bg-gray-800 dark:text-white">
+    <div class="bg-white py-4 dark:bg-gray-800 dark:text-white">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <h1                 class="mb-4 text-xl  tracking-tight leading-tight dark:text-gray-200 text-gray-800 text-center md:text-5xl lg:text-6xl">Events</h1>
 
-            <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 
 
                 @if($events->isEmpty())
