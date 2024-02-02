@@ -118,6 +118,7 @@
                         <a href="{{route('landing')}}" class="block py-2 px-3 rounded md:bg-transparent {{request()->routeIs('landing') ? 'text-blue-700 dark:text-blue-500' : ' text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-700'}} md:p-0 "
                            aria-current="page">Home</a>
                     </li>
+
                     {{--}} <li>
                          <a href="{{route('events.frontend')}}" class="block py-2 px-3 rounded md:bg-transparent {{request()->routeIs('events.frontend') ? 'text-blue-700 dark:text-blue-500' : ' text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-700'}} md:p-0 "
                          >Browse Events</a>

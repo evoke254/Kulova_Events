@@ -25,6 +25,7 @@ Route::get('/dashboardjkkjjkjkjkjjkkjkjjkjkj', function () {
 
 
 Route::get('/', [landingpageController::class, 'index'])->name('landing');
+Route::get('/about', [landingpageController::class, 'about'])->name('home');
 Route::get('/home', [landingpageController::class, 'index'])->name('home');
 Route::get('/browse-events', [\App\Http\Controllers\EventController::class, 'display'])
     ->name('events.frontend');
