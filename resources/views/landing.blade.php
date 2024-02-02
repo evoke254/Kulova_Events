@@ -6,7 +6,6 @@
             <div class="relative pt-14">
 
             </div>
-
             @livewire('event.frontend')
         </main>
 
