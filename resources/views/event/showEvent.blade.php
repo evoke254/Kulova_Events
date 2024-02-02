@@ -1,8 +1,8 @@
 <x-guest-layout>
 
 
-    <section class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+    <section class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen ">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 mt-10">
             <div class="mx-auto max-w-screen-2xl mt-16 text-center lg:mb-16 mb-8">
 
                 <article class="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
@@ -61,7 +61,7 @@
                     </div>
                 </article>
 
-
+@if($event->elections()->count())
     <!-- Block start -->
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
@@ -69,7 +69,7 @@
                 <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Elections</h2>
             </div>
 
-            @if($event->elections()->count())
+
                 <!-- Timeline section -->
                 <div class="mx-auto -mt-8 max-w-7xl px-6 lg:px-8 gap-y-2">
                     <div class="my-2 mb-4 grid  grid-cols-1 mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
@@ -123,10 +123,10 @@
 
                 </div>
 
-            @endif
+
         </div>
       </section>
-
+            @endif
 
 
             </div>
