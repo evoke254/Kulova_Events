@@ -1,7 +1,7 @@
 <div >
 
     <section style="background-image: url('{{asset('images/landing_pg_bg.jpg')}}');"
-        class="bg-[url('{{url('images/landing_pg_bg.jpg')}}')] mt-10 bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply">
+             class="bg-[url('{{url('images/landing_pg_bg.jpg')}}')] mt-10 bg-no-repeat bg-cover bg-center bg-gray-700 bg-blend-multiply">
         <div class="relative py-8 px-4 mx-auto max-w-screen-xl text-white lg:py-16 xl:px-0 z-1">
             <div class="mb-6 max-w-screen-md lg:mb-0">
                 <h1
@@ -11,79 +11,44 @@
                     Experience the Future of Event Management: Seamlessly plan, execute, and optimize with EMS – Your All-in-One Solution for Success!
                 </p>
                 <a href="{{route('register')}}"
-                    class="inline-flex items-center py-3 px-5 font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-900 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                   class="inline-flex items-center py-3 px-5 font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-900 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Sign In / Register
                 </a>
             </div>
-            <form action="#"
-                class="grid gap-y-4 p-4 mt-8 w-full bg-white rounded lg:gap-x-4 lg:grid-cols-9 lg:mt-12 dark:bg-gray-800">
-                <div class="lg:col-span-3">
-                    <label for="location-form" class="sr-only">Location</label>
-                    <div class="relative">
-                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
+            <div class="flex justify-center ">
+                <div class="md:w-3/4">
+                    <div    class="grid gap-y-4 p-4 mt-8 rounded lg:gap-x-4 grid-cols-1 md:grid-cols-4  lg:mt-12 bg-white  dark:bg-gray-800">
+                        <div class="md:col-span-3 " id="search">
+                            <label for="location-form" class="sr-only">Events</label>
+                            <div class="relative">
+                                <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
+                                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" wire:model="search" wire:keyup="searchFilter"
+                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                       placeholder="Search event name, venue">
+                            </div>
                         </div>
-                        <input type="text" id="location-form"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Search destinations">
+
+                        <button type="button" wire:click="searchFilter"
+                                class=" justify-center md:w-auto text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 inline-flex items-center">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                            Search
+                        </button>
                     </div>
                 </div>
-                <div date-rangepicker class="grid grid-cols-2 gap-x-4 lg:col-span-3">
-                    <div class="relative">
-                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <input name="start" type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Check in">
-                    </div>
-                    <div class="relative">
-                        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
-                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <input name="end" type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Check out">
-                    </div>
-                </div>
-                <div class="lg:col-span-1">
-                    <label for="guests" class="sr-only">Select number of guests</label>
-                    <select id="guests"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                        <option>Add guests</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5+</option>
-                    </select>
-                </div>
-                <button type="submit"
-                    class="lg:col-span-2 justify-center md:w-auto text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 inline-flex items-center">
-                    <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                    Search
-                </button>
-            </form>
+            </div>
+
         </div>
     </section>
 
@@ -92,6 +57,12 @@
 
             <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 
+
+                @if($events->isEmpty())
+                    <div class="">
+                        <p class="text-red-600">No events found</p>
+                    </div>
+                @endif
                 @foreach($events as $event)
                     <article class="flex flex-col items-start justify-between shadow-lg p-4 rounded-lg">
                         <div class="relative w-full">

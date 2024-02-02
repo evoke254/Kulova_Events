@@ -12,6 +12,7 @@ class Frontend extends Component
 {
         use Actions;
     public $events;
+    public $search;
 
     public Event $selectedEvent;
     public $subtotal = 0;    public $batchId;
@@ -52,6 +53,16 @@ class Frontend extends Component
     public function mount(){
         $this->events = Event::orderBy('start_date', 'Desc')
                                                     ->get();
+    }
+
+        public function searchFilter(){
+
+        $this->events = Event::where('name', 'like', '%' . $this->search . '%')
+                     ->orWhere('description', 'like', '%' . $this->search . '%')
+                     ->orWhere('venue', 'like', '%' . $this->search . '%')
+                     ->orderBy('start_date', 'desc')
+                     ->get();
+
     }
 
 
