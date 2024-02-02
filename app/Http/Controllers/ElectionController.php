@@ -126,6 +126,35 @@ class ElectionController extends Controller
 
 
 
+        public function setWatsappWebhook(Request $request)
+    {
+        $config = [
+            'facebook' => [
+                'from_number' => '+254742968713',
+                'app_id' => '1048420159710452',
+                'app_secret' => 'b80f0c714d7a726b5e317e5923938b3f',
+                'token' => env('waba_admin_token'),
+                'verification'=>'LoveLivesHere',
+            ],
+            'botman' => [
+                'conversation_cache_time' => 300
+            ],
+        ];
+
+        DriverManager::loadDriver(\BotMan\Drivers\Facebook\FacebookDriver::class);
+        $botman = BotManFactory::create($config, new LaravelCache());
+        $phoneNumber = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['wa_id'];
+        $userName = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['profile']['name'];
+
+        $botman->hears('', function($bot) use ($phoneNumber, $userName) {
+            $bot->startConversation(new \App\Bot\whatsappVoting($phoneNumber, $userName));
+        });
+
+        // Start listening
+        $botman->listen();
+    }
+
+
 
 
     public function vote(Request $request, Election $election, $voter_id=null)
