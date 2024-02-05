@@ -10,7 +10,7 @@
                 <p class="mb-6 font-light text-gray-300 lg:mb-8 md:text-lg lg:text-xl">
                     Experience the Future of Event Management: Seamlessly plan, execute, and optimize with EMS – Your All-in-One Solution for Success!
                 </p>
-                <a href="{{route('register')}}"
+                <a href="{{route('login')}}"
                    class="inline-flex items-center py-3 px-5 font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-900 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Sign In / Register
                 </a>
@@ -54,7 +54,7 @@
 
     <div class="bg-white py-4 dark:bg-gray-800 dark:text-white">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <h1                 class="mb-4 text-xl  tracking-tight leading-tight dark:text-gray-200 text-gray-800 text-center md:text-5xl lg:text-6xl">Events</h1>
+            <h1    class="mb-4 text-xl  tracking-tight leading-tight dark:text-gray-200 text-gray-800 text-center md:text-5xl lg:text-6xl">Events</h1>
 
             <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
 

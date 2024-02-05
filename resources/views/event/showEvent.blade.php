@@ -11,7 +11,6 @@
                         <div class="text-base">
                             <address class="inline"> <a rel="author" class="text-gray-900 no-underline dark:text-white hover:underline" href="#"> {{$event->organization->name}}</a></address>
                             on <time pubdate class="" datetime="2022-02-08" title="February 8th, 2022">
-
                                 {{Carbon\Carbon::parse($event->start_date)->format('M jS Y')}}, {{ Carbon\Carbon::parse($event->start_date)->diffForHumans() }}
                             </time>
                         </div>
