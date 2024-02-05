@@ -111,7 +111,6 @@ class Invite extends Model
                     //Create Ticket
                     $model->createTicket();
                     Mail::to($model->email)->send(new EventTicket($model));
-
                 } else {
                     //TODO Send virtual event Link
                 }
@@ -131,11 +130,11 @@ class Invite extends Model
             foreach ($elections as $election) {
                 $opt .= $election->name .",\n ";
             }
-            $message = "You are invited in the upcoming\n  *" . $opt . "* .\nReply with *Vote* to cast your vote  \n" ;
+            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  *" . $opt . "* .\nPlease take a moment to click the button below to cast your vote:  \nThank you" ;
             $this->sendWhatsapp($model->phone_number, $message);
 
-
-            $urlencodedtext = urlencode('Hey, Text40 Bot.');
+//Cancel Whatsapp voting
+            $urlencodedtext = urlencode('Vote.');
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $message = "You have been invited to vote on WhatsApp \n" . $url;
             $this->sendSMS($model->phone_number, $message);
