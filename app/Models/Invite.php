@@ -160,7 +160,6 @@ class Invite extends Model
                 "buttons" => [
                     [
                         "type" => "reply",
-                        "text" => "",
                         "reply" => [
                             "id" => "56565",
                             "title" => "Vote"
