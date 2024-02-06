@@ -129,9 +129,9 @@ class Invite extends Model
             //Whatsapp Message
             $opt = "";
             foreach ($elections as $election) {
-                $opt .= $election->name .",\n ";
+                $opt .= "*".$election->name ."* \n ";
             }
-            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  *" . $opt . "* .\nPlease take a moment to click the button below to cast your vote:  \nThank you" ;
+            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  " . $opt . ".\nPlease take a moment to click the button below to cast your vote:  \nThank you" ;
             $this->sendWhatsapp($model->phone_number, $message);
 
 //Cancel Whatsapp voting
@@ -149,24 +149,24 @@ class Invite extends Model
 
     public function sendWhatsapp($to, $message)
     {
-
         $payload = [
             "messaging_product" => "whatsapp",
             "recipient_type" => "individual",
             "to" => "+254" . substr($to, -9),
-            "type" => "interactive",
-            "interactive" => [
-                "type" => "button",
-                "body" => [ 'text' => 'Vote'
+            "type" => "template",
+            "template" => [
+                "name" => "event_invitation",
+                "language" => [
+                    "code" => "en"
+                ],
+                "components" => [
+                    [
+                        "type" => "text",
+                        "text" => $message
+                    ]
                 ]
-            ],
-            "content" => [
-                "text" => $message
             ]
         ];
-
-
-
 
         $response = Http::withHeaders([
             'Authorization' => env('waba_admin_token'),
@@ -174,7 +174,6 @@ class Invite extends Model
         ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
 
         Log::info("Response: " . json_encode($response->json()));
-
     }
 
     protected function sendSMS($phoneNumber, $message)
