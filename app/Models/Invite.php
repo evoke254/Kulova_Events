@@ -131,8 +131,8 @@ class Invite extends Model
             foreach ($elections as $election) {
                 $opt .= "*".$election->name ."*, ";
             }
-            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  " . $opt . " .Please take a moment to click the button below to cast your vote.  _Thank you_" ;
-            $this->sendWhatsapp($model->phone_number, $message);
+
+            $this->sendWhatsapp($model, $elections);
 
 //Cancel Whatsapp voting
             $urlencodedtext = urlencode('Vote.');
@@ -147,39 +147,46 @@ class Invite extends Model
 
     }
 
-    public function sendWhatsapp($to, $message)
+    public function sendWhatsapp($model, $elections )
     {
-        $payload = [
-            "messaging_product" => "whatsapp",
-            "recipient_type" => "individual",
-            "to" => "+254" . substr($to, -9),
-            "type" => "template",
-            "template" => [
-                "name" => "event_invitation",
-                "language" => [
-                    "code" => "en"
-                ],
-                "components" => [
-                    [
-                        "type" => "body",
-                        "parameters" => [
-                            [
-                                "type" => "text",
-                                "text" => $message
+        foreach ($elections as $election) {
+            $to = $model->phone_number;
+            $payload = [
+                "messaging_product" => "whatsapp",
+                "recipient_type" => "individual",
+                "to" => "+254" . substr($to, -9),
+                "type" => "template",
+                "template" => [
+                    "name" => "event_invitation",
+                    "language" => [
+                        "code" => "en"
+                    ],
+                    "components" => [
+                        [
+                            "type" => "body",
+                            "parameters" => [
+                                [
+                                    "type" => "text",
+                                    "text" => $model->name
+                                ],
+                                   [
+                                    "type" => "text",
+                                    "text" => $election->name
+                                ]
                             ]
                         ]
                     ]
                 ]
-            ]
-        ];
+            ];
 
 
-        $response = Http::withHeaders([
-            'Authorization' => env('waba_admin_token'),
-            'Content-Type'=> 'application/json'
-        ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
+            $response = Http::withHeaders([
+                'Authorization' => env('waba_admin_token'),
+                'Content-Type' => 'application/json'
+            ])->post($this->facebookProfileEndpoint . '203486022842124' . '/messages', $payload);
 
-        Log::info("Response: " . json_encode($response->json()));
+            Log::info("Response: " . json_encode($response->json()));
+        }
     }
 
     protected function sendSMS($phoneNumber, $message)
