@@ -149,27 +149,26 @@ class Invite extends Model
 
     public function sendWhatsapp($to, $message)
     {
+
         $payload = [
-    "messaging_product" => "whatsapp",
-    "recipient_type" => "individual",
-    "to" => "+254" . substr($to, -9),
-    "type" => "interactive",
-    "interactive" => [
-        "type" => "button",
-        "buttons" => [
-            [
-                "type" => "reply",
+            "messaging_product" => "whatsapp",
+            "recipient_type" => "individual",
+            "to" => "+254" . substr($to, -9),
+            "type" => "interactive",
+            "interactive" => [
+                "type" => "button",
                 "reply" => [
-                    "id" => "56565",
-                    "title" => "Vote"
+                    [
+                        "id" => "56565",
+                        "title" => "Vote"
+                    ]
                 ]
+            ],
+            "content" => [
+                "text" => $message
             ]
-        ]
-    ],
-    "content" => [
-        "text" => $message
-    ]
-];
+        ];
+
 
 
         $response = Http::withHeaders([
