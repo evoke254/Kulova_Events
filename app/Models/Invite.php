@@ -157,11 +157,7 @@ class Invite extends Model
             "type" => "interactive",
             "interactive" => [
                 "type" => "button",
-                "button" => [
-                    [
-                        "id" => "56565",
-                        "title" => "Vote"
-                    ]
+                "body" => [ 'text' => 'Vote'
                 ]
             ],
             "content" => [
