@@ -137,11 +137,11 @@ class Invite extends Model
             $urlencodedtext = urlencode('Vote.');
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $message = "You have been invited to vote on WhatsApp \n" . $url;
-            $this->sendSMS($model->phone_number, $message);
+            //   $this->sendSMS($model->phone_number, $message);
         }
 
         if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
-            Mail::to($model->email)->send(new VoterInvited($elections, $model));
+         //   Mail::to($model->email)->send(new VoterInvited($elections, $model));
         }
 
     }
@@ -151,17 +151,29 @@ class Invite extends Model
         $payload = [
             "messaging_product" => "whatsapp",
             "recipient_type" => "individual",
-            "to" => "+254" . substr($to, -9) ,
-            "type" => "text",
-            "text" => [
-                "preview_url" => true,
-                "body" => $message
+            "to" => "+254" . substr($to, -9),
+            "type" => "interactive",
+            "interactive" => [
+                "type" => "button",
+                "text" => $message,
+                "buttons" => [
+                    [
+                        "type" => "reply",
+                        "text" => "",
+                        "reply" => [
+                            "id" => "56565",
+                            "title" => "Vote"
+                          ]
+                    ],
+                ]
             ]
         ];
+
         $response = Http::withHeaders([
             'Authorization' => env('waba_admin_token'),
             'Content-Type'=> 'application/json'
         ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
+
 
     }
 
