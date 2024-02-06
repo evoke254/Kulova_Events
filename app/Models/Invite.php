@@ -129,9 +129,9 @@ class Invite extends Model
             //Whatsapp Message
             $opt = "";
             foreach ($elections as $election) {
-                $opt .= "*".$election->name ."* \n ";
+                $opt .= "*".$election->name ."*, ";
             }
-            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  " . $opt . ".\nPlease take a moment to click the button below to cast your vote:  \nThank you" ;
+            $message = "Dear ". $model->name ." you are formally invited to participate and exercise your voting rights in  " . $opt . " .Please take a moment to click the button below to cast your vote.  _Thank you_" ;
             $this->sendWhatsapp($model->phone_number, $message);
 
 //Cancel Whatsapp voting
