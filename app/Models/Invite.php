@@ -157,7 +157,7 @@ class Invite extends Model
             "type" => "interactive",
             "interactive" => [
                 "type" => "button",
-                "reply" => [
+                "button" => [
                     [
                         "id" => "56565",
                         "title" => "Vote"
@@ -168,6 +168,7 @@ class Invite extends Model
                 "text" => $message
             ]
         ];
+
 
 
 
