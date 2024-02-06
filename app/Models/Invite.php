@@ -151,6 +151,7 @@ class Invite extends Model
     {
         foreach ($elections as $election) {
             $to = $model->phone_number;
+
             $payload = [
                 "messaging_product" => "whatsapp",
                 "recipient_type" => "individual",
@@ -169,7 +170,7 @@ class Invite extends Model
                                     "type" => "text",
                                     "text" => $model->name
                                 ],
-                                   [
+                                [
                                     "type" => "text",
                                     "text" => $election->name
                                 ]
@@ -178,6 +179,7 @@ class Invite extends Model
                     ]
                 ]
             ];
+
 
 
             $response = Http::withHeaders([
