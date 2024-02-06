@@ -161,12 +161,18 @@ class Invite extends Model
                 ],
                 "components" => [
                     [
-                        "type" => "text",
-                        "text" => $message
+                        "type" => "body",
+                        "parameters" => [
+                            [
+                                "type" => "text",
+                                "text" => $message
+                            ]
+                        ]
                     ]
                 ]
             ]
         ];
+
 
         $response = Http::withHeaders([
             'Authorization' => env('waba_admin_token'),
