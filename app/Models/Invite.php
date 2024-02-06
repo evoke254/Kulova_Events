@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -142,7 +141,7 @@ class Invite extends Model
         }
 
         if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
-            //   Mail::to($model->email)->send(new VoterInvited($elections, $model));
+            Mail::to($model->email)->send(new VoterInvited($elections, $model));
         }
 
     }
@@ -150,24 +149,27 @@ class Invite extends Model
     public function sendWhatsapp($to, $message)
     {
         $payload = [
-            "messaging_product" => "whatsapp",
-            "recipient_type" => "individual",
-            "to" => "+254" . substr($to, -9),
-            "type" => "interactive",
-            "interactive" => [
-                "type" => "button",
-                "text" => $message,
-                "buttons" => [
-                    [
-                        "type" => "reply",
-                        "reply" => [
-                            "id" => "56565",
-                            "title" => "Vote"
-                        ]
-                    ],
+    "messaging_product" => "whatsapp",
+    "recipient_type" => "individual",
+    "to" => "+254" . substr($to, -9),
+    "type" => "interactive",
+    "interactive" => [
+        "type" => "button",
+        "buttons" => [
+            [
+                "type" => "reply",
+                "reply" => [
+                    "id" => "56565",
+                    "title" => "Vote"
                 ]
             ]
-        ];
+        ]
+    ],
+    "content" => [
+        "text" => $message
+    ]
+];
+
 
         $response = Http::withHeaders([
             'Authorization' => env('waba_admin_token'),
@@ -175,6 +177,7 @@ class Invite extends Model
         ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
 
         Log::info("Response: " . json_encode($response->json()));
+
     }
 
     protected function sendSMS($phoneNumber, $message)
