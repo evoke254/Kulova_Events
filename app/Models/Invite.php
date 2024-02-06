@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -141,7 +142,7 @@ class Invite extends Model
         }
 
         if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
-         //   Mail::to($model->email)->send(new VoterInvited($elections, $model));
+            //   Mail::to($model->email)->send(new VoterInvited($elections, $model));
         }
 
     }
@@ -163,7 +164,7 @@ class Invite extends Model
                         "reply" => [
                             "id" => "56565",
                             "title" => "Vote"
-                          ]
+                        ]
                     ],
                 ]
             ]
@@ -174,7 +175,7 @@ class Invite extends Model
             'Content-Type'=> 'application/json'
         ])->post($this->facebookProfileEndpoint. '203486022842124'.'/messages', $payload);
 
-
+        Log::info("Response: " . json_encode($response->json()));
     }
 
     protected function sendSMS($phoneNumber, $message)

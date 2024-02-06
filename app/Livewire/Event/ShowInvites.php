@@ -217,7 +217,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                             foreach ($records as $key => $record){
                                 //   Mail::to($record->email)->send(new EventInvitation($record));
                                 if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
-                                    Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
+                                //    Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
                                 }
                                 //invite via SMS and whatsapp
                                 $record->electionInvitation($record, $this->elections);
