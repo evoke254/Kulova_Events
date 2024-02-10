@@ -55,7 +55,7 @@
                             <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Votes Cast</p>
                         </dt>
                         <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                            <p class="text-2xl font-semibold text-gray-900"> {{  number_format( 2/($event->count() > 0  ? $event->count() : 1) * 100 , 2 ) }}  %</p>
+                            <p class="text-2xl font-semibold text-gray-900"> --  %</p>
                         </dd>
                     </div>
                 </dl>
