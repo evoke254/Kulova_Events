@@ -7,6 +7,7 @@ use App\Mail\EventInvitation;
 use App\Mail\EventTicket;
 use App\Mail\VoterInvited;
 use Barryvdh\Snappy\Facades\SnappyImage;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -138,7 +139,7 @@ class Invite extends Model
             $urlencodedtext = urlencode('Vote.');
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $message = "You have been invited to vote on WhatsApp \n" . $url;
-            //   $this->sendSMS($model->phone_number, $message);
+            $this->sendSMS($model->phone_number, $message);
         }
 
         if (filter_var($model->email, FILTER_VALIDATE_EMAIL)){
@@ -193,35 +194,71 @@ class Invite extends Model
 
     protected function sendSMS($phoneNumber, $message)
     {
-        $username = 'vf567gfgg';
-        $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
 
-        $AT       = new AfricasTalking($username, $apiKey);
+        $url = 'https://mshastra.com/sendurl.aspx';
+        $params = [
+            'user' => 'TEXT40',
+            'pwd' => '6yb64be1',
+            'senderid' => 'Mobishastra',
+            'mobileno' => substr($phoneNumber, -9),
+            'msgtext' => $message,
+            'priority' => 'High',
+            'CountryCode' => '254'
+        ];
 
-        $sms      = $AT->sms();
-        $result   = $sms->send([
-            'to'      => $phoneNumber,
-            'message' => $message
-        ]);
+        $client = new Client();
 
+        try {
+            $response = $client->request('GET', $url, [
+                'query' => $params
+            ]);
 
-    }
+            // Process response if needed
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody()->getContents();
 
+            // Example: Log response
+            Log::info('SMS API Response:', ['status_code' => $statusCode, 'body' => $body]);
 
-    public function createTicket()
-    {
-        if (!$this->ticket){
-            $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
-            $qrCode = QrCode::size(150)->generate($scanUrl);
-            $event = Event::find($this->event_id);
-            $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
-            $user = $this;
-            SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
-                ->setOption('enable-local-file-access', true)
-                ->save($path);
-            $this->ticket = $path;
-            $this->save();
+            // Return response or do something with it
+            return response()->json(['status_code' => $statusCode, 'body' => $body]);
+        } catch (\Exception $e) {
+            // Handle exceptions, log errors, etc.
+            Log::error('Error sending SMS: ' . $e->getMessage());
+            // Return error response
+            return response()->json(['error' => 'Failed to send SMS'], 500);
         }
+
+
+    /*        $username = 'vf567gfgg';
+            $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
+
+            $AT       = new AfricasTalking($username, $apiKey);
+
+            $sms      = $AT->sms();
+            $result   = $sms->send([
+                'to'      => $phoneNumber,
+                'message' => $message
+            ]);
+    */
+
+}
+
+
+public function createTicket()
+{
+    if (!$this->ticket){
+        $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
+        $qrCode = QrCode::size(150)->generate($scanUrl);
+        $event = Event::find($this->event_id);
+        $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+        $user = $this;
+        SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
+            ->setOption('enable-local-file-access', true)
+            ->save($path);
+        $this->ticket = $path;
+        $this->save();
     }
+}
 
 }
