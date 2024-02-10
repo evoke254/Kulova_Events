@@ -33,12 +33,7 @@ class VerifyVoter extends Component
         ],
             [ 'regex' => ' Enter a valid Kenyan number',
             ]);
-        $username = 'vf567gfgg';
-        $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
 
-        $AT = new AfricasTalking($username, $apiKey);
-        $sms = $AT->sms();
-        $senderId = 'Text40';
         $phoneNumber = $this->phone_no;
         $no = substr($phoneNumber, -9);
         //Check if user has been invited to the Election
@@ -87,11 +82,7 @@ class VerifyVoter extends Component
                     );*/
 
         try {
-            $result = $sms->send([
-                'to'      => $phoneNumber,
-                'message' => $message,
-//                'from'    => $senderId,
-            ]);
+            $voter->sendSMS($phoneNumber, $message);
 
             $this->notification()->success(
                 $title = ' Verification Sent Succesfully',
