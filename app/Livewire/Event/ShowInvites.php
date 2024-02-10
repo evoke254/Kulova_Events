@@ -177,7 +177,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                                     };
                                 },
                             ]),
-                        TextInput::make('email'),
+                        TextInput::make('email')->required()->email(),
                         Textarea::make('details'),
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
@@ -280,7 +280,7 @@ class ShowInvites extends Component implements HasForms, HasTable
 
                                 },
                             ]),
-                        TextInput::make('email'),
+                        TextInput::make('email')->required()->email(),
                         Textarea::make('details'),
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
