@@ -55,7 +55,7 @@
                             <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Votes Cast</p>
                         </dt>
                         <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                            <p class="text-2xl font-semibold text-gray-900"> --  %</p>
+                            <p class="text-2xl font-semibold text-gray-900"> -- {{--  number_format( 2/($event->invites()->count() > 0  ? $event->count() : 1) * 100 , 2 ) --}}  %</p>
                         </dd>
                     </div>
                 </dl>
@@ -182,9 +182,10 @@
                                         {{ $event->merchandise()->get()->count() }}
                                     </div>
                                     <div>
+                                        {{--}}
                                         <x-button class="rounded-lg" primary label="View | Add Merchandise"
                                                   data-modal-target="eventMerchandisesModal"
-                                                  data-modal-toggle="eventMerchandisesModal" />
+                                                  data-modal-toggle="eventMerchandisesModal" />--}}
                                     </div>
                                 </div>
                             </td>
