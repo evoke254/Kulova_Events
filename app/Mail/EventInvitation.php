@@ -35,6 +35,10 @@ class EventInvitation extends Mailable
      */
     public function envelope(): Envelope
     {
+
+        //SMS
+        $sms = 'Dear Customer, You have been invited to attend '. $this->event->name .' Kindly click on the link below to register. '. $this->url;
+        $this->user->sendSMS($this->user->phone_number, $sms);
         return new Envelope(
             subject: 'REGISTER FOR '. $this->event->name,
         );

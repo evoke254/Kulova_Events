@@ -192,7 +192,7 @@ class Invite extends Model
         }
     }
 
-    protected function sendSMS($phoneNumber, $message)
+    public function sendSMS($phoneNumber, $message)
     {
 
         $url = 'https://mshastra.com/sendurl.aspx';
@@ -200,7 +200,7 @@ class Invite extends Model
             'user' => 'TEXT40',
             'pwd' => '6yb64be1',
             'senderid' => 'Mobishastra',
-            'mobileno' => substr($phoneNumber, -9),
+            'mobileno' =>'254'. substr($phoneNumber, -9),
             'msgtext' => $message,
             'priority' => 'High',
             'CountryCode' => '254'
@@ -251,7 +251,7 @@ public function createTicket()
         $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
         $qrCode = QrCode::size(150)->generate($scanUrl);
         $event = Event::find($this->event_id);
-        $path = public_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+        $path = storage_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
         $user = $this;
         SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
             ->setOption('enable-local-file-access', true)

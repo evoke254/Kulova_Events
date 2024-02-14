@@ -193,17 +193,20 @@ class ShowInvites extends Component implements HasForms, HasTable
                     })
             ])
             ->bulkActions([
-                BulkActionGroup::make([
+
                     BulkAction::make('Event Invitation')
+                        ->label('Event Invitation')
+                        ->button()
+                        ->color('primary')
                         ->requiresConfirmation()
                         ->action(function (array $data, Collection $records): void {
 
                             foreach ($records as $key => $record){
-                                   Mail::to($record->email)->send(new EventInvitation($record));
                                 if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
                                     Mail::to($record->email)->send(new EventInvitation($record));
                                 }
                             }
+
                             $this->notification()->success(
                                 $title = 'Event Invitation Resent',
                                 $description = 'We have sent new invitation emails to selected users'
@@ -211,11 +214,10 @@ class ShowInvites extends Component implements HasForms, HasTable
                             $this->resetTable();
                         }),
                     BulkAction::make('Election')
+                        ->label('Election Invitation')
                         ->requiresConfirmation()
                         ->action(function (array $data, Collection $records): void {
-
                             foreach ($records as $key => $record){
-                                   Mail::to($record->email)->send(new EventInvitation($record));
                                 if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
                                     Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
                                 }
@@ -229,7 +231,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                             );
                             $this->resetTable();
                         })
-                ])->label('Invitations'),
+                    ,
                 DeleteBulkAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Invite $record) => $record->delete())
