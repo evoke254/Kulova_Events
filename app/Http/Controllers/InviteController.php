@@ -48,6 +48,9 @@ class InviteController extends Controller
 
         if ($request->hasValidSignature()) {
             $event = Event::find($user->event_id);
+            if ($user->registration_status){
+                 return response()->view('already_registered');
+            }
             return view('register-for-event', compact('user', 'event'));
         } else {
             abort(403, 'Invalid or expired signature.');
