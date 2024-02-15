@@ -159,7 +159,7 @@ class Invite extends Model
                 "to" => "+254" . substr($to, -9),
                 "type" => "template",
                 "template" => [
-                    "name" => "event_invitation",
+                    "name" => "elect_invitation",
                     "language" => [
                         "code" => "en"
                     ],
