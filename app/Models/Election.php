@@ -30,6 +30,11 @@ class Election extends Model
         return $this->belongsTo(Event::class);
     }
 
+    public function organization():belongsTo
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     public function getElctTypeAttribute()
     {
         return  isset($this->type) ? self::ELECTION_TYPE [$this->type] : ' ';

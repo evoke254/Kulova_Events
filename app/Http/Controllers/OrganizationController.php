@@ -38,6 +38,14 @@ class OrganizationController extends Controller
     {
         //
     }
+        public function profileShow(Organization $organization)
+    {
+        return view('organization.show', compact('organization'));
+    }
+        public function analytics(Organization $organization)
+    {
+        return view('organization.analytics', compact('organization'));
+    }
 
     /**
      * Show the form for editing the specified resource.

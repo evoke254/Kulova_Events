@@ -3,10 +3,13 @@
 namespace App\Livewire\Organization;
 
 use App\Models\Organization;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Filament\Forms\Contracts\HasForms;
@@ -41,11 +44,17 @@ class Index extends Component implements HasForms, HasTable
 
     public function table(Table $table): Table
     {
+         if (Auth::user()->role_id <= 3) {
+                    $query = Organization::query() ->orderBy('created_at', 'DESC');
+                } else {
+                    $query =Organization::query() ->where('user_id', Auth::id()) ->orderBy('created_at', 'DESC');
+                }
+
         return $table
-            ->query(Organization::query()
-                ->where('id', Auth::user()->organization_id)
-                ->orderBy('created_at', 'DESC') )
+            ->query($query)
             ->columns([
+                ImageColumn::make('lat')
+                    ->label('logo'),
                 TextColumn::make('name')
                     ->label('Organization')
                     ->sortable(),
@@ -54,11 +63,6 @@ class Index extends Component implements HasForms, HasTable
 
                 TextColumn::make('phone_number')
                     ->label('Phone')
-                    ->searchable(),
-
-                TextColumn::make('departments.name')
-                    ->label('Departments')
-                    ->badge()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -76,22 +80,27 @@ class Index extends Component implements HasForms, HasTable
                                     ->multiple()*/
             ])
             ->actions([
+                ViewAction::make('Org Details')
+                    ->button()
+                    ->color('fuchsia')
+                    ->url(fn (Organization $record): string => route('profileShow', ['organization' => $record])),
+                    EditAction::make()
+                        ->form([
+                            TextInput::make('name')
+                                ->required(),
+                            TextInput::make('email')
+                                ->email(),
+                            FileUpload::make('lat')
+                                ->label('logo')
+                                ->image()
+                                ->required(),
+                            Textarea::make('description'),
+                            Textarea::make('location'),
+                        ]),
+                    DeleteAction::make()
+                        ->requiresConfirmation()
+                        ->action(fn (Organization $record) => $record->delete())
 
-                EditAction::make()
-                    ->form([
-                        TextInput::make('name')->label('Organization Name')->required(),
-                        TextInput::make('email')->label('Admin Email')->email(),
-                        Textarea::make('description'),
-                        Textarea::make('location'),
-                        Repeater::make('departments')
-                            ->relationship('departments')
-                            ->schema([
-                                TextInput::make('name')->label('Department')->required(),
-                            ])
-                    ]),
-                DeleteAction::make()
-                    ->requiresConfirmation()
-                    ->action(fn (Organization $record) => $record->delete())
             ])
             ->bulkActions([
 
@@ -102,19 +111,8 @@ class Index extends Component implements HasForms, HasTable
                     ->requiresConfirmation()
                     ->action(fn (Organization $record) => $record->delete()),
             ])
-            ->headerActions([
-                CreateAction::make()
-                ->form([
-                        TextInput::make('name')->label('Organization Name')->required(),
-                        TextInput::make('email')->label('Admin Email')->unique()->email(),
-                        Textarea::make('description'),
-                        Textarea::make('location'),
-                        Repeater::make('departments')
-                            ->relationship('departments')
-                            ->schema([
-                                TextInput::make('name')->label('Department')->required(),
-                            ])
-                    ])
+            ->emptyStateActions([
+                CreateAction::make(),
             ]);
     }
 

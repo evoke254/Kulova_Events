@@ -17,7 +17,8 @@
                         </form>
                     </li>
                     <li>
-                        <a href="{{route('dashboard')}}" active="{{request()->routeIs('dashboard')}}" class="active flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+                        <a href="{{route('dashboard')}}" active="{{request()->routeIs('dashboard')}}" class="active flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700
+                        @if(  request()->routeIs('dashboard')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                             <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
                             <span class="ml-3" sidebar-toggle-item>Dashboard</span>
                         </a>
@@ -27,38 +28,50 @@
                 <div class="pt-2 pb-2 space-y-2">
                     <a href="{{route('organizations.index')}}" active="{{request()->routeIs('organizations.index')}}"
                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                     @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                         <x-icon name="office-building" class="w-6 h-6" />
 
                         <span class="flex-1 ml-3 text-left whitespace-nowrap">Organizations</span>
                     </a>
-{{--}}
-                    <div class="pt-2 ml-4 pb-2 space-y-2">
-                        <a href="{{route('members.index')}}" active="{{request()->routeIs('members.index')}}"
-                           class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-                            </svg>
-                            Members
-                        </a>
-                    </div>
-                   <div class="pt-2 ml-4 pb-2 space-y-2">
-                        <a href="{{route('recipient_pool.index')}}" active="{{request()->routeIs('recipient_pool.index')}}"
-                           class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 ">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
-                            </svg>
-                            Member Pools
-                        </a>
-                    </div> --}}
+                    {{--}}
+                                        <div class="pt-2 ml-4 pb-2 space-y-2">
+                                            <a href="{{route('members.index')}}" active="{{request()->routeIs('members.index')}}"
+                                               class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                                        group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                                                </svg>
+                                                Members
+                                            </a>
+                                        </div>
+                                       <div class="pt-2 ml-4 pb-2 space-y-2">
+                                            <a href="{{route('recipient_pool.index')}}" active="{{request()->routeIs('recipient_pool.index')}}"
+                                               class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                                        group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700 ">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
+                                                </svg>
+                                                Member Pools
+                                            </a>
+                                        </div> --}}
                 </div>
 
                 <div class="pt-2 space-y-2">
-                    <a href="{{route('event-category.index')}}" active="{{request()->routeIs('event-category.index')}}"
+                    <a href="#"
                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+
+                    @if(  request()->routeIs('event-category.index') || request()->routeIs('events.show') ||  request()->routeIs('events.index') ||  request()->routeIs('events.edit') ||   request()->routeIs('election.index')  || request()->routeIs('organization.analytics') ) bg-primary-500 dark:bg-primary-800 @endif" >
+                        <x-icon name="rss" class="w-5 h-5 mr-2" />
+
+                        Events
+                    </a>
+                    <a href="{{route('event-category.index')}}" active="{{request()->routeIs('event-category.index')}}"
+                       class="ml-4 flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+
+                    @if(  request()->routeIs('event-category.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
                         </svg>
@@ -68,7 +81,9 @@
                     <div class=" ml-4 ">
                         <a href="{{route('events.index')}}" active="{{request()->routeIs('events.index')}}"
                            class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+
+                    @if(  request()->routeIs('events.index') || request()->routeIs('events.show') ||  request()->routeIs('events.index') ||  request()->routeIs('events.edit')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                             <x-icon name="location-marker" class="w-5 h-5 mr-2" />
                             Events
                         </a>
@@ -77,12 +92,25 @@
                     <div class=" ml-4 space-y-2">
                         <a href="{{route('election.index')}}" active="{{request()->routeIs('elections.index')}}"
                            class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+
+                    @if(  request()->routeIs('election.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                             <x-icon name="mail-open" class="w-5 h-5 mr-2" />
                             Elections
                         </a>
                     </div>
+                    <div class="ml-4 pb-2 space-y-2">
+                        <a href="{{route('organization.analytics', ['organization' =>\Illuminate\Support\Facades\Auth::user()->organization_id])}}" active="{{request()->routeIs('organization.analytics', ['organization' =>\Illuminate\Support\Facades\Auth::user()->organization_id])}}"
+                           class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                    @if(  request()->routeIs('organization.analytics') ) bg-primary-500 dark:bg-primary-800 @endif" >
+
+                            <x-icon name="trending-up" class="w-6 h-6 mr-2" />
+                            Analytics
+                        </a>
+                    </div>
                 </div>
+
 
 
 

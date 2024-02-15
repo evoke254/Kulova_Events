@@ -42,6 +42,7 @@ class EventElections extends Component implements HasForms, HasTable
     public Event $event;
 
     public function mount(){
+
     }
     public function table(Table $table): Table
     {
@@ -67,8 +68,6 @@ class EventElections extends Component implements HasForms, HasTable
                         'Resolution Election' => 'warning',
                     })
                     ->sortable(),
-                ToggleColumn::make('status')
-                    ->sortable(),
                 TextColumn::make('election_date')
                     ->dateTime('D, d M Y H:i')
                     ->sortable(),
@@ -88,15 +87,15 @@ class EventElections extends Component implements HasForms, HasTable
                                     ->multiple()*/
             ])
             ->actions([
-                Action::make('Update Details')
+                Action::make('Results')
                     ->button()
-                    ->color('success')
+                    ->color('violet')
+                    ->url(fn (Election $record): string => route('election.show', $record)),
+  Action::make('Update Details')
+                    ->button()
+                    ->color('primary')
                     ->url(fn (Election $record): string => route('election.show', $record))
                     ,
-
-                ViewAction::make('show')
-                    ->button()
-                    ->url(fn (Election $record): string => route('election.show', $record)),
                 EditAction::make('edit')
                     ->button()
                     ->form([

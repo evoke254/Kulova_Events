@@ -53,6 +53,10 @@ Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionCo
 Route::middleware('auth')->group(function () {
 
 
+
+    Route::get('organization/{organization}/edit_profile', [\App\Http\Controllers\OrganizationController::class, 'profileShow'])->name('profileShow');
+       Route::get('organization-analytics/{organization}', [\App\Http\Controllers\OrganizationController::class, 'analytics'])->name('organization.analytics');
+
     Route::get('/swift_apps_scans/{user}', [\App\Http\Controllers\InviteController::class, 'scanAttendance'])->name('attend.event');
 
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');

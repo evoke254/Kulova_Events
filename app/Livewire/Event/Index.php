@@ -55,15 +55,15 @@ class Index extends Component  implements HasForms, HasTable
                     ->searchable(),
                 ImageColumn::make('images.image')->label('Image')->width(75)->height(75)->rounded()->limit(2)->stacked(),
                 TextColumn::make('organization.name')
-                    ->sortable()
                     ->searchable(),
+                /*
                 ToggleColumn::make('is_active')
                     ->sortable(),
                   TextColumn::make('categories.name')
                     ->label('Categories')
                     ->badge()
                       ->listWithLineBreaks()
-                    ->searchable(),
+                    ->searchable(),*/
                 ToggleColumn::make('check_registration_status')
                     ->sortable(),
 

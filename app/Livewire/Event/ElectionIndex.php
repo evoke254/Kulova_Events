@@ -47,10 +47,11 @@ class ElectionIndex extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
 
+
         return $table
             ->heading('Elections')
             ->query(Election::query()
-             //   ->where('organization_id', Auth::user()->organization_id)
+                //   ->where('organization_id', Auth::user()->organization_id)
                 ->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
@@ -69,8 +70,8 @@ class ElectionIndex extends Component implements HasForms, HasTable
                 TextColumn::make('elct_type')
                     ->label('Type')
                     ->color(fn (string $state): string => match ($state) {
-                        'Candidate Election' => 'success',
-                        'Resolution Election' => 'warning',
+                        'Candidate Election' => 'fuchsia',
+                        'Resolution Election' => 'info',
                     })
                     ->sortable(),
                 ToggleColumn::make('status')

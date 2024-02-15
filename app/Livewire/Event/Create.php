@@ -4,6 +4,8 @@ namespace App\Livewire\Event;
 
 use App\Models\Event;
 use App\Models\EventImage;
+use App\Models\Organization;
+use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -61,6 +63,11 @@ class Create extends Component   implements HasForms
 
     public function form(Form $form): Form
     {
+        if (Auth::user()->role_id < 4){
+        $orgs =   Organization::query()->where('id', Auth::user()->organization_id)->pluck('name', 'id');
+        } else {
+        $orgs =   \App\Models\Organization::query()->pluck('name', 'id');
+        }
         return $form
             ->schema([
                 TextInput::make('name')
@@ -69,7 +76,7 @@ class Create extends Component   implements HasForms
                 Select::make('organization_id')
                     ->required()
                     ->label('Organization')
-                    ->options(\App\Models\Organization::query()->pluck('name', 'id')),
+                    ->options($orgs),
                 TextInput::make('venue')
                     ->required(),
                 TextInput::make('cost')

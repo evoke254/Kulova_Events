@@ -1,5 +1,5 @@
 <x-app-layout>
 
-     @livewire('campaign.show', ['campaign' => $campaign])
+     @livewire('profile.show', ['organization' => $organization])
 
 </x-app-layout>
