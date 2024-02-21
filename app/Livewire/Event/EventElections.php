@@ -7,6 +7,8 @@ use App\Models\Event;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Livewire\Component;
@@ -51,7 +53,7 @@ class EventElections extends Component implements HasForms, HasTable
             ->heading($this->event->name. ' - Elections')
             ->query(Election::query()
                 ->where('event_id', $this->event->id)
-            //    ->where('organization_id', Auth::user()->organization_id)
+                //    ->where('organization_id', Auth::user()->organization_id)
                 ->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
@@ -71,6 +73,10 @@ class EventElections extends Component implements HasForms, HasTable
                 TextColumn::make('election_date')
                     ->dateTime('D, d M Y H:i')
                     ->sortable(),
+
+                TextColumn::make('total_votes')->label('voters / cast votes'),
+
+                TextColumn::make('percentage_votes_cast')->label('voting %'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -90,12 +96,18 @@ class EventElections extends Component implements HasForms, HasTable
                 Action::make('Results')
                     ->button()
                     ->color('violet')
-                    ->url(fn (Election $record): string => route('election.show', $record)),
-  Action::make('Update Details')
+                    ->modalSubmitActionLabel('Ok - Close')
+                    ->modalWidth(MaxWidth::SevenExtraLarge)
+                    ->modalContent(fn (Election $record): View => view(
+                        'event.result',
+                        ['election' => $record],
+                    ))
+                    ->modalAlignment(Alignment::Start),
+                Action::make('Update Details')
                     ->button()
                     ->color('primary')
                     ->url(fn (Election $record): string => route('election.show', $record))
-                    ,
+                ,
                 EditAction::make('edit')
                     ->button()
                     ->form([
@@ -117,33 +129,33 @@ class EventElections extends Component implements HasForms, HasTable
                     ->action(fn (Election $record) => $record->delete())
             ])
             ->bulkActions([
-        DeleteBulkAction::make()
-            ->requiresConfirmation()
-            ->action(fn (Event $record) => $record->delete()),
-    ])
-        ->headerActions([
-            CreateAction::make()
-                ->form([
-                    TextInput::make('name')->label('Election')->required(),
-                    TextInput::make('venue'),
-                    Radio::class::make('type')
-                        ->required()
-                        ->options(Election::ELECTION_TYPE),
-                    Toggle::make('status')->default(true),
+                DeleteBulkAction::make()
+                    ->requiresConfirmation()
+                    ->action(fn (Event $record) => $record->delete()),
+            ])
+            ->headerActions([
+                CreateAction::make()
+                    ->form([
+                        TextInput::make('name')->label('Election')->required(),
+                        TextInput::make('venue'),
+                        Radio::class::make('type')
+                            ->required()
+                            ->options(Election::ELECTION_TYPE),
+                        Toggle::make('status')->default(true),
 
-                    DateTimePicker::make('election_date')
-                        ->minDate(now())
-                        ->native(false)
-                        ->required(),
-                    Textarea::make('details')->label('Description')
-                ])
-                ->mutateFormDataUsing(function ( $data): array{
-                    $data['event_id'] = $this->event->id;
-                    $data['organization_id'] = Auth::user()->organization_id;
-                    $data['user_id'] = Auth::id();
-                    return $data;
-                })
-        ]);
+                        DateTimePicker::make('election_date')
+                            ->minDate(now())
+                            ->native(false)
+                            ->required(),
+                        Textarea::make('details')->label('Description')
+                    ])
+                    ->mutateFormDataUsing(function ( $data): array{
+                        $data['event_id'] = $this->event->id;
+                        $data['organization_id'] = Auth::user()->organization_id;
+                        $data['user_id'] = Auth::id();
+                        return $data;
+                    })
+            ]);
     }
 
     public function styles()

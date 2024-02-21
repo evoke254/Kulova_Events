@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Election;
 use Illuminate\Support\ServiceProvider;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
@@ -32,5 +33,16 @@ class AppServiceProvider extends ServiceProvider
 
             'warning' => Color::Amber,
         ]);
+
+           $elections = Election::get();
+           foreach ($elections as $election){
+                $elec = $election->load('elective_positions');
+                foreach ($elec->elective_positions as $pstn){
+                        foreach ($pstn->candidates as $cdt){
+                        $cdt->election_id = $election->id;
+                        $cdt->save();
+                        }
+                }
+           }
     }
 }

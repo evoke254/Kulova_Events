@@ -128,6 +128,7 @@ class ElectionShow extends Component implements HasForms
                             'photo' =>  $cdt['photo'],
                             'member_no' =>  $cdt['member_no'],
                             'elective_position_id' =>  $position->id,
+                            'election_id' =>  $position->election_id,
                         ]
                     );
                 }
@@ -156,6 +157,7 @@ class ElectionShow extends Component implements HasForms
                             'photo' =>  'n_a',
                             'member_no' =>  -99,
                             'elective_position_id' =>  $position->id,
+                            'election_id' =>  $position->election_id,
                         ]
                     );
                 }

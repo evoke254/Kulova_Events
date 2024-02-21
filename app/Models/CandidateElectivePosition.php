@@ -15,7 +15,8 @@ class CandidateElectivePosition extends Model
         'name',
         'member_no',
         'elective_position_id',
-        'photo'
+        'photo',
+        'election_id'
     ];
 
     protected $with =['votes'];
@@ -29,4 +30,24 @@ class CandidateElectivePosition extends Model
     {
         return $this->hasmany(Vote::class);
     }
+
+    public function getVotesCountAttribute()
+    {
+        $votes =        $this->hasmany(Vote::class)->get()->count();
+        return $votes;
+    }
+
+    public function getPercentageVotesAttribute()
+    {
+        $totalVotes = $this->elective_position()->first()->votes()->count();
+
+        if ($totalVotes){
+            return ($this->getVotesCountAttribute()/$totalVotes )* 100  . ' %';
+        }
+        return '0 %';
+
+    }
+
+
+
 }

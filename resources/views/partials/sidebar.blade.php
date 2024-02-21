@@ -26,13 +26,30 @@
 
                 </ul>
                 <div class="pt-2 pb-2 space-y-2">
-                    <a href="{{route('organizations.index')}}" active="{{request()->routeIs('organizations.index')}}"
+                    <a href="#" active="{{request()->routeIs('organizations.index')}}"
                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
                     group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
                      @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
-                        <x-icon name="office-building" class="w-6 h-6" />
+                        <x-icon name="cog" class="w-6 h-6" />
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">Settings</span>
+                    </a>
+                    @if(\Illuminate\Support\Facades\Auth::user()->role_id <= 2)
+                          <a href="{{route('organizations.index')}}"
+                       class="ml-4 flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                     @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
+                        <x-icon name="users" class="w-6 h-6" />
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">App Users</span>
+                    </a>
 
-                        <span class="flex-1 ml-3 text-left whitespace-nowrap">Organizations</span>
+                    @endif
+
+                          <a href="{{route('organizations.index')}}"
+                       class="ml-4 flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                     @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
+                        <x-icon name="office-building" class="w-6 h-6" />
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">All Organizations</span>
                     </a>
                     {{--}}
                                         <div class="pt-2 ml-4 pb-2 space-y-2">
@@ -85,7 +102,7 @@
 
                     @if(  request()->routeIs('events.index') || request()->routeIs('events.show') ||  request()->routeIs('events.index') ||  request()->routeIs('events.edit')  ) bg-primary-500 dark:bg-primary-800 @endif" >
                             <x-icon name="location-marker" class="w-5 h-5 mr-2" />
-                            Events
+                           All Events
                         </a>
                     </div>
 

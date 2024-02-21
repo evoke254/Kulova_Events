@@ -24,6 +24,10 @@ class Election extends Model
     {
         return $this->hasmany(ElectivePosition::class);
     }
+    public function positions()
+    {
+        return $this->hasmany(ElectivePosition::class);
+    }
 
     public function event():belongsTo
     {
@@ -38,6 +42,29 @@ class Election extends Model
     public function getElctTypeAttribute()
     {
         return  isset($this->type) ? self::ELECTION_TYPE [$this->type] : ' ';
+    }
+
+    public function getTotalVotesAttribute()
+    {
+        $positions = $this->positions()->get();
+        $votes = 0;
+        foreach ($positions as $position){
+            $votes += $position->votes()->count();
+        }
+
+        return $votes .'/'. $this->event()->first()->invites()->count();
+    }
+
+
+    public function getPercentageVotesCastAttribute()
+    {
+        $positions = $this->positions()->get();
+        $votes = 0;
+        foreach ($positions as $position){
+            $votes += $position->votes()->count();
+        }
+
+        return ($votes / ($this->event()->first()->invites()->count()) * 100) . '%';
     }
 
 }

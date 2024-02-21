@@ -110,9 +110,36 @@ class Index extends Component implements HasForms, HasTable
                 DeleteBulkAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Organization $record) => $record->delete()),
+            ])->headerActions([
+                createAction::make()
+                    ->color('info')
+                 ->form([
+                            TextInput::make('name')
+                                ->required(),
+                            TextInput::make('email')
+                                ->email(),
+                            FileUpload::make('lat')
+                                ->label('logo')
+                                ->image()
+                                ->required(),
+                            Textarea::make('description'),
+                            Textarea::make('location'),
+                        ])
             ])
             ->emptyStateActions([
-                CreateAction::make(),
+                CreateAction::make()
+                 ->form([
+                            TextInput::make('name')
+                                ->required(),
+                            TextInput::make('email')
+                                ->email(),
+                            FileUpload::make('lat')
+                                ->label('logo')
+                                ->image()
+                                ->required(),
+                            Textarea::make('description'),
+                            Textarea::make('location'),
+                        ]),
             ]);
     }
 

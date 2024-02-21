@@ -87,6 +87,7 @@ class Edit extends Component
         ]);
 
         $this->candidate['photo'] = $this->candidate['photo']->store('uploads', 'public');
+        $this->candidate['election_id'] = $this->election->id;
 
         CandidateElectivePosition::create(
             $this->candidate

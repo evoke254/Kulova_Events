@@ -61,10 +61,11 @@
                                                     <div class="text-sm">Votes: {{$postn ->votes}}</div>
                                                 </div>
 
+                                                {{--}}
                                                 <div class="  flex justify-start items-baseline mt-5">
                                                     <x-button negative rounded sm
                                                               wire:click="cnfmDelete({{$postn->id}} ) " icon="trash"/>
-                                                </div>
+                                                </div> --}}
                                             </th>
                                             <td class="px-6 py-4">
                                                 <ul role="list" class="divide-y divide-gray-100">
