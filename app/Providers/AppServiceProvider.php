@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($elec->elective_positions as $pstn){
                         foreach ($pstn->candidates as $cdt){
                         $cdt->election_id = $election->id;
-                        $cdt->save();
+                  //      $cdt->save();
                         }
                 }
            }
