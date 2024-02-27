@@ -1,0 +1,3 @@
+<div>
+    {{ $this->eventInfolist }}
+</div>
