@@ -131,7 +131,7 @@ class ElectionController extends Controller
         } else {
 
             $botman->hears('', function (BotMan $bot) {
-                $bot->reply("Invalid entry. Please ensure you enter the correct format: *Voter-1234*. Retry with the correct format.");
+                $bot->reply("Incorrect format. Please retry using the correct format: *Voter-1234* ");
             });
 
         }
@@ -145,7 +145,7 @@ class ElectionController extends Controller
 
     function isValidVoter($str) {
         // Check if the string matches the pattern 'voter-<number>'
-        if (preg_match('/^voter-(\d+)$/', $str, $matches)) {
+        if (preg_match('/^voter-(\d+)$/i', $str, $matches)) {
             $inviteId = $matches[1];
             $invite = Invite::find($inviteId);
             return $invite ? $invite : false;
