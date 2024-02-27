@@ -260,21 +260,22 @@ class whatsappVoting extends Conversation
 
             }
 
-            $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n2 : Cancel and Start";
-            $this->ask($qstn, function(Answer $answer) use ($opt) {
+            $qstn = "Cast Votes: \n ".   $opt ."\n1 : Confirm\n";
+            $this->ask($qstn, function(Answer $answer) use ($opt, $qstn) {
 
                 $ans = (int) $answer->getText() ;
                 if ($ans == 1){
                     $this->say('Vote cast. Thank you.');
                     $prov_rslts = $this->getProvisionalRslts();
                     $this->say($prov_rslts);
-
-                } else if ($ans == 2) {
+                }
+                /*else if (false) {
                     $this->votes = [];
                     $this->deleteVote();
                     $this->say('Cancelled by user. Text Vote to try again');
-                } else {
-                    $qstn = "Invalid Option ( ".$answer->getText()." ). Try again\n".$this->election->type.":\n ". $opt ."\n2 : Confirm\n3 : Cancel and Start";
+                }*/
+                else {
+                    $qstn = "Invalid Option ( ".$answer->getText()." ). Please try again.\n". $qstn;
                     $this->qstnFallback($qstn);
                 }
             });
