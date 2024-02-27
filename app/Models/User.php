@@ -18,6 +18,11 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable,  HasRoles;
 
+    protected $roleLabels = [
+        1 => 'Super Admin',
+        2 => 'Admin',
+        3 => 'Support',
+    ];
     /**
      * The attributes that are mass assignable.
      *
@@ -74,6 +79,10 @@ class User extends Authenticatable implements FilamentUser
 
         return  false;
 
+    }
+      public function getRoleNameAttribute()
+    {
+        return $this->roleLabels[$this->attributes['role_id']] ?? null;
     }
 
         public function events():HasMany
