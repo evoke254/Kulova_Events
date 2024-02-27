@@ -216,6 +216,7 @@ class ShowInvites extends Component implements HasForms, HasTable
                     BulkAction::make('Election')
                         ->label('Election Invitation')
                         ->requiresConfirmation()
+                        ->hidden(! $this->event->elections()->count())
                         ->action(function (array $data, Collection $records): void {
                             foreach ($records as $key => $record){
                                 if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
