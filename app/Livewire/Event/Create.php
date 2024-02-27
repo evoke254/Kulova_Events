@@ -33,6 +33,7 @@ class Create extends Component   implements HasForms
     public function mount(): void
     {
         $this->form->fill();
+        $this->event = new Event();
     }
 
 
@@ -63,10 +64,11 @@ class Create extends Component   implements HasForms
 
     public function form(Form $form): Form
     {
+
         if (Auth::user()->role_id < 4){
-        $orgs =   Organization::query()->where('id', Auth::user()->organization_id)->pluck('name', 'id');
+            $orgs =   Organization::query()->where('id', Auth::user()->organization_id)->pluck('name', 'id');
         } else {
-        $orgs =   \App\Models\Organization::query()->pluck('name', 'id');
+            $orgs =   \App\Models\Organization::query()->pluck('name', 'id');
         }
         return $form
             ->schema([
@@ -91,18 +93,6 @@ class Create extends Component   implements HasForms
                 DateTimePicker::make('end_date')
                     ->native(false)
                     ->required(),
-
-
-
-
-                Toggle::make('is_active')
-                    ->label('Active')
-                    ->default(true)
-                    ->columnSpan(1),
-                Toggle::make('is_featured')
-                    ->label('Featured')
-                    ->default(true)
-                    ->columnSpan(1),
 
                 Select::make('categories')
                     ->multiple()
@@ -132,10 +122,17 @@ class Create extends Component   implements HasForms
                     ->disk('public')
                     ->required()
                     ->multiple()
-                    ->columns(4)
                     ->columnSpanFull()
                     ->reorderable()
-                    ->imageEditor(),
+                    ->imageEditor()
+                    ->columnSpan(1),
+
+
+                Toggle::make('is_featured')
+                    ->label('Featured')
+                    ->default(true)
+                    ->columnSpan(1),
+
 
 
             ])->columns(2)
@@ -149,11 +146,11 @@ class Create extends Component   implements HasForms
 
         $event = Event::create($data);
         foreach ($data['images']  as $files){
-/*            $event->addMedia(storage_path('app/public/'.$file))
-                ->withResponsiveImages()
-                ->toMediaCollection();*/
+            /*            $event->addMedia(storage_path('app/public/'.$file))
+                            ->withResponsiveImages()
+                            ->toMediaCollection();*/
             foreach ($files as $file){
-            EventImage::create(['event_id' => $event->id, 'image' => $file]);
+                EventImage::create(['event_id' => $event->id, 'image' => $file]);
             }
         }
         $event->attachTags($data['categories']);

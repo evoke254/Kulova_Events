@@ -53,6 +53,10 @@ Route::get('/election/{election}/vote/{vote}', [\App\Http\Controllers\ElectionCo
 Route::middleware('auth')->group(function () {
 
 
+    //Only Admins
+
+    Route::get('/app-users-settings', [\App\Http\Controllers\ProfileController::class, 'userSettings'])->name('user.settings');
+
 
     Route::get('organization/{organization}/edit_profile', [\App\Http\Controllers\OrganizationController::class, 'profileShow'])->name('profileShow');
        Route::get('organization-analytics/{organization}', [\App\Http\Controllers\OrganizationController::class, 'analytics'])->name('organization.analytics');

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,20 +23,19 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'email' => 'kevmanyonge@gmail.com',
-            'password' => Hash::make('123456789'),
+            'email' => 'deejayvoke@gmail.com',
+            'password' => Hash::make('N@li@k@2030'),
             'organization_id' => 1,
             'role_id' => 1
         ]);
 
-        $org = \App\Models\Organization::create([
-            'name' => 'Swift Apps Africa',
-        ]);
 
-        \App\Models\OrganizationDepartment::create([
-            'name' => 'Human Resource',
-            'organization_id' => $org->id
-        ]);
+       $role = Role::create(['name' => 'Super Admin']);
+       $role = Role::create(['name' => 'Admin']);
+       $role = Role::create(['name' => 'Support']);
+       $role = Role::create(['name' => 'Customer']);
+
+
 
 
     }

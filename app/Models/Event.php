@@ -47,11 +47,11 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Election::class);
     }
 
-        public function merchandise(): HasMany
+    public function merchandise(): HasMany
     {
         return $this->hasMany(EventMerchandise::class);
     }
-        public function images(): HasMany
+    public function images(): HasMany
     {
         return $this->hasMany(EventImage::class);
     }
@@ -74,6 +74,25 @@ class Event extends Model implements HasMedia
         return $this
             ->morphToMany(self::getTagClassName(), 'taggable', 'taggables', null, 'tag_id')
             ->orderBy('created_at');
+    }
+
+
+    public function agendas(): HasMany
+    {
+        return $this->hasMany(EventAgenda::class);
+    }
+    public function exhibitors(): HasMany
+    {
+        return $this->hasMany(EventExhibitors::class);
+    }
+
+    public function speakers(): HasMany
+    {
+        return $this->hasMany(EventSpeaker::class);
+    }
+    public function sponsors(): HasMany
+    {
+        return $this->hasMany(EventSponsor::class);
     }
 
 }

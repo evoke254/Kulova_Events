@@ -29,17 +29,16 @@
                     <a href="#" active="{{request()->routeIs('organizations.index')}}"
                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
                     group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
-                     @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
+                     @if(  request()->routeIs('organizations.index') ||  request()->routeIs('user.settings') ) bg-primary-500 dark:bg-primary-800 @endif" >
                         <x-icon name="cog" class="w-6 h-6" />
                         <span class="flex-1 ml-3 text-left whitespace-nowrap">Settings</span>
                     </a>
                     @if(\Illuminate\Support\Facades\Auth::user()->role_id <= 2)
-                          <a href="{{route('organizations.index')}}"
-                       class="ml-4 flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
-                    group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
-                     @if(  request()->routeIs('organizations.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
-                        <x-icon name="users" class="w-6 h-6" />
-                        <span class="flex-1 ml-3 text-left whitespace-nowrap">App Users</span>
+                          <a href="{{route('user.settings')}}"       class="ml-4 flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
+                        group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
+                         @if(  request()->routeIs('user.settings')  ) bg-primary-500 dark:bg-primary-800 @endif" >
+                            <x-icon name="users" class="w-6 h-6" />
+                            <span class="flex-1 ml-3 text-left whitespace-nowrap">App Users</span>
                     </a>
 
                     @endif
@@ -79,7 +78,13 @@
                        class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
                     group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
 
-                    @if(  request()->routeIs('event-category.index') || request()->routeIs('events.show') ||  request()->routeIs('events.index') ||  request()->routeIs('events.edit') ||   request()->routeIs('election.index')  || request()->routeIs('organization.analytics') ) bg-primary-500 dark:bg-primary-800 @endif" >
+                    @if(  request()->routeIs('event-category.index') || request()->routeIs('events.show') ||  request()->routeIs('events.index')
+                                ||  request()->routeIs('events.edit') ||   request()->routeIs('election.index')
+                                || request()->routeIs('organization.analytics') ||
+                                 request()->routeIs('election.index') ||
+                              request()->routeIs('election.show') ||
+                               request()->routeIs('election.edit')
+                                 ) bg-primary-500 dark:bg-primary-800 @endif" >
                         <x-icon name="rss" class="w-5 h-5 mr-2" />
 
                         Events
@@ -111,7 +116,9 @@
                            class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg
                     group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700
 
-                    @if(  request()->routeIs('election.index')  ) bg-primary-500 dark:bg-primary-800 @endif" >
+                    @if(  request()->routeIs('election.index') ||
+                              request()->routeIs('election.show') ||
+                               request()->routeIs('election.edit')) bg-primary-500 dark:bg-primary-800 @endif" >
                             <x-icon name="mail-open" class="w-5 h-5 mr-2" />
                             Elections
                         </a>

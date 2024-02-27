@@ -34,7 +34,7 @@ class Edit extends Component   implements HasForms
     public Event $event;
     public function mount(Event $event): void
     {
-
+        $this->event = $event;
         $data = $event->toArray();
         $data['categories'] = $event->tags->pluck('id')->toArray();
         $data['uploads'] = $event->images->pluck('image')->toArray();
@@ -72,13 +72,6 @@ class Edit extends Component   implements HasForms
                     ->native(false)
                     ->required(),
 
-
-
-
-                Toggle::make('is_active')
-                    ->label('Active')
-                    ->default(true)
-                    ->columnSpan(1),
                 Toggle::make('is_featured')
                     ->label('Featured')
                     ->default(true)
@@ -89,6 +82,21 @@ class Edit extends Component   implements HasForms
                     ->label('Event Category')
                     ->options(\App\Models\EventCategory::query()->pluck('name', 'id')),
 
+                Repeater::make('speakers')
+                    ->relationship()
+                    ->schema([
+                        TextInput::make('speaker')->required(),
+                        Textarea::make('topic'),
+                        FileUpload::make('image')
+                            ->label('Image')
+                            ->disk('public')
+                            ->image()
+                            ->required()
+                            ->columnSpan(1)
+                            ->imageEditor(),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
 
                 RichEditor::make('description')
                     ->columnSpanFull()
@@ -114,13 +122,55 @@ class Edit extends Component   implements HasForms
                     ->disk('public')
                     ->image()
                     ->required()
-                    ->columnSpanFull()
+                    ->columnSpan(1)
                     ->multiple()
                     ->imageEditor(),
 
 
+                Repeater::make('agendas')
+                    ->label('Agenda')
+                    ->relationship()
+                    ->schema([
+                        TextInput::make('name')->required(),
+                        Textarea::make('description'),
+                    ])
+                    ->columns(2),
+
+
+                Repeater::make('exhibitors')
+                    ->relationship()
+                    ->schema([
+                        TextInput::make('exhibitor')->required(),
+                        Textarea::make('topic'),
+                        FileUpload::make('image')
+                            ->label('Image')
+                            ->disk('public')
+                            ->image()
+                            ->required()
+                            ->columnSpan(1)
+                            ->imageEditor(),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
+                Repeater::make('sponsors')
+                    ->relationship()
+                    ->schema([
+                        TextInput::make('sponsor')->required(),
+                        Textarea::make('topic')->label('details'),
+                        FileUpload::make('image')
+                            ->label('Image')
+                            ->disk('public')
+                            ->image()
+                            ->required()
+                            ->columnSpan(1)
+                            ->imageEditor(),
+                    ])
+                    ->columns(3)
+                    ->columnSpanFull(),
+
             ])->columns(2)
-            ->statePath('data');
+            ->statePath('data')
+            ->model($this->event);
     }
 
     public function create(): void
@@ -130,9 +180,9 @@ class Edit extends Component   implements HasForms
 
         foreach ($data['uploads']  as $file){
             if ( EventImage::where('image', $file)->get()->empty()) {
-                EventImage::create(
-                    ['event_id' => $this->event->id,
-                        'image' => $file]);
+                EventImage::updateOrCreate(
+                    ['event_id' => $this->event->id, 'image' => $file],
+                    ['event_id' => $this->event->id, 'image' => $file]);
             }
 
         }

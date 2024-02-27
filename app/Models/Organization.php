@@ -9,21 +9,30 @@ class Organization extends Model
 {
     use HasFactory;
 
-        protected $fillable = [
-            'name',
-            'email',
-            'location',
-            'description',
-            'phone_number',
-            'lat',
-            'long',
+    protected $fillable = [
+        'name',
+        'email',
+        'location',
+        'description',
+        'phone_number',
+        'lat',
+        'long',
     ];
 
 
 
-         public function departments(): HasMany
+    public function departments(): HasMany
     {
         return $this->hasMany(OrganizationDepartment::class);
     }
 
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
+    }
+
+        public function elections(): HasMany
+    {
+        return $this->hasMany(Election::class);
+    }
 }

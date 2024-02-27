@@ -35,5 +35,5 @@
     </div>
 </footer>
 <p class="my-10 text-sm text-center text-gray-500">
-    &copy; {{date('Y') }} <a href=" # " class="hover:underline" target="_blank">visuafusion.com</a>. All rights reserved.
+    &copy; {{date('Y') }} <a href="https://swiftappsafrica.com " class="hover:underline" target="_blank">Swift Apps Africa</a>. All rights reserved.
 </p>

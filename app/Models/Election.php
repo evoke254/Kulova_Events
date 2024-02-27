@@ -64,7 +64,8 @@ class Election extends Model
             $votes += $position->votes()->count();
         }
 
-        return ($votes / ($this->event()->first()->invites()->count()) * 100) . '%';
+        return round(($votes / ($this->event()->first()->invites()->count()) * 100), 1) . '%';
+
     }
 
 }

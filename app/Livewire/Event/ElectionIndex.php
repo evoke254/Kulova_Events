@@ -11,6 +11,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Livewire\Attributes\Reactive;
@@ -74,11 +76,13 @@ class ElectionIndex extends Component implements HasForms, HasTable
                         'Resolution Election' => 'info',
                     })
                     ->sortable(),
-                ToggleColumn::make('status')
-                    ->sortable(),
                 TextColumn::make('election_date')
-                    ->dateTime()
+                    ->dateTime('D, d M Y H:i')
                     ->sortable(),
+
+                TextColumn::make('total_votes')->label('voters / cast votes'),
+                TextColumn::make('percentage_votes_cast')->label('voting %'),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -95,14 +99,19 @@ class ElectionIndex extends Component implements HasForms, HasTable
                                     ->multiple()*/
             ])
             ->actions([
+                Action::make('Results')
+                    ->button()
+                    ->color('violet')
+                    ->modalSubmitActionLabel('Ok - Close')
+                    ->modalWidth(MaxWidth::SevenExtraLarge)
+                    ->modalContent(fn (Election $record): View => view(
+                        'event.result',
+                        ['election' => $record],
+                    ))
+                    ->modalAlignment(Alignment::Start),
                 Action::make('Update Details')
                     ->button()
                     ->color('success')
-                    ->url(fn (Election $record): string => route('election.show', $record))
-                ,
-
-                ViewAction::make('show')
-                    ->button()
                     ->url(fn (Election $record): string => route('election.show', $record)),
                 EditAction::make('edit')
                     ->button()
@@ -117,7 +126,6 @@ class ElectionIndex extends Component implements HasForms, HasTable
                         Radio::class::make('type')
                             ->required()
                             ->options(Election::ELECTION_TYPE),
-                        Toggle::make('status')->default(true),
 
                         DateTimePicker::make('election_date')
                             ->minDate(now())
