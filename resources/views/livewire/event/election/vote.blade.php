@@ -38,20 +38,18 @@
                                     <div class="grid grid-cols-1  gap-4 w-1/2 self-center">
                                         @foreach($elective_positions as $key => $pstn)
                                             <div class="justify-center">
-                                                <h1 class="text-xl ml-2 font-semibold tracking-tight text-gray-900 my-2 "> {{$pstn->position}}</h1>
-                                                <p class="ml-2 mb-1">You can vote {{$pstn->votes}} times</p>
-                                                <ul role="list"  class="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
-                                                    @foreach($pstn->candidates as $counter => $cdt)
-                                                        @php
-                                                            if ($election->type == 1){
-                                                                $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
-                                                                }else{
-                                                                $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
-                                                                }
-
-                                                        @endphp
-                                                        @if(!$prev_votes->count() > 0)
-
+                                                @php
+                                                    if ($election->type == 1){
+                                                        $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
+                                                        }else{
+                                                        $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
+                                                        }
+                                                @endphp
+                                                @if(!$prev_votes->count() > 0)
+                                                    <h1 class="text-xl ml-2 font-semibold tracking-tight text-gray-900 my-2 "> {{$pstn->position}}</h1>
+                                                    <p class="ml-2 mb-1">You can vote {{$pstn->votes}} times</p>
+                                                    <ul role="list"  class="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
+                                                        @foreach($pstn->candidates as $counter => $cdt)
                                                             <li class="" wire:poll.100ms
                                                                 wire:click="castVote({{$pstn->id}}, {{$cdt->id}} )">
                                                                 <label
@@ -100,12 +98,11 @@
                                                                     </div>
                                                                 </label>
                                                             </li>
-                                                        @else
-                                                            <p class="text-red-500">You have already cast your vote</p>
-                                                            @php break @endphp
-                                                        @endif
-                                                    @endforeach
-                                                </ul>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    <p class="text-red-500">You have already cast your vote</p>
+                                                @endif
                                             </div>
                                         @endforeach
                                     </div>
