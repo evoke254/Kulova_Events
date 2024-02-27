@@ -44,9 +44,9 @@
                                                     @foreach($pstn->candidates as $counter => $cdt)
                                                         @php
                                                             if ($election->type == 1){
-                                                                $prev_votes = $this->voter->castVotes($pstn->id, $cdt->id);
+                                                                $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
                                                                 }else{
-                                                                $prev_votes = $pstn->votes()->get();
+                                                                $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
                                                                 }
 
                                                         @endphp
