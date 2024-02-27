@@ -47,7 +47,7 @@ class RegisterForEvent extends Component implements HasForms
 
         //Check Kenyan number
         if (preg_match('/^(?:\+254|254|0)?7\d{8}$/', $data['phone_number'])){
-        $data['phone_number'] = substr($data['phone_number'], -9);
+            $data['phone_number'] = substr($data['phone_number'], -9);
         }
         $data['merchandise'] = json_decode($data['merchandise'], true);
 
@@ -60,8 +60,8 @@ class RegisterForEvent extends Component implements HasForms
         $merchandiseFields = [];
         foreach ($this->event->merchandise()->get() as  $mcds){
             if (!$mcds->parent_id) {
-/*                $merchandiseFields[] = TextInput::make('merchandise.' . $mcds->id . '.name')
-                    ->label($mcds->name);*/
+                /*                $merchandiseFields[] = TextInput::make('merchandise.' . $mcds->id . '.name')
+                                    ->label($mcds->name);*/
 
                 $merchandiseFields[] = Select::make('merchandise.' . $mcds->id . '.option')->options($mcds->variants()->get()->pluck('name', 'id')->toArray())
                     ->required()
@@ -100,20 +100,20 @@ class RegisterForEvent extends Component implements HasForms
                     ->required()
                     ->rules([
                         function () {
-                                    return function (string $attribute, $value, Closure $fail) {
-                                        if (!preg_match('/^\d{9}$/', $value)) {
-                                            return   $fail('Invalid :attribute format. Example format 702755928.');
-                                        } else {
-                                            $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
-                                            $invite = Invite::whereIn('phone_number', $phoneNumbers)
-                                                ->where('event_id', $this->event->id)
-                                                ->where('id', '!=', $this->user->id)
-                                                ->first();
-                                            if ($invite) {
-                                                return $fail('The :attribute has already been taken.');
-                                            }
-                                        }
-                                    };
+                            return function (string $attribute, $value, Closure $fail) {
+                                if (!preg_match('/^\d{9}$/', $value)) {
+                                    return   $fail('Invalid :attribute format. Example format 702755928.');
+                                } else {
+                                    $phoneNumbers = ["+254" . $value, "254" . $value, "0" . $value];
+                                    $invite = Invite::whereIn('phone_number', $phoneNumbers)
+                                        ->where('event_id', $this->event->id)
+                                        ->where('id', '!=', $this->user->id)
+                                        ->first();
+                                    if ($invite) {
+                                        return $fail('The :attribute has already been taken.');
+                                    }
+                                }
+                            };
                         },
                     ]),
                 Radio::make('attendance_mode')
@@ -146,6 +146,9 @@ class RegisterForEvent extends Component implements HasForms
             $title = 'Registration Details updated',
             $description = 'Your details were successfully updated'
         );
+
+        redirect()->route('events.show', ['event' => $this->event->id]);
+
 
     }
     public function render()
