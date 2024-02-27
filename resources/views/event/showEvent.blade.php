@@ -20,7 +20,7 @@
 
                         <div>
                             <h4 class="mb-4 text-2xl font-semibold  text-gray-900 lg:mb-6  dark:text-white"> Details</h4>
-                            <div>
+                            <div class="text-left">
                                 {!! $event->description !!}
                             </div>
 
