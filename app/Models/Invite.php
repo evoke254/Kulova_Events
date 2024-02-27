@@ -136,7 +136,7 @@ class Invite extends Model
             $this->sendWhatsapp($model, $elections);
 
 //Cancel Whatsapp voting
-            $urlencodedtext = urlencode('Vote.');
+            $urlencodedtext = urlencode('Voter-'.$model->id);
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $message = "You have been invited to vote on WhatsApp \n" . $url;
             $this->sendSMS($model->phone_number, $message);
@@ -174,6 +174,10 @@ class Invite extends Model
                                 [
                                     "type" => "text",
                                     "text" => $election->name
+                                ],
+                                [
+                                    "type" => "text",
+                                    "text" => 'Voter-'.$model->id
                                 ]
                             ]
                         ]

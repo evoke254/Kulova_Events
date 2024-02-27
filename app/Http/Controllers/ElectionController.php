@@ -112,22 +112,58 @@ class ElectionController extends Controller
         ];
 
         //Log::info(json_encode($config));
-        DriverManager::loadDriver(whatsapp::class);
+        //  DriverManager::loadDriver(whatsapp::class);
         $botman = BotManFactory::create($config, new LaravelCache());
         $phoneNumber = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['wa_id'];
         $userName = $request->get('entry')[0]['changes'][0]['value']['contacts'][0]['profile']['name'];
+        $msg = $request->get('entry')[0]['changes'][0]['value']['messages'][0]['text']['body'];
+        $voter = $this->isValidVoter($msg);
+        if ($voter){
+            if (substr($voter->phone_number, -9) ==  substr($phoneNumber, -9)){
+                $botman->hears('', function($bot) use ($phoneNumber, $userName, $voter) {
+                    $bot->startConversation(new \App\Bot\whatsappVoting($phoneNumber, $userName, $voter));
+                });
+            } else{
+                $botman->hears('', function (BotMan $bot) {
+                    $bot->reply("Invalid entry. Please use your registered phone number or vote online using the link in your email.");
+                });
+            }
+        } else {
 
-        $botman->hears('', function($bot) use ($phoneNumber, $userName) {
-            $bot->startConversation(new \App\Bot\whatsappVoting($phoneNumber, $userName));
-        });
+            $botman->hears('', function (BotMan $bot) {
+                $bot->reply("Invalid entry. Please ensure you enter the correct format: *Voter-1234*. Retry with the correct format.");
+            });
+
+        }
+
+
 
         // Start listening
         $botman->listen();
     }
 
 
+    function isValidVoter($str) {
+        // Check if the string matches the pattern 'voter-<number>'
+        if (preg_match('/^voter-(\d+)$/', $str, $matches)) {
+            $inviteId = $matches[1];
+            $invite = Invite::find($inviteId);
+            return $invite ? $invite : false;
+        }
 
-        public function setWatsappWebhook(Request $request)
+        // Check if the string is just a number
+        if (is_numeric($str)) {
+            // Check if an invite with the integer ID exists
+            $invite = Invite::find($str);
+            return $invite ? $invite : false;
+        }
+
+        // If the string doesn't match any of the patterns, return false
+        return false;
+    }
+
+
+    public function setWatsappWebhook(Request $request)
     {
         $config = [
             'facebook' => [

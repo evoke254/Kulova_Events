@@ -32,15 +32,22 @@ class whatsappVoting extends Conversation
 
     public $bot22;
 
-    public function __construct( $phoneNumber, $userName)
+    public function __construct( $phoneNumber, $userName, $voter = null)
     {
         $this->userName = $userName;
         $this->phoneNumber = $phoneNumber;
+        $this->voter = $voter;
     }
     public function run(){
 
         $welcomeMessage = "Hello ".$this->userName.", \nwelcome to Text40 Digital Voting System. I'm here to assist you cast your vote.\n";
-        $this->startConversation($welcomeMessage);
+        if ($this->voter){
+            $this->event = Event::find($this->voter->event_id);
+            $this->elections =  $this->event->elections->toArray();
+            $this->selectElection();
+        } else {
+            $this->startConversation($welcomeMessage);
+        }
     }
 
     public function startConversation($welcomeMessage) {
@@ -74,7 +81,7 @@ class whatsappVoting extends Conversation
 
                 if ($voter){
                     $this->voter = $voter;
-                     $this->selectElection();
+                    $this->selectElection();
                 } else{
                     $qstn = "You have not been invited to this event/election. \n\nPlease select an event: \n ". $opt ."00 : Cancel" ;
                     $this->qstnFallback($qstn);
