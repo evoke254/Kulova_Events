@@ -107,10 +107,13 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                <div class="my-2 mt-5 flex justify-center">
-                                    <x-button green lg label="Cast Ballot" wire:click="submit"
-                                              class="rounded-lg shadow-lg"/>
-                                </div>
+
+                                @if($prev_votes)
+                                    <div class="my-2 mt-5 flex justify-center">
+                                        <x-button green lg label="Cast Ballot" wire:click="submit"
+                                                  class="rounded-lg shadow-lg"/>
+                                    </div>
+                                @endif
                             </div>
                         </form>
 
