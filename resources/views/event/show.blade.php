@@ -45,19 +45,7 @@
 
                         </dd>
                     </div>
-                    <div class="relative overflow-hidden rounded-lg bg-white px-4 pb-12 pt-5 shadow sm:px-6 sm:pt-6">
-                        <dt>
-                            <div class="absolute rounded-md bg-indigo-500 p-3">
-                                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                                </svg>
-                            </div>
-                            <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Votes Cast</p>
-                        </dt>
-                        <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                            <p class="text-2xl font-semibold text-gray-900"> -- {{--  number_format( 2/($event->invites()->count() > 0  ? $event->count() : 1) * 100 , 2 ) --}}  %</p>
-                        </dd>
-                    </div>
+
                 </dl>
 
             </div>
