@@ -147,7 +147,7 @@ class RegisterForEvent extends Component implements HasForms
             $description = 'Your details were successfully updated'
         );
 
-        redirect()->route('events.show', ['event' => $this->event->id]);
+        redirect()->route('event.view', ['event' => $this->event->id]);
 
 
     }
