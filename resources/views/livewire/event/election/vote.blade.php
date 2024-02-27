@@ -40,9 +40,9 @@
                                             <div class="justify-center">
                                                 @php
                                                     if ($election->type == 1){
-                                                        $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
+                                                        $prev_votes = $voter->castVoteInPstn($pstn->id);
                                                         }else{
-                                                        $prev_votes = $voter->castVotes($pstn->id, $cdt->id);
+                                                        $prev_votes = $voter->castVoteInPstn($pstn->id);
                                                         }
                                                 @endphp
                                                 @if(!$prev_votes->count() > 0)
