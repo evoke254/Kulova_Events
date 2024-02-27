@@ -151,7 +151,7 @@ class EventElections extends Component implements HasForms, HasTable
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
                         $data['event_id'] = $this->event->id;
-                        $data['organization_id'] = Auth::user()->organization_id;
+                        $data['organization_id'] =  $this->event->organization_id;
                         $data['user_id'] = Auth::id();
                         return $data;
                     })

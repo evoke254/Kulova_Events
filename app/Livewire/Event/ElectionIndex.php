@@ -164,7 +164,8 @@ class ElectionIndex extends Component implements HasForms, HasTable
                         Textarea::make('details')->label('Description')
                     ])
                     ->mutateFormDataUsing(function ( $data): array{
-                        $data['organization_id'] = Auth::user()->organization_id;
+                        $event = Event::find($data['event_id']);
+                        $data['organization_id'] = $event->organization_id;
                         $data['user_id'] = Auth::id();
                         return $data;
                     })
