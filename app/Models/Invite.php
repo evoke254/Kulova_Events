@@ -75,12 +75,12 @@ class Invite extends Model
     public function castVoteInPstn($elective_position_id) :bool
     {
         $allowed_votes = ElectivePosition::find($elective_position_id)->votes;
-        $allowed_votes = 1;
+
         $votes = Vote::where('elective_position_id',  $elective_position_id)
             ->where('invite_id', $this->id)
             ->get()
             ->count();
-        return($allowed_votes > $votes);
+        return($allowed_votes < $votes);
 
     }
     public function attendance(): HasMany
