@@ -2,6 +2,11 @@
 # {{$event->organization->name}},
 
 **{{$user->name}}, You have been invited to attend an event**
+
+**Event Details:**
+- **Event Name:** {{ $event->name }}
+- **Venue:** {{ $event->venue }}
+
 Please click on the link below to register for the event
 <x-mail::button :url="$url">
     Register
