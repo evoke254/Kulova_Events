@@ -1,6 +1,7 @@
 <x-mail::message>
-# {{$user->name}}, You have been invited to attend an event
+# {{$event->organization->name}},
 
+**{{$user->name}}, You have been invited to attend an event**
 Please click on the link below to register for the event
 <x-mail::button :url="$url">
     Register
