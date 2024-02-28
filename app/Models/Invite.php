@@ -220,9 +220,9 @@ class Invite extends Model
             $statusCode = $response->status();
             $body = $response->body();
 
-            Log::info('SMS API Response:', ['status_code' => $statusCode, 'body' => $body]);
+            Log::info('SMS 2.0 API Response:', ['status_code' => $statusCode, 'body' => $body]);
         } catch (\Exception $e) {
-            Log::error('Error sending SMS: ' . $e->getMessage());
+            Log::error('Error 4545 sending SMS: ' . $e->getMessage());
         }
     }
 
