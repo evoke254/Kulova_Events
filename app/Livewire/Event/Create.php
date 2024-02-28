@@ -64,8 +64,7 @@ class Create extends Component   implements HasForms
 
     public function form(Form $form): Form
     {
-
-        if (Auth::user()->role_id < 4){
+        if (Auth::user()->role_id > 3){
             $orgs =   Organization::query()->where('id', Auth::user()->organization_id)->pluck('name', 'id');
         } else {
             $orgs =   \App\Models\Organization::query()->pluck('name', 'id');
