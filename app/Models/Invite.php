@@ -80,7 +80,7 @@ class Invite extends Model
             ->where('invite_id', $this->id)
             ->get()
             ->count();
-        return($allowed_votes < $votes);
+        return($allowed_votes > $votes);
 
     }
     public function attendance(): HasMany

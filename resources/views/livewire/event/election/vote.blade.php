@@ -44,6 +44,7 @@
                                                         }else{
                                                         $prev_votes = $voter->castVoteInPstn($pstn->id);
                                                         }
+
                                                 @endphp
                                                 @if($prev_votes)
                                                     <h1 class="text-xl ml-2 font-semibold tracking-tight text-gray-900 my-2 "> {{$pstn->position}}</h1>
