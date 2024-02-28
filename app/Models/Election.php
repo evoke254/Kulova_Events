@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Election extends Model
 {
@@ -46,13 +47,13 @@ class Election extends Model
 
     public function getTotalVotesAttribute()
     {
-        $positions = $this->positions()->get();
-        $votes = 0;
-        foreach ($positions as $position){
-
-            $votes += $position->votes()->selectRaw('DISTINCT invite_id')->count();
-
-        }
+        $votes = DB::table('elections')
+            ->join('elective_positions', 'elections.id', '=', 'elective_positions.election_id')
+            ->join('candidate_elective_positions', 'elective_positions.id', '=', 'candidate_elective_positions.elective_position_id')
+            ->join('votes', 'candidate_elective_positions.id', '=', 'votes.candidate_elective_position_id')
+            ->where('elections.id', $this->id)
+            ->distinct('votes.id')
+            ->count('votes.id');
 
         return $votes .'/'. $this->event()->first()->invites()->count();
     }
@@ -60,11 +61,13 @@ class Election extends Model
 
     public function getPercentageVotesCastAttribute()
     {
-        $positions = $this->positions()->get();
-        $votes = 0;
-        foreach ($positions as $position){
-            $votes += $position->votes()->selectRaw('DISTINCT invite_id')->count();
-        }
+        $votes = DB::table('elections')
+            ->join('elective_positions', 'elections.id', '=', 'elective_positions.election_id')
+            ->join('candidate_elective_positions', 'elective_positions.id', '=', 'candidate_elective_positions.elective_position_id')
+            ->join('votes', 'candidate_elective_positions.id', '=', 'votes.candidate_elective_position_id')
+            ->where('elections.id', $this->id)
+            ->distinct('votes.id')
+            ->count('votes.id');
 
         return round(($votes / ($this->event()->first()->invites()->count()) * 100), 1) . '%';
 
