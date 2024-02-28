@@ -49,7 +49,6 @@ class Election extends Model
         $positions = $this->positions()->selectRaw('DISTINCT election_id')->get();
         $votes = 0;
         foreach ($positions as $position){
-            dd($position);
             $votes += $position->votes()->count();
         }
 
