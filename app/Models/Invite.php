@@ -206,7 +206,7 @@ class Invite extends Model
     {
         $url = 'https://mshastra.com/sendurl.aspx';
 
-        $response = Http::post($url, [
+        $params = [
             'user' => 'TEXT40',
             'pwd' => '6yb64be1',
             'senderid' => 'Mobishastra',
@@ -214,9 +214,11 @@ class Invite extends Model
             'msgtext' => $message,
             'priority' => 'High',
             'CountryCode' => '254'
-        ]);
+        ];
 
         try {
+            $response = Http::get($url, $params);
+
             $statusCode = $response->status();
             $body = $response->body();
 
