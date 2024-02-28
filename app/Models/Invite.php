@@ -94,9 +94,15 @@ class Invite extends Model
         static::created(function ($model) {
             $event = Event::find($model->event_id);
             //Send Email invitation
+            $url = URL::signedRoute('event.registration', ['user' => $model]);
+            $sms = 'Dear '.$model->name.', You have been invited to attend '. $this->event->name .' Kindly click on the link below to register. '. $url;
+            $model->sendSMS($model->phone_number, $sms);
+
+
             if (filter_var($model->email, FILTER_VALIDATE_EMAIL) && $event->check_registration_status){
-                Mail::to($model->email)->send(new EventInvitation($model));
+                Mail::to($model->email)->send(new EventInvitation($model, $url));
             }
+
 
             $elections = Event::find($model->event_id)->elections()->get();
             if (!$elections->isEmpty()){
@@ -134,7 +140,7 @@ class Invite extends Model
 
             $this->sendWhatsapp($model, $elections);
 
-//Cancel Whatsapp voting
+
             $urlencodedtext = urlencode('Voter-'.$model->id);
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             $message = "You have been invited to vote on WhatsApp \n" . $url;

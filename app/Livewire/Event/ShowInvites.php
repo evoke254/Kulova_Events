@@ -17,6 +17,7 @@ use Filament\Tables\Actions\ImportAction;
 
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
@@ -194,45 +195,50 @@ class ShowInvites extends Component implements HasForms, HasTable
             ])
             ->bulkActions([
 
-                    BulkAction::make('Event Invitation')
-                        ->label('Event Invitation')
-                        ->button()
-                        ->color('primary')
-                        ->requiresConfirmation()
-                        ->action(function (array $data, Collection $records): void {
+                BulkAction::make('Event Invitation')
+                    ->label('Event Invitation')
+                    ->button()
+                    ->color('primary')
+                    ->requiresConfirmation()
+                    ->action(function (array $data, Collection $records): void {
 
-                            foreach ($records as $key => $record){
-                                if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
-                                    Mail::to($record->email)->send(new EventInvitation($record));
-                                }
+                        foreach ($records as $key => $record){
+
+                            $url = URL::signedRoute('event.registration', ['user' => $record]);
+                            $sms = 'Dear '.$record->name.', You have been invited to attend '. $this->event->name .' Kindly click on the link below to register. '. $url;
+                            $record->sendSMS($record->phone_number, $sms);
+
+                            if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
+                                Mail::to($record->email)->send(new EventInvitation($record, $url));
                             }
+                        }
 
-                            $this->notification()->success(
-                                $title = 'Event Invitation Resent',
-                                $description = 'We have sent new invitation emails to selected users'
-                            );
-                            $this->resetTable();
-                        }),
-                    BulkAction::make('Election')
-                        ->label('Election Invitation')
-                        ->requiresConfirmation()
-                        ->hidden(! $this->event->elections()->count())
-                        ->action(function (array $data, Collection $records): void {
-                            foreach ($records as $key => $record){
-                                if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
-                                    Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
-                                }
-                                //invite via SMS and whatsapp
-                                $record->electionInvitation($record, $this->elections);
+                        $this->notification()->success(
+                            $title = 'Event Invitation Resent',
+                            $description = 'We have sent new invitation emails to selected users'
+                        );
+                        $this->resetTable();
+                    }),
+                BulkAction::make('Election')
+                    ->label('Election Invitation')
+                    ->requiresConfirmation()
+                    ->hidden(! $this->event->elections()->count())
+                    ->action(function (array $data, Collection $records): void {
+                        foreach ($records as $key => $record){
+                            if (filter_var($record->email, FILTER_VALIDATE_EMAIL)){
+                                Mail::to($record->email)->send(new VoterInvited($this->elections, $record));
                             }
+                            //invite via SMS and whatsapp
+                            $record->electionInvitation($record, $this->elections);
+                        }
 
-                            $this->notification()->success(
-                                $title = 'Election Resent',
-                                $description = 'Selected voters re-invited'
-                            );
-                            $this->resetTable();
-                        })
-                    ,
+                        $this->notification()->success(
+                            $title = 'Election Resent',
+                            $description = 'Selected voters re-invited'
+                        );
+                        $this->resetTable();
+                    })
+                ,
                 DeleteBulkAction::make()
                     ->requiresConfirmation()
                     ->action(fn (Invite $record) => $record->delete())

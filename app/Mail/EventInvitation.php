@@ -22,10 +22,10 @@ class EventInvitation extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $url = null)
     {
         $this->user = $user;
-        $this->url = URL::signedRoute('event.registration', ['user' => $user]);;
+        $this->url = $url ;
         $this->event = Event::find($user->event_id);
     }
 
@@ -35,10 +35,6 @@ class EventInvitation extends Mailable
      */
     public function envelope(): Envelope
     {
-
-        //SMS
-        $sms = 'Dear '.$this->user->name.', You have been invited to attend '. $this->event->name .' Kindly click on the link below to register. '. $this->url;
-        $this->user->sendSMS($this->user->phone_number, $sms);
         return new Envelope(
             subject: 'REGISTER FOR '. $this->event->name,
         );
