@@ -7,12 +7,11 @@ use App\Mail\EventInvitation;
 use App\Mail\EventTicket;
 use App\Mail\VoterInvited;
 use Barryvdh\Snappy\Facades\SnappyImage;
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -196,69 +195,45 @@ class Invite extends Model
         }
     }
 
+
     public function sendSMS($phoneNumber, $message)
     {
-
         $url = 'https://mshastra.com/sendurl.aspx';
-        $params = [
+
+        $response = Http::post($url, [
             'user' => 'TEXT40',
             'pwd' => '6yb64be1',
             'senderid' => 'Mobishastra',
-            'mobileno' =>'254'. substr($phoneNumber, -9),
+            'mobileno' => '254' . substr($phoneNumber, -9),
             'msgtext' => $message,
             'priority' => 'High',
             'CountryCode' => '254'
-        ];
-
-        $client = new Client();
+        ]);
 
         try {
-            $response = $client->request('GET', $url, [
-                'query' => $params
-            ]);
-
-            $statusCode = $response->getStatusCode();
-            $body = $response->getBody()->getContents();
+            $statusCode = $response->status();
+            $body = $response->body();
 
             Log::info('SMS API Response:', ['status_code' => $statusCode, 'body' => $body]);
-
-//            return response()->json(['status_code' => $statusCode, 'body' => $body]);
         } catch (\Exception $e) {
             Log::error('Error sending SMS: ' . $e->getMessage());
-
-   //         return response()->json(['error' => 'Failed to send SMS'], 500);
         }
-
-
-    /*        $username = 'vf567gfgg';
-            $apiKey = '200497db36dd9900fe83dd8d82b4e5ecd81a9bb25bb8c58ed8da028bd8979355';
-
-            $AT       = new AfricasTalking($username, $apiKey);
-
-            $sms      = $AT->sms();
-            $result   = $sms->send([
-                'to'      => $phoneNumber,
-                'message' => $message
-            ]);
-    */
-
-}
-
-
-public function createTicket()
-{
-    if (!$this->ticket){
-        $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
-        $qrCode = QrCode::size(150)->generate($scanUrl);
-        $event = Event::find($this->event_id);
-        $path = storage_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
-        $user = $this;
-        SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
-            ->setOption('enable-local-file-access', true)
-            ->save($path);
-        $this->ticket = $path;
-        $this->save();
     }
-}
+
+    public function createTicket()
+    {
+        if (!$this->ticket){
+            $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
+            $qrCode = QrCode::size(150)->generate($scanUrl);
+            $event = Event::find($this->event_id);
+            $path = storage_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+            $user = $this;
+            SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
+                ->setOption('enable-local-file-access', true)
+                ->save($path);
+            $this->ticket = $path;
+            $this->save();
+        }
+    }
 
 }
