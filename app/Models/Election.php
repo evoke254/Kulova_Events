@@ -49,7 +49,7 @@ class Election extends Model
         $positions = $this->positions()->get();
         $votes = 0;
         foreach ($positions as $position){
-            $votes += $position->votes()->count();
+            $votes += $position->votes()->selectRaw('DISTINCT candidate_elective_position_id, invite_id')->count();
         }
 
         return $votes .'/'. $this->event()->first()->invites()->count();
@@ -61,7 +61,7 @@ class Election extends Model
         $positions = $this->positions()->get();
         $votes = 0;
         foreach ($positions as $position){
-            $votes += $position->votes()->count();
+            $votes += $position->votes()->selectRaw('DISTINCT candidate_elective_position_id, invite_id')->count();
         }
 
         return round(($votes / ($this->event()->first()->invites()->count()) * 100), 1) . '%';
