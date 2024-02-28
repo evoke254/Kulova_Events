@@ -46,10 +46,11 @@ class Election extends Model
 
     public function getTotalVotesAttribute()
     {
-        $positions = $this->positions()->get();
+        $positions = $this->positions()->selectRaw('DISTINCT election_id')->get();
         $votes = 0;
         foreach ($positions as $position){
-            $votes += $position->votes()->selectRaw('DISTINCT candidate_elective_position_id, invite_id')->count();
+            dd($position);
+            $votes += $position->votes()->count();
         }
 
         return $votes .'/'. $this->event()->first()->invites()->count();
@@ -58,10 +59,10 @@ class Election extends Model
 
     public function getPercentageVotesCastAttribute()
     {
-        $positions = $this->positions()->get();
+        $positions = $this->positions()->selectRaw('DISTINCT election_id')->get();
         $votes = 0;
         foreach ($positions as $position){
-            $votes += $position->votes()->selectRaw('DISTINCT candidate_elective_position_id, invite_id')->count();
+            $votes += $position->votes()->count();
         }
 
         return round(($votes / ($this->event()->first()->invites()->count()) * 100), 1) . '%';
