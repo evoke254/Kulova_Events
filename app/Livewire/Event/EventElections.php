@@ -48,13 +48,16 @@ class EventElections extends Component implements HasForms, HasTable
     }
     public function table(Table $table): Table
     {
+        if (Auth::user()->role_id <= 3){
+            $qry = Election::query()->where('event_id', $this->event->id);
+        } else {
+            $qry = Election::query()->where('event_id', $this->event->id)
+                    ->where('organization_id', Auth::user()->organization_id);
+        }
 
         return $table
             ->heading($this->event->name. ' - Elections')
-            ->query(Election::query()
-                ->where('event_id', $this->event->id)
-                //    ->where('organization_id', Auth::user()->organization_id)
-                ->orderBy('election_date', 'DESC') )
+            ->query($qry->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
                     ->label('Elections')

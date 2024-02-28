@@ -48,13 +48,15 @@ class ElectionIndex extends Component implements HasForms, HasTable
 
     public function table(Table $table): Table
     {
-
+        if (Auth::user()->role_id <= 3){
+            $qry = Election::query();
+        } else {
+            $qry = Election::query()           ->where('organization_id', Auth::user()->organization_id);
+        }
 
         return $table
             ->heading('Elections')
-            ->query(Election::query()
-                //   ->where('organization_id', Auth::user()->organization_id)
-                ->orderBy('election_date', 'DESC') )
+            ->query($qry->orderBy('election_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
                     ->label('Elections')

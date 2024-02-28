@@ -42,10 +42,14 @@ class Index extends Component  implements HasForms, HasTable
 
         public function table(Table $table): Table
     {
+          if (Auth::user()->role_id <= 3){
+            $qry = Event::query();
+        } else {
+            $qry = Event::query()  ->where('organization_id', Auth::user()->organization_id);
+        }
+
         return $table
-            ->query(Event::query()
-            //    ->where('organization_id', Auth::user()->organization_id)
-                ->orderBy('start_date', 'DESC') )
+            ->query($qry->orderBy('start_date', 'DESC') )
             ->columns([
                 TextColumn::make('name')
                     ->label('Events')
