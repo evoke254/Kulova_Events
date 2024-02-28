@@ -52,7 +52,7 @@ class Election extends Model
             ->join('candidate_elective_positions', 'elective_positions.id', '=', 'candidate_elective_positions.elective_position_id')
             ->join('votes', 'candidate_elective_positions.id', '=', 'votes.candidate_elective_position_id')
             ->where('elections.id', $this->id)
-            ->distinct('votes.id')
+            ->distinct('votes.invite_id')
             ->count('votes.id');
 
         return $votes .'/'. $this->event()->first()->invites()->count();
@@ -66,7 +66,7 @@ class Election extends Model
             ->join('candidate_elective_positions', 'elective_positions.id', '=', 'candidate_elective_positions.elective_position_id')
             ->join('votes', 'candidate_elective_positions.id', '=', 'votes.candidate_elective_position_id')
             ->where('elections.id', $this->id)
-            ->distinct('votes.id')
+            ->distinct('votes.invite_id')
             ->count('votes.id');
 
         return round(($votes / ($this->event()->first()->invites()->count()) * 100), 1) . '%';
