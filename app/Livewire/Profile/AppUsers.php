@@ -86,8 +86,8 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
                     ->button()
                     ->color('gray')
                     ->form([
-                        TextInput::make('title')->placeholder('Data Engineer'),
                         TextInput::make('name')->required(),
+                        TextInput::make('last_name')->required(),
                         TextInput::make('email')->required()->email(),
                         TextInput::make('password')
                             ->password()
@@ -95,6 +95,7 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state)),
                         Select::make('role_id')
+                            ->required()
                             ->label('Role')
                             ->options([
                                 1 => 'Super Admin',
@@ -114,10 +115,10 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
                     ])->using(function (Model $record, array $data): Model {
                         //            dd($data);
                         $record->name = $data['name'];
+                        $record->last_name = $data['last_name'];
                         $record->password = $data['password'] ?? $record->password;
                         $record->role_id = $data['role_id'];
                         $record->avatar =  $data['avatar'];
-                        $record->title = $data['title'] ?? '';
                         $record->email = $data['email'];
                         $record->parent_id = Auth::id();
                         $record->save();
@@ -139,8 +140,8 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
                 CreateAction::make()
                     ->color('fuchsia')
                     ->form([
-                        TextInput::make('title')->placeholder('Data Engineer'),
-                        TextInput::make('name')->required(),
+                        TextInput::make('name')->label('First Name')->required(),
+                        TextInput::make('last_name')->required(),
                         TextInput::make('email')->required()->email()->unique(),
                         TextInput::make('password')
                             ->required()
@@ -149,6 +150,7 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state)),
                         Select::make('role_id')
+                            ->required()
                             ->label('Role')
                             ->options([
                                 1 => 'Super Admin',
@@ -167,10 +169,10 @@ class AppUsers extends Component implements HasForms, HasTable, HasActions
 
                         $user = new \App\Models\User();
                         $user->name = $data['name'];
+                        $user->last_name = $data['last_name'];
                         $user->password = $data['password'];
                         $user->role_id = $data['role_id'];
                         $user->avatar = $data['avatar'] ?? '';
-                        $user->title = $data['title'] ?? '';
                         $user->email = $data['email'];
                         $user->save();
                         //   event(new Registered($user));

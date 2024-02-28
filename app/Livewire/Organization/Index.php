@@ -54,6 +54,9 @@ class Index extends Component implements HasForms, HasTable
             ->query($query)
             ->columns([
                 ImageColumn::make('lat')
+                    ->rounded()
+                    ->height(100)
+                    ->width(100)
                     ->label('logo'),
                 TextColumn::make('name')
                     ->label('Organization')
