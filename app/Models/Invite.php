@@ -217,20 +217,16 @@ class Invite extends Model
                 'query' => $params
             ]);
 
-            // Process response if needed
             $statusCode = $response->getStatusCode();
             $body = $response->getBody()->getContents();
 
-            // Example: Log response
-            Log::info('SMS API Response:', ['status_code' => $statusCode, 'body' => $body]);
+           // Log::info('SMS API Response:', ['status_code' => $statusCode, 'body' => $body]);
 
-            // Return response or do something with it
-            return response()->json(['status_code' => $statusCode, 'body' => $body]);
+//            return response()->json(['status_code' => $statusCode, 'body' => $body]);
         } catch (\Exception $e) {
-            // Handle exceptions, log errors, etc.
-            Log::error('Error sending SMS: ' . $e->getMessage());
-            // Return error response
-            return response()->json(['error' => 'Failed to send SMS'], 500);
+         //   Log::error('Error sending SMS: ' . $e->getMessage());
+
+   //         return response()->json(['error' => 'Failed to send SMS'], 500);
         }
 
 
