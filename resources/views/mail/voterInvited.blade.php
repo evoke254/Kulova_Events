@@ -7,7 +7,7 @@ We are reaching out to invite you to participate in  {{$event->name}} elections.
 @endforeach
 @foreach($elections as $election)
     @php
-            $urlencodedtext = urlencode('Hey, Text40 Bot.');
+            $urlencodedtext = urlencode('Voter-'.$voter->id);
             $url = "https://wa.me/254792782923?text=". $urlencodedtext;
             @endphp
 <x-mail::button :url="$url">
