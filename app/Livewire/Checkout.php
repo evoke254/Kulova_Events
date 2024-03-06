@@ -35,11 +35,14 @@ class Checkout extends Component
 
     public function mount()
     {
+        $this->tickets = 1;
         $this->computeTotals();
     }
 
+    #[On('updateTickets')]
     public function computeTotals()
     {
+
         $this->total = $this->tickets * $this->event->cost;
         $this->subtotal = $this->tickets * $this->event->cost;
     }

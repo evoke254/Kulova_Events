@@ -33,8 +33,9 @@
                                     </div>
 
                                     <div class="mt-4 sm:mt-0 sm:pr-9">
-                                        <div>
-                                            <x-inputs.number wire:model="tickets" label="Number of Tickets" wire:change="computeTotals" />
+                                         <div>
+                                                <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Number Of Tickets:</label>
+                                                <input type="number" wire:model="tickets" wire:change="computeTotals" id="number-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="1" required />
                                         </div>
                                     </div>
                                 </div>
@@ -119,14 +120,14 @@
 
 
                     <div class="mt-6 flex gap-3">
-                        <x-button
+                    {{--}}       <x-button
                             icon="cash"
                             warning
                             label="Test"
                             class="w-full rounded-md px-4 py-3 text-gray-900"
                             wire:click="prcsCashPayment"
                         />
-                        {{--}}                        <x-button
+                                             <x-button
                                                     icon="cash"
                                                     warning
                                                     label="Paypal"
@@ -143,12 +144,6 @@
 
 
 
-                    <div wire:ignore  class="mt-16 rounded-lg px-4 py-6 sm:p-6  space-y-2.5">
-                        <div class="flex-grow col-span-2" id="paypal-button-container" ></div>
-                    </div>
-
-
-
                 </section>
             </form>
         </div>
@@ -157,132 +152,7 @@
 
 
 
-    @if(env('APP_ENV')  == 'local')
-        <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_SANDBOX_CLIENT_ID')}}&enable-funding=card&currency=USD"></script>
-    @else
-        <script src="https://www.paypal.com/sdk/js?client-id={{env('PAYPAL_LIVE_CLIENT_ID')}}&enable-funding=card&currency=USD"></script>
-    @endif
-
     <script>
-        function computeDateTime(){
-        @this.dispatchSelf('computeDateTime');
-        }
-
-        //VisuaFusion paypal payment button script js
-        /*************************************************************************************************************
-         Paypal Payment on Click
-         **************************************************************************************************************/
-
-        function prcsPayPalPayment(){
-            console.log('test');
-            let el = document.getElementById('paypal-button-container');
-
-
-            @this.dispatchSelf('checkout')
-
-            var FUNDING_SOURCES = [
-                paypal.FUNDING.CARD,
-                paypal.FUNDING.PAYPAL,
-            ];
-
-
-            FUNDING_SOURCES.forEach(function(fundingSource) {
-                try {
-                    var button = paypal.Buttons({
-                        fundingSource: fundingSource,
-                        style: {
-                            layout: 'horizontal',
-                            // color: 'black',
-                            shape: 'pill',
-                            size: 'responsive',
-                            //label:   'checkout',
-                            tagline: false,
-                            height: 40
-                        },
-
-                        createOrder: function(data, actions) {
-                            // This function sets up the details of the transaction, including the amount and line item details.
-
-                            return actions.order.create({
-                                purchase_units: [{
-                                    amount: {
-                                        value: @this.get('total')
-                                    }
-                                }]
-                            });
-                        },
-
-
-                        // Authorize or capture the transaction after payer approves
-                        onApprove: (data, actions) => {
-
-
-                            return fetch('api/success/order/'+ @this.get('orderId'), {
-                                method: "POST"
-                            }).then((res) => {
-                                window.$wireui.notify({
-                                    title: 'Success!',
-                                    description: 'Payment Successful',
-                                    icon: 'success',
-                                    timeout: 30000
-                                });
-
-                                location.replace( '/dashboard' )
-                            });
-
-                            return fetch('api/success/order/'+ @this.get('orderId'), {
-                                method: 'post'
-                            });
-                        },
-
-                        onError: function(err) {
-                            window.$wireui.notify({
-                                title: 'Payment Error!',
-                                description: err.message,
-                                icon: 'error',
-                                timeout: 30000
-                            });
-                        },
-                        onCancel: function(data) {
-                            // Show notification
-
-                            window.$wireui.notify({
-                                title: 'Error!',
-                                description: 'Payment Canceled by User',
-                                icon: 'error',
-                                timeout: 30000
-                            });
-                        }
-                    });
-
-
-
-                    //button.render('#paypal-button-container')
-                    if(fundingSource == 'card'){
-
-                    }
-
-                    //console.log(fundingSource);
-
-                    if (button.isEligible()) {
-                        button.render('#paypal-button-container');
-                    }
-
-                } catch (error) {
-
-
-                    console.log(error);
-                    window.$wireui.notify({
-                        title: 'Payment Error!',
-                        description:  error ,
-                        icon: 'error',
-                        timeout: 30000
-                    });
-                }
-
-
-            });
-        }
 
     </script>
 </div>
