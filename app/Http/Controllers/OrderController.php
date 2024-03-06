@@ -73,7 +73,6 @@ class OrderController extends Controller
     }
 
 
-
     public function stkPushCallback(Request $request)
     {
         $data = $request->json()->all(); // Get request body as an array
@@ -81,20 +80,19 @@ class OrderController extends Controller
         try {
             // Validate required fields
             $this->validate($request, [
-                'ResultCode' => 'required|integer',
-                'CheckoutRequestID' => 'required|string',
+                'Body.stkCallback.ResultCode' => 'required|integer',
+                'Body.stkCallback.CheckoutRequestID' => 'required|string',
             ]);
 
             // Extract relevant data
-            $resultCode = $data['ResultCode'];
-            $ResultDesc = $data['ResultDesc'];
-            $checkoutRequestId = $data['CheckoutRequestID'];
-            $MerchantRequestID = $data['MerchantRequestID'];
-            $MpesaReceiptNumber = $data['MpesaReceiptNumber'];
+            $resultCode = $data['Body']['stkCallback']['ResultCode'];
+            $resultDesc = $data['Body']['stkCallback']['ResultDesc'];
+            $checkoutRequestId = $data['Body']['stkCallback']['CheckoutRequestID'];
+            $merchantRequestId = $data['Body']['stkCallback']['MerchantRequestID'];
 
             // Find the matching order by CheckoutRequestID
             $order = Order::where('CheckoutRequestID', $checkoutRequestId)
-                ->where('MerchantRequestID', $MerchantRequestID)
+                ->where('MerchantRequestID', $merchantRequestId)
                 ->first();
 
             if (!$order) {
@@ -104,11 +102,11 @@ class OrderController extends Controller
 
             // Update order based on ResultCode
             if ($resultCode === 0) {
-                $order->status = 'PAYMENT SUCCESSFUL - '. $ResultDesc .' - '.  $MpesaReceiptNumber;
+                $order->status = 'PAYMENT SUCCESSFUL - ' . $resultDesc ;
                 $message = 'Payment successful.';
             } else {
-                $order->status = 'PAYMENT ERROR - '. $ResultDesc;
-                $message = "Payment failed (ResultCode: $ResultDesc)";
+                $order->status = 'PAYMENT ERROR - ' . $resultDesc;
+                $message = "Payment failed (ResultCode: $resultCode)";
             }
 
             // Log the response for reference
@@ -121,4 +119,5 @@ class OrderController extends Controller
             return response()->json(['message' => 'Error processing request'], 500);
         }
     }
+
 }
