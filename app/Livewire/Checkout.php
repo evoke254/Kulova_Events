@@ -2,12 +2,9 @@
 
 namespace App\Livewire;
 
-use App\Jobs\ProcessMpesaPayment;
 use App\Models\Event;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\URL;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -84,7 +81,7 @@ class Checkout extends Component
             [ 'regex' => ' Enter a valid kenyan Number' ]);
 
 
-              $this->payment_in_progress = true;
+        $this->payment_in_progress = true;
         $this->payment_method = 'MPESA';
 
         $mpesa= new \Safaricom\Mpesa\Mpesa();
@@ -114,14 +111,13 @@ class Checkout extends Component
             $TransactionDesc,
             $Remarks);
         $stkPushSimulation = json_decode($stkPushSimulation);
-        dd($stkPushSimulation);
+
         $this->dialog()->success(
             $title = 'Initiate Payment - MPESA',
             $description = 'MPESA Prompt sent to your number'
         );
         $this->createOrder('Initiated');
-
-
+        $this->payment_in_progress = true;
     }
     protected function createOrder($status, $CheckoutRequestID = null, $MerchantRequestID = null){
         $this->order = Order::create(
@@ -144,6 +140,53 @@ class Checkout extends Component
             $description = 'waiting for payment confirmation'
         );
         $this->orderId = $this->order->id;
+        return true;
+    }
+
+    public function pollTransactionStatus()
+    {
+        $order = Order::find($this->orderId);
+        if ($order){
+            if ( strpos($order->status, "PAYMENT SUCCESSFUL") !== false ){
+                $this->payment_in_progress = false;
+                $this->dialog()->confirm([
+                    'title'       => 'Successfully Purchased Ticket(s)',
+                    'description' => 'Thank you for your ticket purchase! Your tickets have been successfully sent to your email. ',
+                    'icon'        => 'badge-check',
+                    'accept'      => [
+                        'label'  => 'View Event',
+                        'method' => 'redirectEvent',
+                        'params' => 'Saved',
+                    ],
+                    'reject' => [
+                        'label'  => 'Go Home',
+                        'method' => 'redirectHome',
+                    ],
+                ]);
+
+            }
+            elseif( strpos($order->status, "PAYMENT ERROR") !== false ) {
+                $this->payment_in_progress = false;
+                $this->dialog()->error(
+                    $title = 'Payment Error',
+                    $description = 'There was an error processing your transaction. Please try again.'
+                );
+
+            }
+
+        }
+        $this->payment_in_progress = true;
+        return  $this->payment_in_progress;
+
+    }
+    public function redirectEvent()
+    {
+        redirect()->route('event.view', ['event' => $this->event->id]);
+    }
+
+        public function redirectHome()
+    {
+        redirect()->route('landing');
     }
     public function render()
     {

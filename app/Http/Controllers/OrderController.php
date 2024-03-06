@@ -87,10 +87,15 @@ class OrderController extends Controller
 
             // Extract relevant data
             $resultCode = $data['ResultCode'];
+            $ResultDesc = $data['ResultDesc'];
             $checkoutRequestId = $data['CheckoutRequestID'];
+            $MerchantRequestID = $data['MerchantRequestID'];
+            $MpesaReceiptNumber = $data['MpesaReceiptNumber'];
 
             // Find the matching order by CheckoutRequestID
-            $order = Order::where('checkout_request_id', $checkoutRequestId)->first();
+            $order = Order::where('CheckoutRequestID', $checkoutRequestId)
+                ->where('MerchantRequestID', $MerchantRequestID)
+                ->first();
 
             if (!$order) {
                 Log::error("Order not found for CheckoutRequestID: $checkoutRequestId");
@@ -99,10 +104,11 @@ class OrderController extends Controller
 
             // Update order based on ResultCode
             if ($resultCode === 0) {
-                $order->markAsComplete(); // Update order status to complete based on your logic
+                $order->status = 'PAYMENT SUCCESSFUL - '. $ResultDesc .' - '.  $MpesaReceiptNumber;
                 $message = 'Payment successful.';
             } else {
-                $message = "Payment failed (ResultCode: $resultCode)";
+                $order->status = 'PAYMENT ERROR - '. $ResultDesc;
+                $message = "Payment failed (ResultCode: $ResultDesc)";
             }
 
             // Log the response for reference
