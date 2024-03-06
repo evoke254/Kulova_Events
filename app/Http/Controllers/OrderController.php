@@ -77,7 +77,7 @@ class OrderController extends Controller
     public function stkPushCallback(Request $request)
     {
         $data = $request->json()->all(); // Get request body as an array
-
+        Log::info(json_encode($data));
         try {
             // Validate required fields
             $this->validate($request, [
