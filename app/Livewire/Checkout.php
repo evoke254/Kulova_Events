@@ -123,15 +123,17 @@ class Checkout extends Component
                     $title = 'Initiate Payment - MPESA',
                     $description = 'MPESA Prompt sent to your number -'. $stkPushSimulation->ResponseDescription
                 );
-                $this->createOrder('Initiated');
+
+                $this->payment_method = 'MPESA';
                 $this->payment_in_progress = true;
+                $this->createOrder('INITIATED');
             }
         } else {
 
-                $this->dialog()->error(
-                    $title = ' MPESA - Error',
-                    $description = 'M-PESA STK Push response missing mandatory fields.'
-                );
+            $this->dialog()->error(
+                $title = ' MPESA - Error',
+                $description = 'M-PESA STK Push response missing mandatory fields.'
+            );
         }
 
 
