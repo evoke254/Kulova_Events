@@ -100,7 +100,7 @@ class Checkout extends Component
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
         $LipaNaMpesaPasskey = 'd19d1f26e66073935e11f5265708d09422f1e6c36c49deb4a4de02b2668d0e46' ;
         //$LipaNaMpesaPasskey = env('MPESA_PassKey');
-        $AccountReference = 'TEXT40';
+        $AccountReference = $this->event->name;
 
         $stkPushSimulation=$mpesa->STKPushSimulation($BusinessShortCode,
             $LipaNaMpesaPasskey,
@@ -113,12 +113,13 @@ class Checkout extends Component
             $AccountReference,
             $TransactionDesc,
             $Remarks);
-dd($stkPushSimulation);
-        $this->notification()->warning(
-            $title = 'TEST TEST',
-            $description = 'Test Bed'
+        $stkPushSimulation = json_decode($stkPushSimulation);
+        dd($stkPushSimulation);
+        $this->dialog()->success(
+            $title = 'Initiate Payment - MPESA',
+            $description = 'MPESA Prompt sent to your number'
         );
-        $this->createOrder('PAID');
+        $this->createOrder('Initiate');
 
 
     }
