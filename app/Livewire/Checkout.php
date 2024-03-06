@@ -169,6 +169,7 @@ class Checkout extends Component
         if ($order){
             if ( strpos($order->status, "PAYMENT SUCCESSFUL") !== false ){
                 $this->payment_in_progress = false;
+                $this->orderId = null;
                 $this->dialog()->confirm([
                     'title'       => 'Successfully Purchased Ticket(s)',
                     'description' => $order->status . ' Thank you for your ticket purchase! Your tickets have been successfully sent to your email. ',
@@ -186,6 +187,7 @@ class Checkout extends Component
 
             }
             elseif( strpos($order->status, "PAYMENT ERROR") !== false ) {
+                $this->orderId = null;
                 $this->payment_in_progress = false;
                 $this->dialog()->error(
                     $title = 'Payment Error',
@@ -193,7 +195,7 @@ class Checkout extends Component
                 );
 
             }
-            $this->orderId = null;
+
         }
 
 
