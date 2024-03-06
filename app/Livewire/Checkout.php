@@ -108,11 +108,11 @@ class Checkout extends Component
             $TransactionDesc,
             $Remarks);
         $stkPushSimulation = json_decode($stkPushSimulation);
-dd($stkPushSimulation);
-        if (isset($stkPushSimulation->ResultCode)) {
-            if ($stkPushSimulation->ResultCode !== 0) {
-                $errorMessage = $stkPushSimulation->ResultDesc ?? "Unknown Error";
-                Log::error("M-PESA STK Push error: $errorMessage (ResultCode: {$stkPushSimulation->ResultCode})");
+        
+        if (isset($stkPushSimulation->ResponseCode)) {
+            if ($stkPushSimulation->ResponseCode !== '0') {
+                $errorMessage = $stkPushSimulation->ResponseDescription ?? "Unknown Error";
+                Log::error("M-PESA STK Push error: $errorMessage (ResultCode: {$stkPushSimulation->ResponseCode})");
                 $this->dialog()->error(
                     $title = ' MPESA - Error',
                     $description = $errorMessage
@@ -121,7 +121,7 @@ dd($stkPushSimulation);
             } else {
                 $this->dialog()->success(
                     $title = 'Initiate Payment - MPESA',
-                    $description = 'MPESA Prompt sent to your number -'. $stkPushSimulation->ResultDesc
+                    $description = 'MPESA Prompt sent to your number -'. $stkPushSimulation->ResponseDescription
                 );
                 $this->createOrder('Initiated');
                 $this->payment_in_progress = true;
