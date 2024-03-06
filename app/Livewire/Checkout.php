@@ -126,7 +126,7 @@ class Checkout extends Component
 
                 $this->payment_method = 'MPESA';
                 $this->payment_in_progress = true;
-                $this->createOrder('INITIATED');
+                $this->createOrder('INITIATED', $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID);
             }
         } else {
 
