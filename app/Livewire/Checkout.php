@@ -81,8 +81,7 @@ class Checkout extends Component
             'email' => 'required|email',
             'phoneNumber' => ['required', 'regex:/^(0|\+254|254)\d{9}$/'],
         ],
-            [ 'regex' => ' Enter a valid kenyan Number',
-            ]);
+            [ 'regex' => ' Enter a valid kenyan Number' ]);
 
 
         $this->payment_status = true;
@@ -90,16 +89,17 @@ class Checkout extends Component
 
         $mpesa= new \Safaricom\Mpesa\Mpesa();
 
-        $BusinessShortCode = "767219";
+        $BusinessShortCode = "7487337";
         $TransactionDesc ="Event Tickets Purchase Text40";
         $Remarks = 'Event ticket Purchase';
         $TransactionType = "CustomerPayBillOnline";
         $Amount = $this->total;
-        $PartyA = 254 . substr($this->phoneNumber, -9);
+        $PartyA = '254' . substr($this->phoneNumber, -9);
         $PartyB =$BusinessShortCode;
         $PhoneNumber = $PartyA;
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
-        $LipaNaMpesaPasskey = env('MPESA_PassKey');
+        $LipaNaMpesaPasskey = 'd19d1f26e66073935e11f5265708d09422f1e6c36c49deb4a4de02b2668d0e46' ;
+        //$LipaNaMpesaPasskey = env('MPESA_PassKey');
         $AccountReference = 'TEXT40';
 
         $stkPushSimulation=$mpesa->STKPushSimulation($BusinessShortCode,
