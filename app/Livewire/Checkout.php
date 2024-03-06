@@ -108,7 +108,7 @@ class Checkout extends Component
             $TransactionDesc,
             $Remarks);
         $stkPushSimulation = json_decode($stkPushSimulation);
-
+dd($stkPushSimulation);
         if (isset($stkPushSimulation->ResultCode)) {
             if ($stkPushSimulation->ResultCode !== 0) {
                 $errorMessage = $stkPushSimulation->ResultDesc ?? "Unknown Error";
