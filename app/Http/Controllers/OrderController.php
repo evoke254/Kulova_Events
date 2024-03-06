@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -69,5 +70,49 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         //
+    }
+
+
+
+    public function stkPushCallback(Request $request)
+    {
+        $data = $request->json()->all(); // Get request body as an array
+
+        try {
+            // Validate required fields
+            $this->validate($request, [
+                'ResultCode' => 'required|integer',
+                'CheckoutRequestID' => 'required|string',
+            ]);
+
+            // Extract relevant data
+            $resultCode = $data['ResultCode'];
+            $checkoutRequestId = $data['CheckoutRequestID'];
+
+            // Find the matching order by CheckoutRequestID
+            $order = Order::where('checkout_request_id', $checkoutRequestId)->first();
+
+            if (!$order) {
+                Log::error("Order not found for CheckoutRequestID: $checkoutRequestId");
+                return response()->json(['message' => 'Order not found'], 404);
+            }
+
+            // Update order based on ResultCode
+            if ($resultCode === 0) {
+                $order->markAsComplete(); // Update order status to complete based on your logic
+                $message = 'Payment successful.';
+            } else {
+                $message = "Payment failed (ResultCode: $resultCode)";
+            }
+
+            // Log the response for reference
+            Log::info("STK Push callback: $message - Order ID: {$order->id}");
+
+            return response()->json(['message' => $message]);
+
+        } catch (\Exception $e) {
+            Log::error("Error processing STK Push callback: " . $e->getMessage());
+            return response()->json(['message' => 'Error processing request'], 500);
+        }
     }
 }

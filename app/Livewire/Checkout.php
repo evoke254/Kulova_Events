@@ -50,7 +50,7 @@ class Checkout extends Component
     #[On('checkout')]
     public function checkout(){
         $this->validate();
-        $this->payment_method = 'PAYPAL';
+        $this->payment_method = 'MPESA';
         $this->payment_in_progress = true;
         $this->createOrder('INITIATED');
     }
@@ -84,7 +84,7 @@ class Checkout extends Component
             [ 'regex' => ' Enter a valid kenyan Number' ]);
 
 
-        $this->payment_status = true;
+              $this->payment_in_progress = true;
         $this->payment_method = 'MPESA';
 
         $mpesa= new \Safaricom\Mpesa\Mpesa();
@@ -119,11 +119,11 @@ class Checkout extends Component
             $title = 'Initiate Payment - MPESA',
             $description = 'MPESA Prompt sent to your number'
         );
-        $this->createOrder('Initiate');
+        $this->createOrder('Initiated');
 
 
     }
-    protected function createOrder($status){
+    protected function createOrder($status, $CheckoutRequestID = null, $MerchantRequestID = null){
         $this->order = Order::create(
             [
                 'tickets' => $this->tickets,
@@ -135,6 +135,8 @@ class Checkout extends Component
                 'amount' => $this->total,
                 'payment_method' => $this->payment_method,
                 'status' => $status,
+                'CheckoutRequestID' => $CheckoutRequestID,
+                'MerchantRequestID' => $MerchantRequestID,
             ]
         );
         $this->notification()->success(

@@ -19,5 +19,7 @@ class Order extends Model
         'name',
         'phone_number',
         'status',
+        'CheckoutRequestID',
+        'MerchantRequestID'
     ];
 }
