@@ -108,6 +108,7 @@ class OrderController extends Controller
                 $order->status = 'PAYMENT ERROR - ' . $resultDesc;
                 $message = "Payment failed (ResultCode: $resultCode)";
             }
+            $order->save();
 
             // Log the response for reference
             Log::info("STK Push callback: $message - Order ID: {$order->id}");
