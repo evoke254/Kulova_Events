@@ -171,7 +171,7 @@ class Checkout extends Component
                 $this->payment_in_progress = false;
                 $this->dialog()->confirm([
                     'title'       => 'Successfully Purchased Ticket(s)',
-                    'description' => 'Thank you for your ticket purchase! Your tickets have been successfully sent to your email. ',
+                    'description' => $order->status . ' Thank you for your ticket purchase! Your tickets have been successfully sent to your email. ',
                     'icon'        => 'badge-check',
                     'accept'      => [
                         'label'  => 'View Event',
@@ -189,11 +189,11 @@ class Checkout extends Component
                 $this->payment_in_progress = false;
                 $this->dialog()->error(
                     $title = 'Payment Error',
-                    $description = 'There was an error processing your transaction. Please try again.'
+                    $description = $order->status
                 );
 
             }
-
+            $this->orderId = null;
         }
 
 
