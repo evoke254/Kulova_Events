@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Event;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use WireUi\Traits\Actions;
@@ -80,10 +81,6 @@ class Checkout extends Component
         ],
             [ 'regex' => ' Enter a valid kenyan Number' ]);
 
-
-        $this->payment_in_progress = true;
-        $this->payment_method = 'MPESA';
-
         $mpesa= new \Safaricom\Mpesa\Mpesa();
 
         $BusinessShortCode = "7487337";
@@ -112,12 +109,33 @@ class Checkout extends Component
             $Remarks);
         $stkPushSimulation = json_decode($stkPushSimulation);
 
-        $this->dialog()->success(
-            $title = 'Initiate Payment - MPESA',
-            $description = 'MPESA Prompt sent to your number'
-        );
-        $this->createOrder('Initiated');
-        $this->payment_in_progress = true;
+        if (isset($stkPushSimulation->ResultCode)) {
+            if ($stkPushSimulation->ResultCode !== 0) {
+                $errorMessage = $stkPushSimulation->ResultDesc ?? "Unknown Error";
+                Log::error("M-PESA STK Push error: $errorMessage (ResultCode: {$stkPushSimulation->ResultCode})");
+                $this->dialog()->error(
+                    $title = ' MPESA - Error',
+                    $description = $errorMessage
+                );
+                return false;
+            } else {
+                $this->dialog()->success(
+                    $title = 'Initiate Payment - MPESA',
+                    $description = 'MPESA Prompt sent to your number -'. $stkPushSimulation->ResultDesc
+                );
+                $this->createOrder('Initiated');
+                $this->payment_in_progress = true;
+            }
+        } else {
+
+                $this->dialog()->error(
+                    $title = ' MPESA - Error',
+                    $description = 'M-PESA STK Push response missing mandatory fields.'
+                );
+        }
+
+
+
     }
     protected function createOrder($status, $CheckoutRequestID = null, $MerchantRequestID = null){
         $this->order = Order::create(
@@ -175,8 +193,7 @@ class Checkout extends Component
             }
 
         }
-        $this->payment_in_progress = true;
-        return  $this->payment_in_progress;
+
 
     }
     public function redirectEvent()
@@ -184,7 +201,7 @@ class Checkout extends Component
         redirect()->route('event.view', ['event' => $this->event->id]);
     }
 
-        public function redirectHome()
+    public function redirectHome()
     {
         redirect()->route('landing');
     }
