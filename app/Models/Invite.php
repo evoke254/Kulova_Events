@@ -95,7 +95,7 @@ class Invite extends Model
             $event = Event::find($model->event_id);
             //Send Email invitation
             $url = URL::signedRoute('event.registration', ['user' => $model]);
-            $sms = 'Dear '.$model->name.', You have been invited to attend '. $this->event->name .' Kindly click on the link below to register. '. $url;
+            $sms = 'Dear '.$model->name.', You have been invited to attend '. $event->name .' Kindly click on the link below to register. '. $url;
             $model->sendSMS($model->phone_number, $sms);
 
 
