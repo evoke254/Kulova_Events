@@ -130,8 +130,12 @@ class ElectionController extends Controller
             }
         } else {
 
-            $botman->hears('', function (BotMan $bot) {
-                $bot->reply("Incorrect format. Please retry using the correct format: *Voter-1234* ");
+            $botman->hears('', function (BotMan $bot) use ($voter) {
+                if ($voter){
+                $bot->reply("Incorrect format. Please retry using the correct format: _Voter-". $voter->id);
+                } else {
+                $bot->reply("Incorrect format. Please retry using the correct format: _Voter-***_  ");
+                }
             });
 
         }
