@@ -244,6 +244,11 @@ class ShowInvites extends Component implements HasForms, HasTable
                     ->action(fn (Invite $record) => $record->delete())
             ])
             ->headerActions([
+
+                ImportAction::make()
+                    ->color('fuchsia')
+                    ->importer(MemberImporter::class),
+
                 CreateAction::make('updateAuthor')
                     ->form([
                         TextInput::make('name')

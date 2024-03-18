@@ -1,7 +1,7 @@
 <div>
 
     <!-- Modal toggle -->
-
+{{--}}
 <x-button icon="cloud" md fuchsia label="Import" class="rounded-lg"
         data-modal-target="importInvitesModal"
         data-modal-toggle="importInvitesModal" />
@@ -99,7 +99,7 @@
                                 </p>
                                 @enderror
 
-                                {{-- -Get validation errors from job--}}
+                                  Get validation errors from job
                                 @if (count($errors) > 0)
                                     @foreach($errors->all() as $error)
                                         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span>
@@ -135,5 +135,5 @@
             </div>
         </div>
     </div>
-
+--}}
 </div>

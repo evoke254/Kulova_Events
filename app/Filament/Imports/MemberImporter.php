@@ -14,18 +14,23 @@ class MemberImporter extends Importer
     public static function getColumns(): array
     {
         return [
+            ImportColumn::make('event')
+                ->requiredMapping()
+                ->relationship()
+                ->rules(['required']),
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
             ImportColumn::make('last_name')
-                ->requiredMapping()
                 ->rules(['max:255']),
             ImportColumn::make('phone_number')
-                ->requiredMapping()
-                ->rules(['required', 'regex:/^[0-9]{9}$/']),
+                ->rules(['max:255']),
             ImportColumn::make('email')
-                ->requiredMapping()
-                ->rules(['email']),
+                ->rules(['email', 'max:255']),
+            ImportColumn::make('member_no')
+                ->rules(['required','max:255']),
+            ImportColumn::make('organization')
+                ->relationship(),
         ];
     }
 
@@ -33,6 +38,7 @@ class MemberImporter extends Importer
     {
          return Invite::firstOrNew([
         //     // Update existing records, matching them by `$this->data['column_name']`
+             'email' => $this->data['email'],
              'member_no' => $this->data['member_no'],
          ]);
 
