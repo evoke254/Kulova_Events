@@ -3,9 +3,11 @@
 namespace App\Filament\Imports;
 
 use App\Models\Invite;
+use Closure;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Filament\Forms\Get;
 
 class MemberImporter extends Importer
 {
@@ -14,11 +16,8 @@ class MemberImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('event')
-                ->requiredMapping()
-                ->relationship()
-                ->rules(['required']),
             ImportColumn::make('name')
+                ->label('first_name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
             ImportColumn::make('last_name')
@@ -26,21 +25,26 @@ class MemberImporter extends Importer
             ImportColumn::make('phone_number')
                 ->rules(['max:255']),
             ImportColumn::make('email')
-                ->rules(['email', 'max:255']),
+                ->rules(['required',
+                    'email']),
             ImportColumn::make('member_no')
                 ->rules(['required','max:255']),
-            ImportColumn::make('organization')
-                ->relationship(),
+
         ];
     }
 
     public function resolveRecord(): ?Invite
     {
-         return Invite::firstOrNew([
-        //     // Update existing records, matching them by `$this->data['column_name']`
-             'email' => $this->data['email'],
-             'member_no' => $this->data['member_no'],
-         ]);
+        $this->data['event_id'] = $this->options['event_id'];
+        $this->data['organization_id'] = $this->options['organization_id'];
+        $this->data['user_id'] = $this->options['user_id'];
+
+        return Invite::firstOrNew( [
+            'organization_id' => $this->data['organization_id'],
+            'event_id' => $this->data['event_id'],
+            'member_no' => $this->data['member_no'],
+            'phone_number' => $this->data['phone_number'],
+        ]);
 
     }
 

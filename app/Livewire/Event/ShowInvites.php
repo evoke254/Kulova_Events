@@ -245,9 +245,15 @@ class ShowInvites extends Component implements HasForms, HasTable
             ])
             ->headerActions([
 
-                ImportAction::make()
+                 ImportAction::make()
                     ->color('fuchsia')
-                    ->importer(MemberImporter::class),
+                     ->importer(MemberImporter::class)
+                                      ->options([
+                                        'event_id' => $this->event->id,
+                                        'organization_id' => $this->event->organization_id,
+                                        'user_id' => Auth::id(),
+                                    ]),
+
 
                 CreateAction::make('updateAuthor')
                     ->form([
@@ -310,14 +316,6 @@ class ShowInvites extends Component implements HasForms, HasTable
 
                         return $data;
                     }),
-                /*
-                                ImportAction::make()->importer(MemberImporter::class)
-                                    ->mutateFormDataUsing(function ( $data): array{
-                                        $data['event_id'] = $this->event->id;
-                                        $data['organization_id'] = Auth::user()->organization_id;
-                                        $data['user_id'] = Auth::id();
-                                        return $data;
-                                    })*/
             ]);
     }
 
