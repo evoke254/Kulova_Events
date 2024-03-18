@@ -134,7 +134,7 @@ class ElectionController extends Controller
                 if ($voter){
                 $bot->reply("Incorrect format. Please retry using the correct format: _Voter-". $voter->id);
                 } else {
-                $bot->reply("Incorrect format. Please retry using the correct format: _Voter-***_  ");
+                $bot->reply("Incorrect format. Please retry using the correct format: *Voter-000*  ");
                 }
             });
 
