@@ -141,6 +141,8 @@ class whatsappVoting extends Conversation
                     $opt .= Str::upper($pstn['position']). " \n ";
                     $this->candidates = $pstn['candidates'];
                     foreach ($this->candidates as $key => $candidate){
+
+                        Log::info(json_encode($candidate));
                         $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                         if ( !$prev_votes->contains('candidate_elective_position_id', $candidate['id'])){
                             if ($this->election->type == 1){
