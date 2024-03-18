@@ -150,7 +150,7 @@ class whatsappVoting extends Conversation
 
                                 $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." \n ";
                             } else {
-                                $opt .= $key+1 . ": ".$candidate['name']."\n ";
+                                $opt .= $key+1 . ": ".$candidate['name']['name']."\n ";
                             }
                         }
                     }
