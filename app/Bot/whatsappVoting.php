@@ -141,7 +141,6 @@ class whatsappVoting extends Conversation
                     $opt .= Str::upper($pstn['position']). " \n ";
                     $this->candidates = $pstn['candidates'];
                     foreach ($this->candidates as $key => $candidate){
-
                         $prev_votes = $this->voter->castVotes($pstn['id'], $candidate['id']);
                         if ( !$prev_votes->contains('candidate_elective_position_id', $candidate['id'])){
                             if ($this->election->type == 1){
@@ -149,8 +148,7 @@ class whatsappVoting extends Conversation
 
                                 $opt .= $key+1 . ": ".$candidate['name'] . " - ". $candidate['member_no'] ." \n ";
                             } else {
-                                 $resolution_option = json_decode($candidate['name']);
-                                $opt .= $key+1 . ": ".$resolution_option->name."\n ";
+                                $opt .= $key+1 . ": ".$candidate['name']."\n ";
                             }
                         }
                     }
