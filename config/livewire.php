@@ -115,6 +115,8 @@ return [
 
     'inject_assets' => true,
 
+    'asset_url' => config('app.url'),
+
     /*
     |---------------------------------------------------------------------------
     | Navigate (SPA mode)
