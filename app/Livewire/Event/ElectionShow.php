@@ -145,19 +145,19 @@ class ElectionShow extends Component implements HasForms
                     ]
                 );
 
-                if (!isset($pstn['candidates']) || empty($pstn['candidates']) ){
-                    $pstn['candidates'] = ["Yes", "No"];
-                }
+                $pstn['candidates'] = ["Yes", "No"];
 
                 foreach ($pstn['candidates'] as $cdt ){
                     CandidateElectivePosition::updateOrCreate(
-                        ['id' => isset($cdt['id']) ? $cdt['id'] : '' ],
                         [
-                            'name' =>  $cdt,
-                            'photo' =>  'n_a',
-                            'member_no' =>  -99,
                             'elective_position_id' =>  $position->id,
                             'election_id' =>  $position->election_id,
+                            'name' =>  $cdt,
+                        ],
+
+                        [
+                            'photo' =>  'n_a',
+                            'member_no' =>  -99,
                         ]
                     );
                 }
