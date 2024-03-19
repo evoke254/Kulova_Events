@@ -14,8 +14,7 @@
                             {{--}}<div class="flex-shrink-0">
                                 <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg" alt="Front of men&#039;s Basic Tee in sienna." class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48">
                             </div>--}}
-
-                            <div class="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                            <div class="ml-3 flex flex-1 flex-col justify-between sm:ml-6">
                                 <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
                                     <div>
                                         <div class="flex justify-between">
