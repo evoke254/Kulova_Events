@@ -234,7 +234,7 @@ class Invite extends Model
             $scanUrl = URL::signedRoute('attend.event', ['user' => $this]);
             $qrCode = QrCode::size(150)->generate($scanUrl);
             $event = Event::find($this->event_id);
-            $path = storage_path('images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
+            $path = public_path('storage/images/tickets/'. time() . str_shuffle('bcdefghijklmnopqrstuvwxyzABCDEFGHIJKLM') . '.png');
             $user = $this;
             SnappyImage::loadView('ticket', compact('user', 'qrCode', 'event'))
                 ->setOption('enable-local-file-access', true)
