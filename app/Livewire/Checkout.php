@@ -86,7 +86,7 @@ class Checkout extends Component
         $BusinessShortCode = "7487337";
         $TransactionDesc ="Event Tickets Purchase Text40";
         $Remarks = 'Event ticket Purchase';
-        $TransactionType = "CustomerPayBillOnline";
+        $TransactionType = "CustomerBuyGoodsOnline";
         $Amount = $this->total;
         $PartyA = '254' . substr($this->phoneNumber, -9);
         $PartyB =$BusinessShortCode;
