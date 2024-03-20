@@ -89,7 +89,7 @@ class Checkout extends Component
         $TransactionType = "CustomerBuyGoodsOnline";
         $Amount = $this->total;
         $PartyA = '254' . substr($this->phoneNumber, -9);
-        $PartyB =$BusinessShortCode;
+        $PartyB ='5488345';
         $PhoneNumber = $PartyA;
         $CallBackURL = URL('/api/MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1O');
         $LipaNaMpesaPasskey = 'd19d1f26e66073935e11f5265708d09422f1e6c36c49deb4a4de02b2668d0e46' ;
